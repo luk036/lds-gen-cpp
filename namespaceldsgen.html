@@ -60,6 +60,8 @@
               <ul>
                 <li><a href="#nested-classes">Classes</a></li>
                 <li><a href="#enum-members">Enums</a></li>
+                <li><a href="#func-members">Functions</a></li>
+                <li><a href="#var-members">Variables</a></li>
               </ul>
             </li>
           </ul>
@@ -68,9 +70,33 @@
           <h2><a href="#nested-classes">Classes</a></h2>
           <dl class="m-doc">
             <dt>
+              class <a href="classldsgen_1_1_circle.html" class="m-doc">Circle</a>
+            </dt>
+            <dd><a href="classldsgen_1_1_circle.html" class="m-doc">Circle</a> sequence generator.</dd>
+            <dt>
+              class <a href="classldsgen_1_1_halton.html" class="m-doc">Halton</a>
+            </dt>
+            <dd><a href="classldsgen_1_1_halton.html" class="m-doc">Halton</a> sequence generator.</dd>
+            <dt>
+              class <a href="classldsgen_1_1_halton_n.html" class="m-doc">HaltonN</a>
+            </dt>
+            <dd>Halton(n) sequence generator.</dd>
+            <dt>
               class <a href="classldsgen_1_1_lds_gen.html" class="m-doc">LdsGen</a>
             </dt>
             <dd>A class for saying hello in multiple languages.</dd>
+            <dt>
+              class <a href="classldsgen_1_1_sphere.html" class="m-doc">Sphere</a>
+            </dt>
+            <dd><a href="classldsgen_1_1_sphere.html" class="m-doc">Sphere</a> sequence generator.</dd>
+            <dt>
+              class <a href="classldsgen_1_1_sphere3_hopf.html" class="m-doc">Sphere3Hopf</a>
+            </dt>
+            <dd>S(3) sequence generator by Hopf fibration.</dd>
+            <dt>
+              class <a href="classldsgen_1_1_vd_corput.html" class="m-doc">VdCorput</a>
+            </dt>
+            <dd>Van der Corput sequence generator.</dd>
           </dl>
         </section>
         <section id="enum-members">
@@ -85,6 +111,29 @@
             <dd></dd>
           </dl>
         </section>
+        <section id="func-members">
+          <h2><a href="#func-members">Functions</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a515b023f523a08685b5fc692dc9758e8" class="m-doc">vdc</a>(</span><span class="m-doc-wrap">size_t k,
+              const size_t base) -&gt; double -&gt; <a href="ilds_8hpp.html#a46d983a6cf6b8e418426de1b7e33dc46" class="m-doc">CONSTEXPR14</a> auto</span>
+            </dt>
+            <dd>Van der Corput sequence.</dd>
+          </dl>
+        </section>
+        <section id="var-members">
+          <h2><a href="#var-members">Variables</a></h2>
+          <dl class="m-doc">
+            <dt>
+              const auto <a href="#a4ee3065056614b55639ee8fa2083957d" class="m-doc">TWO_PI</a> <span class="m-label m-flat m-primary">constexpr</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              static const size_t <a href="#a62bf45bc2b72ab5b553e3ed6d0ad1dde" class="m-doc">PRIME_TABLE</a>
+            </dt>
+            <dd><span></span></dd>
+          </dl>
+        </section>
         <section>
           <h2>Enum documentation</h2>
           <section class="m-doc-details" id="ad139bcfbef4976290cb50b3d6b6a5003"><div>
@@ -93,6 +142,56 @@
               <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="greeter_8h.html">&lt;ldsgen/greeter.h&gt;</a></div>
             </h3>
 <p>Language codes to be used with the <a href="classldsgen_1_1_lds_gen.html" class="m-doc">LdsGen</a> class</p>
+          </div></section>
+        </section>
+        <section>
+          <h2>Function documentation</h2>
+          <section class="m-doc-details" id="a515b023f523a08685b5fc692dc9758e8"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper"><a href="ilds_8hpp.html#a46d983a6cf6b8e418426de1b7e33dc46" class="m-doc">CONSTEXPR14</a> auto ldsgen::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a515b023f523a08685b5fc692dc9758e8" class="m-doc-self">vdc</a>(</span><span class="m-doc-wrap">size_t k,
+              const size_t base) -&gt; double</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="lds_8hpp.html">&lt;ldsgen/lds.hpp&gt;</a></div>
+            </h3>
+            <p>Van der Corput sequence.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">k</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>base</td>
+                  <td></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>double</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>The <code>vdc</code> function is calculating the Van der Corput sequence value for a given index <code>k</code> and base <code>base</code>. It returns a <code>double</code> value.</p>
+          </div></section>
+        </section>
+        <section>
+          <h2>Variable documentation</h2>
+          <section class="m-doc-details" id="a4ee3065056614b55639ee8fa2083957d"><div>
+            <h3>
+              const auto ldsgen::<wbr /><a href="#a4ee3065056614b55639ee8fa2083957d" class="m-doc-self">TWO_PI</a> <span class="m-label m-primary">constexpr</span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="lds_8hpp.html">&lt;ldsgen/lds.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="a62bf45bc2b72ab5b553e3ed6d0ad1dde"><div>
+            <h3>
+              static const size_t ldsgen::<wbr /><a href="#a62bf45bc2b72ab5b553e3ed6d0ad1dde" class="m-doc-self">PRIME_TABLE</a>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="lds__n_8hpp.html">&lt;ldsgen/lds_n.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
           </div></section>
         </section>
       </div>
