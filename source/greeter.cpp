@@ -1,11 +1,11 @@
 #include <fmt/format.h>
-#include <greeter/greeter.h>
+#include <ldsgen/greeter.h>
 
-using namespace greeter;
+using namespace ldsgen;
 
-Greeter::Greeter(std::string _name) : name(std::move(_name)) {}
+LdsGen::LdsGen(std::string _name) : name(std::move(_name)) {}
 
-std::string Greeter::greet(LanguageCode lang) const {
+std::string LdsGen::greet(LanguageCode lang) const {
   switch (lang) {
     default:
     case LanguageCode::EN:

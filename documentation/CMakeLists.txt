@@ -1,19 +1,19 @@
 cmake_minimum_required(VERSION 3.14...3.22)
 
-project(GreeterDocs)
+project(LdsGenDocs)
 
 # ---- Dependencies ----
 
 include(../cmake/CPM.cmake)
 
 CPMAddPackage("gh:mosra/m.css#a0d292ec311b97fefd21e93cdefb60f88d19ede6")
-CPMAddPackage(NAME Greeter SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
+CPMAddPackage(NAME LdsGen SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
 
 # ---- Doxygen variables ----
 
 # set Doxyfile variables
-set(DOXYGEN_PROJECT_NAME Greeter)
-set(DOXYGEN_PROJECT_VERSION ${Greeter_VERSION})
+set(DOXYGEN_PROJECT_NAME LdsGen)
+set(DOXYGEN_PROJECT_VERSION ${LdsGen_VERSION})
 set(DOXYGEN_PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}/..")
 set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doxygen")
 
