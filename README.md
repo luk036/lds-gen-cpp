@@ -1,18 +1,17 @@
-[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/MacOS/badge.svg)](https://github.com/TheLartians/ModernCppStarter/actions)
-[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/Windows/badge.svg)](https://github.com/TheLartians/ModernCppStarter/actions)
-[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/Ubuntu/badge.svg)](https://github.com/TheLartians/ModernCppStarter/actions)
-[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/Style/badge.svg)](https://github.com/TheLartians/ModernCppStarter/actions)
-[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/Install/badge.svg)](https://github.com/TheLartians/ModernCppStarter/actions)
-[![codecov](https://codecov.io/gh/TheLartians/ModernCppStarter/branch/master/graph/badge.svg)](https://codecov.io/gh/TheLartians/ModernCppStarter)
+[![Actions Status](https://github.com/luk036/lds-gen-cpp/workflows/MacOS/badge.svg)](https://github.com/luk036/lds-gen-cpp/actions)
+[![Actions Status](https://github.com/luk036/lds-gen-cpp/workflows/Windows/badge.svg)](https://github.com/luk036/lds-gen-cpp/actions)
+[![Actions Status](https://github.com/luk036/lds-gen-cpp/workflows/Ubuntu/badge.svg)](https://github.com/luk036/lds-gen-cpp/actions)
+[![Actions Status](https://github.com/luk036/lds-gen-cpp/workflows/Style/badge.svg)](https://github.com/luk036/lds-gen-cpp/actions)
+[![Actions Status](https://github.com/luk036/lds-gen-cpp/workflows/Install/badge.svg)](https://github.com/luk036/lds-gen-cpp/actions)
+[![codecov](https://codecov.io/gh/luk036/lds-gen-cpp/branch/master/graph/badge.svg)](https://codecov.io/gh/luk036/lds-gen-cpp)
 
 <p align="center">
   <img src="https://repository-images.githubusercontent.com/254842585/4dfa7580-7ffb-11ea-99d0-46b8fe2f4170" height="175" width="auto" />
 </p>
 
-# ModernCppStarter
+# lds-gen-cpp
 
-Setting up a new C++ project usually requires a significant amount of preparation and boilerplate code, even more so for modern C++ projects with tests, executables and continuous integration.
-This template is the result of learnings from many previous projects and should help reduce the work required to setup up a modern C++ project.
+Low Discrepancy Sequence Generation in Modern C++
 
 ## Features
 
@@ -205,4 +204,4 @@ Perhaps the [MiniCppStarter](https://github.com/TheLartians/MiniCppStarter) is s
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=TheLartians/ModernCppStarter,cpp-best-practices/gui_starter_template,filipdutescu/modern-cpp-template&type=Date)](https://star-history.com/#TheLartians/ModernCppStarter&cpp-best-practices/gui_starter_template&filipdutescu/modern-cpp-template&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=luk036/lds-gen-cpp,cpp-best-practices/gui_starter_template,filipdutescu/modern-cpp-template&type=Date)](https://star-history.com/#luk036/lds-gen-cpp&cpp-best-practices/gui_starter_template&filipdutescu/modern-cpp-template&Date)
