@@ -25,3 +25,7 @@ TEST_CASE("Sphere3Hopf") {
     const auto arr = shfgen.pop();
     CHECK_EQ(arr[0], doctest::Approx(-0.2236067977));
 }
+
+TEST_CASE("dummy") {
+    CHECK_EQ(ldsgen::dummy(15), 53);
+}

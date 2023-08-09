@@ -363,4 +363,6 @@ namespace ldsgen {
             this->vdc2.reseed(seed);
         }
     };
+
+  extern size_t dummy(size_t i);
 }  // namespace ldsgen
