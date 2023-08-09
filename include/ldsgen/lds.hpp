@@ -364,5 +364,5 @@ namespace ldsgen {
         }
     };
 
-  extern size_t dummy(size_t i);
+    extern size_t dummy(size_t i);
 }  // namespace ldsgen
