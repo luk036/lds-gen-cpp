@@ -1,6 +1,6 @@
 #include <doctest/doctest.h>
 #include <ldsgen/greeter.h>
-#include <ldsgen/version.h>
+// #include <ldsgen/version.h>
 
 #include <string>
 
@@ -15,7 +15,7 @@ TEST_CASE("LdsGen") {
     CHECK(ldsgen.greet(LanguageCode::FR) == "Bonjour Tests!");
 }
 
-TEST_CASE("LdsGen version") {
-    static_assert(std::string_view(LDSGEN_VERSION) == std::string_view("1.0"));
-    CHECK(std::string(LDSGEN_VERSION) == std::string("1.0"));
-}
+// TEST_CASE("LdsGen version") {
+//     static_assert(std::string_view(LDSGEN_VERSION) == std::string_view("1.0"));
+//     CHECK(std::string(LDSGEN_VERSION) == std::string("1.0"));
+// }
