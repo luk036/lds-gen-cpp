@@ -16,8 +16,8 @@ namespace ildsgen {
     /**
      * @brief Van der Corput sequence
      *
-     * @param k
-     * @param base
+     * @param[in] k
+     * @param[in] base
      * @return double
      */
     inline auto vdc_i(size_t k, size_t base, unsigned int scale) -> size_t {
@@ -45,7 +45,7 @@ namespace ildsgen {
         /**
          * @brief Construct a new Vdcorputorput object
          *
-         * @param base
+         * @param[in] base
          */
         CONSTEXPR14 explicit VdCorput(size_t base, unsigned int scale)
             : count{0}, base{base}, scale{scale} {}
@@ -63,7 +63,7 @@ namespace ildsgen {
         /**
          * @brief
          *
-         * @param seed
+         * @param[in] seed
          * @return auto
          */
         CONSTEXPR14 auto reseed(size_t seed) -> void { this->count = seed; }
@@ -81,7 +81,7 @@ namespace ildsgen {
         /**
          * @brief Construct a new Halton object
          *
-         * @param base
+         * @param[in] base
          */
         CONSTEXPR14 explicit Halton(const size_t base[], const unsigned int scale[])
             : vdc0(base[0], scale[0]), vdc1(base[1], scale[1]) {}
@@ -98,7 +98,7 @@ namespace ildsgen {
         /**
          * @brief
          *
-         * @param seed
+         * @param[in] seed
          */
         CONSTEXPR14 auto reseed(size_t seed) -> void {
             this->vdc0.reseed(seed);

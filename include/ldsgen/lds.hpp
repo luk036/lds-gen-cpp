@@ -23,8 +23,8 @@ namespace ldsgen {
      * The `vdc` function is calculating the Van der Corput sequence value for a
      * given index `k` and base `base`. It returns a `double` value.
      *
-     * @param k
-     * @param base
+     * @param[in] k
+     * @param[in] base
      * @return double
      */
     CONSTEXPR14 auto vdc(size_t k, const size_t base) -> double {
@@ -60,7 +60,7 @@ namespace ldsgen {
          * object with a given base. The base is used to generate the Van der Corput
          * sequence.
          *
-         * @param base
+         * @param[in] base
          */
         CONSTEXPR14 explicit VdCorput(size_t base) : count{0}, base{base} {}
 
@@ -88,7 +88,7 @@ namespace ldsgen {
          * generator to start generating the sequence from the beginning, or from a
          * specific point in the sequence, depending on the value of the seed.
          *
-         * @param seed
+         * @param[in] seed
          */
         CONSTEXPR14 auto reseed(size_t seed) -> void { this->count = seed; }
     };
@@ -118,8 +118,8 @@ namespace ldsgen {
          * `CONSTEXPR14` keyword indicates that the constructor is constexpr,
          * meaning it can be evaluated at compile-time if possible.
          *
-         * @param base0
-         * @param base1
+         * @param[in] base0
+         * @param[in] base1
          */
         CONSTEXPR14 Halton(size_t base0, size_t base1)
             : vdc0(std::move(base0)), vdc1(std::move(base1)) {}
@@ -152,7 +152,7 @@ namespace ldsgen {
          * generator to start generating the sequence from the beginning, or from a
          * specific point in the sequence, depending on the value of the seed.
          *
-         * @param seed
+         * @param[in] seed
          */
         CONSTEXPR14 auto reseed(size_t seed) -> void {
             this->vdc0.reseed(seed);
@@ -186,7 +186,7 @@ namespace ldsgen {
          * `explicit` keyword indicates that this constructor can only be used for
          * explicit construction and not for implicit conversions.
          *
-         * @param base
+         * @param[in] base
          */
         CONSTEXPR14 explicit Circle(size_t base) : vdc(base) {}
 
@@ -219,7 +219,7 @@ namespace ldsgen {
          * generator to start generating the sequence from the beginning, or from a
          * specific point in the sequence, depending on the value of the seed.
          *
-         * @param seed
+         * @param[in] seed
          */
         CONSTEXPR14 auto reseed(size_t seed) -> void { this->vdc.reseed(seed); }
     };
@@ -245,8 +245,8 @@ namespace ldsgen {
         /**
          * @brief Construct a new Sphere object
          *
-         * @param base0
-         * @param base1
+         * @param[in] base0
+         * @param[in] base1
          */
         CONSTEXPR14 Sphere(const size_t base0, const size_t base1) : vdcgen(base0), cirgen(base1) {}
 
@@ -281,7 +281,7 @@ namespace ldsgen {
          * generator to start generating the sequence from the beginning, or from a
          * specific point in the sequence, depending on the value of the seed.
          *
-         * @param seed
+         * @param[in] seed
          */
         CONSTEXPR14 auto reseed(size_t seed) -> void {
             this->cirgen.reseed(seed);
@@ -310,9 +310,9 @@ namespace ldsgen {
         /**
          * @brief Construct a new Sphere 3 Hopf object
          *
-         * @param base0
-         * @param base1
-         * @param base2
+         * @param[in] base0
+         * @param[in] base1
+         * @param[in] base2
          */
         Sphere3Hopf(const size_t base0, const size_t base1, const size_t base2)
             : vdc0(base0), vdc1(base1), vdc2(base2) {}
@@ -355,7 +355,7 @@ namespace ldsgen {
          * generator to start generating the sequence from the beginning, or from a
          * specific point in the sequence, depending on the value of the seed.
          *
-         * @param seed
+         * @param[in] seed
          */
         CONSTEXPR14 auto reseed(size_t seed) -> void {
             this->vdc0.reseed(seed);
