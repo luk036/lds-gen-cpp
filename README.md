@@ -13,6 +13,17 @@
 
 Low Discrepancy Sequence Generation in Modern C++
 
+# Used In
+
+- [physdes-cpp](https://luk036.github.io/physdes-cpp)
+- [bairstow-cpp](https://luk036.github.io/bairstow-cpp)
+- [sphere-n-cpp](https://github.com/luk036/sphere-n-cpp)
+
+## 👀 See also
+
+- [lds-gen](https://github.com/luk036/lds-gen)
+- [lds-rs](https://github.com/luk036/lds-rs)
+
 ## Features
 
 - [Modern CMake practices](https://pabloariasal.github.io/2018/02/19/its-time-to-do-cmake-right/)
