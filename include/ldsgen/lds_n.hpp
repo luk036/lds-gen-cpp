@@ -2,8 +2,9 @@
 
 #include <stddef.h>  // for size_t
 
-#include <cassert>  // for assert
-#include <vector>   // for vector
+// #include <algorithm>  // for std::transform
+// #include <iterator>
+#include <vector>  // for vector
 
 #include "lds.hpp"  // for VdCorput, Sphere
 
@@ -38,6 +39,8 @@ namespace ldsgen {
          * @param[in] base
          */
         explicit HaltonN(const vector<size_t> &base) {
+            // std::transform(base.begin(), base.end(), std::back_inserter(this->vdcs),
+            //                [](size_t b) { return VdCorput(b); });
             for (const auto &b : base) {
                 this->vdcs.emplace_back(VdCorput(b));
             }
@@ -61,6 +64,8 @@ namespace ldsgen {
          */
         auto pop() -> vector<double> {
             auto res = vector<double>{};
+            // std::transform(this->vdcs.begin(), this->vdcs.end(), std::back_inserter(res),
+            //                [](auto &vdc) { return vdc.pop(); });
             for (auto &vdc : this->vdcs) {
                 res.emplace_back(vdc.pop());
             }
