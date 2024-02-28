@@ -18,7 +18,8 @@ namespace ildsgen {
      *
      * @param[in] k
      * @param[in] base
-     * @return double
+     * @param[in] scale
+     * @return size_t
      */
     inline auto vdc_i(size_t k, size_t base, unsigned int scale) -> size_t {
         size_t vdc{0};
@@ -46,6 +47,7 @@ namespace ildsgen {
          * @brief Construct a new Vdcorputorput object
          *
          * @param[in] base
+         * @param[in] scale
          */
         CONSTEXPR14 explicit VdCorput(size_t base, unsigned int scale)
             : count{0}, base{base}, scale{scale} {}
@@ -53,7 +55,7 @@ namespace ildsgen {
         /**
          * @brief
          *
-         * @return double
+         * @return size_t
          */
         inline auto pop() -> size_t {
             this->count += 1;
@@ -82,6 +84,7 @@ namespace ildsgen {
          * @brief Construct a new Halton object
          *
          * @param[in] base
+         * @param[in] scale
          */
         CONSTEXPR14 explicit Halton(const size_t base[], const unsigned int scale[])
             : vdc0(base[0], scale[0]), vdc1(base[1], scale[1]) {}
@@ -89,7 +92,7 @@ namespace ildsgen {
         /**
          * @brief
          *
-         * @return array<double, 2>
+         * @return array<size_t, 2>
          */
         inline auto pop() -> array<size_t, 2> {  //
             return {this->vdc0.pop(), this->vdc1.pop()};
