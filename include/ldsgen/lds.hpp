@@ -23,8 +23,8 @@ namespace ldsgen {
      * The `vdc` function is calculating the Van der Corput sequence value for a
      * given index `k` and base `base`. It returns a `double` value.
      *
-     * @param[in] k
-     * @param[in] base
+     * @param[in] k index of the sequence
+     * @param[in] base base of the sequence
      * @return double
      */
     CONSTEXPR14 auto vdc(size_t k, const size_t base) -> double {
@@ -60,7 +60,7 @@ namespace ldsgen {
          * object with a given base. The base is used to generate the Van der Corput
          * sequence.
          *
-         * @param[in] base
+         * @param[in] base the base of the Van der Corput sequence
          */
         CONSTEXPR14 explicit VdCorput(size_t base) : count{0}, base{base} {}
 
@@ -88,7 +88,7 @@ namespace ldsgen {
          * generator to start generating the sequence from the beginning, or from a
          * specific point in the sequence, depending on the value of the seed.
          *
-         * @param[in] seed
+         * @param[in] seed the seed value to reset the sequence generator to
          */
         CONSTEXPR14 auto reseed(size_t seed) -> void { this->count = seed; }
     };
