@@ -49,7 +49,7 @@ enable_testing()
 # testing frameworks add the tests target instead: add_test(NAME ${PROJECT_NAME} COMMAND
 # ${PROJECT_NAME})
 
-include(${doctest_SOURCE_DIR}/scripts/cmake/doctest.cmake)
+include(../cmake/doctest.cmake)
 doctest_discover_tests(${PROJECT_NAME})
 
 # ---- code coverage ----
