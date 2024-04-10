@@ -1,7 +1,6 @@
 add_rules("mode.debug", "mode.release", "mode.coverage")
 add_requires("doctest", {alias = "doctest"})
 add_requires("fmt", {alias = "fmt"})
-add_requires("benchmark", {alias = "benchmark"})
 
 if is_mode("coverage") then
     add_cxflags("-ftest-coverage", "-fprofile-arcs", {force = true})

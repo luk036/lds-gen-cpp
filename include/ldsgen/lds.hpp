@@ -76,7 +76,7 @@ namespace ldsgen {
          * @return double
          */
         CONSTEXPR14 auto pop() -> double {
-            this->count += 1;
+            ++this->count;
             return vdc(this->count, this->base);
         }
 
