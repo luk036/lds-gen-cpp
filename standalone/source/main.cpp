@@ -46,8 +46,8 @@ auto main(int argc, char** argv) -> int {
         return 1;
     }
 
-    ldsgen::LdsGen ldsgen(name);
-    std::cout << ldsgen.greet(langIt->second) << std::endl;
+    // ldsgen::LdsGen ldsgen(name);
+    // std::cout << ldsgen.greet(langIt->second) << std::endl;
 
     return 0;
 }
