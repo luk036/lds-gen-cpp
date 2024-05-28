@@ -121,8 +121,7 @@ namespace ldsgen {
          * @param[in] base0
          * @param[in] base1
          */
-        CONSTEXPR14 Halton(size_t base0, size_t base1)
-            : vdc0(base0), vdc1(base1) {}
+        CONSTEXPR14 Halton(size_t base0, size_t base1) : vdc0(base0), vdc1(base1) {}
 
         /**
          * @brief pop
