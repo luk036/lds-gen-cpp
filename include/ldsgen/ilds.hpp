@@ -23,7 +23,7 @@ namespace ildsgen {
      */
     inline auto vdc_i(size_t k, size_t base, unsigned int scale) -> size_t {
         size_t vdc{0};
-        auto factor = size_t(std::pow(base, std::move(scale)));
+        auto factor = size_t(std::pow(base, scale));
         while (k != 0U) {
             const auto remainder = k % base;
             factor /= base;

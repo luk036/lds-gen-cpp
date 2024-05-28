@@ -122,7 +122,7 @@ namespace ldsgen {
          * @param[in] base1
          */
         CONSTEXPR14 Halton(size_t base0, size_t base1)
-            : vdc0(std::move(base0)), vdc1(std::move(base1)) {}
+            : vdc0(base0), vdc1(base1) {}
 
         /**
          * @brief pop
@@ -208,7 +208,7 @@ namespace ldsgen {
          */
         inline auto pop() -> std::array<double, 2> {
             auto theta = this->vdc.pop() * TWO_PI;  // map to [0, 2*pi];
-            return {std::sin(theta), std::cos(std::move(theta))};
+            return {std::sin(theta), std::cos(theta)};
         }
 
         /**
@@ -270,7 +270,7 @@ namespace ldsgen {
             auto cosphi = 2.0 * this->vdcgen.pop() - 1.0;  // map to [-1, 1];
             auto sinphi = std::sqrt(1.0 - cosphi * cosphi);
             auto arr = this->cirgen.pop();
-            return {sinphi * arr[0], std::move(sinphi) * arr[1], std::move(cosphi)};
+            return {sinphi * arr[0], sinphi * arr[1], cosphi};
         }
 
         /**
@@ -336,14 +336,14 @@ namespace ldsgen {
         inline auto pop() -> std::array<double, 4> {
             auto phi = this->vdc0.pop() * TWO_PI;  // map to [0, 2*pi];
             auto psy = this->vdc1.pop() * TWO_PI;  // map to [0, 2*pi];
-            auto vd = this->vdc2.pop();
-            auto cos_eta = std::sqrt(vd);
-            auto sin_eta = std::sqrt(1.0 - std::move(vd));
+            auto vdc = this->vdc2.pop();
+            auto cos_eta = std::sqrt(vdc);
+            auto sin_eta = std::sqrt(1.0 - vdc);
             return {
                 cos_eta * std::cos(psy),
-                std::move(cos_eta) * std::sin(psy),
+                cos_eta * std::sin(psy),
                 sin_eta * std::cos(phi + psy),
-                std::move(sin_eta) * std::sin(std::move(phi) + std::move(psy)),
+                sin_eta * std::sin(phi + psy),
             };
         }
 
