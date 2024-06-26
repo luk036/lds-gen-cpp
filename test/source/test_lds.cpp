@@ -5,7 +5,7 @@
 TEST_CASE("Circle") {
     auto cgen = ldsgen::Circle(2);
     const auto arr = cgen.pop();
-    CHECK_EQ(arr[0], doctest::Approx(0.0));
+    CHECK_EQ(arr[1], doctest::Approx(0.0));
 }
 
 TEST_CASE("Halton") {
@@ -17,7 +17,7 @@ TEST_CASE("Halton") {
 TEST_CASE("Sphere") {
     auto sgen = ldsgen::Sphere(2, 3);
     const auto arr = sgen.pop();
-    CHECK_EQ(arr[0], doctest::Approx(0.8660254038));
+    CHECK_EQ(arr[1], doctest::Approx(0.8660254038));
 }
 
 TEST_CASE("Sphere3Hopf") {

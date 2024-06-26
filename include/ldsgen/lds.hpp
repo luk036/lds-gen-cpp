@@ -76,7 +76,7 @@ namespace ldsgen {
          * @return double
          */
         CONSTEXPR14 auto pop() -> double {
-            ++this->count;
+            ++this->count;  // ignore 0
             return vdc(this->count, this->base);
         }
 
@@ -207,7 +207,7 @@ namespace ldsgen {
          */
         inline auto pop() -> std::array<double, 2> {
             auto theta = this->vdc.pop() * TWO_PI;  // map to [0, 2*pi];
-            return {std::sin(theta), std::cos(theta)};
+            return {std::cos(theta), std::sin(theta)};
         }
 
         /**
