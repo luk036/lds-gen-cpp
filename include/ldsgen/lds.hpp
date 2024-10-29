@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cmath>
+#include <cstddef>
 
 #if __cpp_constexpr >= 201304
 #    define CONSTEXPR14 constexpr
@@ -30,8 +31,9 @@ namespace ldsgen {
     CONSTEXPR14 auto vdc(size_t k, const size_t base) -> double {
         auto vdc = 0.0;
         auto denom = 1.0;
-        for (; k != 0; k /= base) {
+        while (k != 0) {
             const auto remainder = k % base;
+            k /= base;
             denom *= double(base);
             vdc += double(remainder) / denom;
         }
@@ -51,6 +53,7 @@ namespace ldsgen {
     class VdCorput {
         size_t count;
         size_t base;
+        std::array<double, 64> rev_lst;
 
       public:
         /**
@@ -62,7 +65,13 @@ namespace ldsgen {
          *
          * @param[in] base the base of the Van der Corput sequence
          */
-        CONSTEXPR14 explicit VdCorput(size_t base) : count{0}, base{base} {}
+        CONSTEXPR14 explicit VdCorput(size_t base) : count{0}, base{base}, rev_lst{} {
+            double reverse = 1.0;
+            for (size_t i = 0; i < 64; ++i) {
+                reverse /= double(base);
+                this->rev_lst[i] = reverse;
+            }
+        }
 
         /**
          * @brief pop
@@ -77,7 +86,16 @@ namespace ldsgen {
          */
         CONSTEXPR14 auto pop() -> double {
             ++this->count;  // ignore 0
-            return vdc(this->count, this->base);
+            size_t k = this->count;
+            size_t i = 0;
+            double res = 0.0;
+            while (k != 0) {
+                const auto remainder = k % this->base;
+                k /= this->base;
+                res += this->rev_lst[i] * remainder;
+                ++i;
+            }
+            return res;
         }
 
         /**
@@ -313,7 +331,7 @@ namespace ldsgen {
          * @param[in] base1
          * @param[in] base2
          */
-        Sphere3Hopf(const size_t base0, const size_t base1, const size_t base2)
+        CONSTEXPR14 Sphere3Hopf(const size_t base0, const size_t base1, const size_t base2)
             : vdc0(base0), vdc1(base1), vdc2(base2) {}
 
         /**
