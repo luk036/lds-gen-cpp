@@ -92,7 +92,7 @@ namespace ldsgen {
             while (k != 0) {
                 const auto remainder = k % this->base;
                 k /= this->base;
-                res += this->rev_lst[i] * remainder;
+                res += this->rev_lst[i] * double(remainder);
                 ++i;
             }
             return res;
