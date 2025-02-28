@@ -1,7 +1,7 @@
 #include <doctest/doctest.h>  // for ResultBuilder, TestCase, CHECK
 
-#include <ldsgen/div_mod.hpp>  // for div_mod_3
 #include <cstdint>
+#include <ldsgen/div_mod.hpp>  // for div_mod_3
 #include <tuple>
 
 // Unit tests using doctest
