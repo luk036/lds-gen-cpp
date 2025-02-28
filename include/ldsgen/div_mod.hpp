@@ -10,7 +10,7 @@ template <typename T>
 constexpr std::tuple<T, T> div_mod_3_iter(T input) {
     T q = input >> 2;      // Equivalent to extracting upper bits
     T r = input & 0x03;    // Equivalent to extracting lower 2 bits
-    return {q, q + r};           // Return the quotient and sum of q and r
+    return std::make_tuple(q, T(q + r));           // Return the quotient and sum of q and r
 }
 
 // Function for u8 division by 3
