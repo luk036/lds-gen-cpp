@@ -21,7 +21,7 @@ target("LdsGen")
     add_packages("fmt")
 
 target("test_ldsgen")
-    set_languages("c++14")
+    set_languages("c++17")
     set_kind("binary")
     add_deps("LdsGen")
     add_files("test/source/*.cpp")
