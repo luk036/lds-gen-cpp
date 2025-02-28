@@ -26,7 +26,7 @@ constexpr std::tuple<uint8_t, uint8_t> div_mod_3_u8(uint8_t n) {
 
     // Final check and output assignment
     if (rem4 == 0x03) {         // Equivalent to rem4 == 2'b11
-        return {quotient_sum + 1, 0x00}; // Equivalent to quotient_sum + 1 and remainder 2'b00
+        return {quotient_sum + 1, uint8_t(0x00)}; // Equivalent to quotient_sum + 1 and remainder 2'b00
     } else {
         return {quotient_sum, rem4}; // Equivalent to quotient_sum and rem4[1:0]
     }
@@ -49,7 +49,7 @@ constexpr std::tuple<uint16_t, uint16_t> div_mod_3_u16(uint16_t n) {
 
     // Final check and output assignment
     if (rem8 == 0x03) {         // Equivalent to rem8 == 2'b11
-        return {quotient_sum + 1, 0x00}; // Equivalent to quotient_sum + 1 and remainder 2'b00
+        return {quotient_sum + 1, uint16_t(0x00)}; // Equivalent to quotient_sum + 1 and remainder 2'b00
     } else {
         return {quotient_sum, rem8}; // Equivalent to quotient_sum and rem8[1:0]
     }
