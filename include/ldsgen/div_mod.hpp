@@ -55,3 +55,50 @@ constexpr std::tuple<uint16_t, uint16_t> div_mod_3_u16(uint16_t n) {
         return {quotient_sum, rem8};  // Equivalent to quotient_sum and rem8[1:0]
     }
 }
+
+// Inline function to simplify the iterative logic
+template <typename T> constexpr std::tuple<T, T> div_mod_7_iter(T input) {
+    T q = input >> 3;              // Equivalent to extracting upper bits
+    T r = q + (input & 0x07);      // Equivalent to extracting lower 3 bits
+    return std::make_tuple(q, r);  // Return the quotient and sum of q and r
+}
+
+// Function for u8 division by 7
+constexpr std::tuple<uint8_t, uint8_t> div_mod_7_u8(uint8_t n) {
+    // Perform the iterations using the inline function
+    auto [q1, rem1] = div_mod_7_iter(n);     // First iteration
+    auto [q2, rem2] = div_mod_7_iter(rem1);  // Second iteration
+    auto [q3, rem3] = div_mod_7_iter(rem2);  // Third iteration
+
+    // Calculate the final quotient sum
+    uint8_t quotient_sum = q1 + q2 + q3;
+
+    // Final check and output assignment
+    if (rem3 == 0x07) {  // Equivalent to rem4 == 2'b111
+        return {++quotient_sum,
+                uint8_t(0x00)};  // Equivalent to quotient_sum + 1 and remainder 2'b000
+    } else {
+        return {quotient_sum, rem3};  // Equivalent to quotient_sum and rem3[2:0]
+    }
+}
+
+// Function for u16 division by 7
+constexpr std::tuple<uint16_t, uint16_t> div_mod_7_u16(uint16_t n) {
+    // Perform the iterations using the inline function
+    auto [q1, rem1] = div_mod_7_iter(n);     // First iteration
+    auto [q2, rem2] = div_mod_7_iter(rem1);  // Second iteration
+    auto [q3, rem3] = div_mod_7_iter(rem2);  // Third iteration
+    auto [q4, rem4] = div_mod_7_iter(rem3);  // Fourth iteration
+    auto [q5, rem5] = div_mod_7_iter(rem4);  // 5th iteration
+
+    // Calculate the final quotient sum
+    uint16_t quotient_sum = q1 + q2 + q3 + q4 + q5;
+
+    // Final check and output assignment
+    if (rem5 == 0x07) {  // Equivalent to rem5 == 2'b111
+        return {++quotient_sum,
+                uint16_t(0x00)};  // Equivalent to quotient_sum + 1 and remainder 2'b000
+    } else {
+        return {quotient_sum, rem5};  // Equivalent to quotient_sum and rem5[2:0]
+    }
+}
