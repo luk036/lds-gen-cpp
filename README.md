@@ -37,7 +37,7 @@ Each generator class has methods for producing the next value in the sequence (p
 # Used In
 
 - [physdes-cpp](https://luk036.github.io/physdes-cpp)
-- [bairstow-cpp](https://luk036.github.io/bairstow-cpp)
+- [ginger-cpp](https://luk036.github.io/ginger-cpp)
 - [sphere-n-cpp](https://github.com/luk036/sphere-n-cpp)
 
 ## 👀 See also
