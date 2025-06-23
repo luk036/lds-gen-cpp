@@ -8,6 +8,12 @@ TEST_CASE("Circle") {
     CHECK_EQ(arr[1], doctest::Approx(0.0));
 }
 
+TEST_CASE("Disk") {
+    auto dgen = ldsgen::Disk(2, 3);
+    const auto arr = dgen.pop();
+    CHECK_EQ(arr[0], doctest::Approx(-0.57735));
+}
+
 TEST_CASE("Halton") {
     auto hgen = ldsgen::Halton(2, 3);
     const auto arr = hgen.pop();
