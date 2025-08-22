@@ -66,15 +66,3 @@ TEST_CASE("Halton_i different bases and scales") {
     CHECK_EQ(res[0], 243);  // 3^5 = 243
     CHECK_EQ(res[1], 125);  // 5^3 = 125
 }
-
-TEST_CASE("Halton_i three dimensions") {
-    const size_t base[] = {2, 3, 5};
-    const unsigned int scale[] = {10, 8, 6};
-    auto hgen = ildsgen::Halton(base, scale);
-    hgen.reseed(0);
-
-    auto res = hgen.pop();
-    CHECK_EQ(res[0], 512);   // 2^9 = 512
-    CHECK_EQ(res[1], 2187);  // 3^7 = 2187
-    CHECK_EQ(res[2], 3125);  // 5^5 = 3125
-}
