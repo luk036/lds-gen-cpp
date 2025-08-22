@@ -288,7 +288,7 @@ namespace ldsgen {
          * @return std::array<double, 2>
          */
         inline auto pop() -> std::array<double, 2> {  //
-            auto theta = this->vdc0.pop() * TWO_PI;  // map to [0, 2*pi];
+            auto theta = this->vdc0.pop() * TWO_PI;   // map to [0, 2*pi];
             auto radius = std::sqrt(this->vdc1.pop());
             return {radius * std::cos(theta), radius * std::sin(theta)};
         }
