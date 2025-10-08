@@ -28,6 +28,7 @@ target("test_ldsgen")
     add_deps("LdsGen")
     add_files("test/source/*.cpp")
     add_packages("doctest", "fmt")
+    add_tests("default")
 
 -- If you want to known more usage about xmake, please see https://xmake.io
 --

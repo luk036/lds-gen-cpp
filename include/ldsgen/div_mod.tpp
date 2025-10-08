@@ -7,13 +7,13 @@
 
 // Optimized div_mod_3_iter with forced inline and reduced operations
 template <typename T>
-inline constexpr std::tuple<T, T> div_mod_3_iter(T input) noexcept {
+inline constexpr std::tuple<T, T> div_mod_3_iter(const T input) noexcept {
     const T q = input >> 2;
     return {q, q + (input & 0x03)};
 }
 
 // Optimized u8 division by 3 with loop unrolling and constexpr optimizations
-constexpr std::tuple<uint8_t, uint8_t> div_mod_3_u8(uint8_t n) noexcept {
+constexpr std::tuple<uint8_t, uint8_t> div_mod_3_u8(const uint8_t n) noexcept {
     auto [q1, rem1] = div_mod_3_iter(n);
     auto [q2, rem2] = div_mod_3_iter(rem1);
     auto [q3, rem3] = div_mod_3_iter(rem2);
@@ -26,7 +26,7 @@ constexpr std::tuple<uint8_t, uint8_t> div_mod_3_u8(uint8_t n) noexcept {
 }
 
 // Optimized u16 division by 3 with loop unrolling
-constexpr std::tuple<uint16_t, uint16_t> div_mod_3_u16(uint16_t n) noexcept {
+constexpr std::tuple<uint16_t, uint16_t> div_mod_3_u16(const uint16_t n) noexcept {
     auto [q1, rem1] = div_mod_3_iter(n);
     auto [q2, rem2] = div_mod_3_iter(rem1);
     auto [q3, rem3] = div_mod_3_iter(rem2);
@@ -44,13 +44,13 @@ constexpr std::tuple<uint16_t, uint16_t> div_mod_3_u16(uint16_t n) noexcept {
 
 // Optimized div_mod_7_iter with forced inline
 template <typename T>
-inline constexpr std::tuple<T, T> div_mod_7_iter(T input) noexcept {
+inline constexpr std::tuple<T, T> div_mod_7_iter(const T input) noexcept {
     const T q = input >> 3;
     return {q, q + (input & 0x07)};
 }
 
 // Optimized u8 division by 7
-constexpr std::tuple<uint8_t, uint8_t> div_mod_7_u8(uint8_t n) noexcept {
+constexpr std::tuple<uint8_t, uint8_t> div_mod_7_u8(const uint8_t n) noexcept {
     auto [q1, rem1] = div_mod_7_iter(n);
     auto [q2, rem2] = div_mod_7_iter(rem1);
     auto [q3, rem3] = div_mod_7_iter(rem2);
@@ -62,7 +62,7 @@ constexpr std::tuple<uint8_t, uint8_t> div_mod_7_u8(uint8_t n) noexcept {
 }
 
 // Optimized u16 division by 7
-constexpr std::tuple<uint16_t, uint16_t> div_mod_7_u16(uint16_t n) noexcept {
+constexpr std::tuple<uint16_t, uint16_t> div_mod_7_u16(const uint16_t n) noexcept {
     auto [q1, rem1] = div_mod_7_iter(n);
     auto [q2, rem2] = div_mod_7_iter(rem1);
     auto [q3, rem3] = div_mod_7_iter(rem2);

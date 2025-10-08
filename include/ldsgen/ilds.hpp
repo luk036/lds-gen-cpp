@@ -21,7 +21,7 @@ namespace ildsgen {
      * @param[in] scale
      * @return size_t
      */
-    inline auto vdc_i(size_t k, size_t base, unsigned int scale) -> size_t {
+    inline auto vdc_i(size_t k, const size_t base, const unsigned int scale) -> size_t {
         size_t vdc{0};
         auto factor = size_t(std::pow(base, scale));
         while (k != 0U) {
@@ -49,7 +49,7 @@ namespace ildsgen {
          * @param[in] base
          * @param[in] scale
          */
-        CONSTEXPR14 explicit VdCorput(size_t base, unsigned int scale)
+        CONSTEXPR14 explicit VdCorput(const size_t base, const unsigned int scale)
             : count{0}, base{base}, scale{scale} {}
 
         /**
@@ -68,7 +68,7 @@ namespace ildsgen {
          * @param[in] seed
          * @return auto
          */
-        CONSTEXPR14 auto reseed(size_t seed) -> void { this->count = seed; }
+        CONSTEXPR14 auto reseed(const size_t seed) -> void { this->count = seed; }
     };
 
     /**
@@ -103,7 +103,7 @@ namespace ildsgen {
          *
          * @param[in] seed
          */
-        CONSTEXPR14 auto reseed(size_t seed) -> void {
+        CONSTEXPR14 auto reseed(const size_t seed) -> void {
             this->vdc0.reseed(seed);
             this->vdc1.reseed(seed);
         }

@@ -65,7 +65,7 @@ namespace ldsgen {
          *
          * @param[in] base the base of the Van der Corput sequence
          */
-        CONSTEXPR14 explicit VdCorput(size_t base) : count{0}, base{base}, rev_lst{} {
+        CONSTEXPR14 explicit VdCorput(const size_t base) : count{0}, base{base}, rev_lst{} {
             double reverse = 1.0;
             for (size_t i = 0; i < 64; ++i) {
                 reverse /= double(base);
@@ -108,7 +108,7 @@ namespace ldsgen {
          *
          * @param[in] seed the seed value to reset the sequence generator to
          */
-        CONSTEXPR14 auto reseed(size_t seed) -> void { this->count = seed; }
+        CONSTEXPR14 auto reseed(const size_t seed) -> void { this->count = seed; }
     };
 
     /**
@@ -139,7 +139,7 @@ namespace ldsgen {
          * @param[in] base0
          * @param[in] base1
          */
-        CONSTEXPR14 Halton(size_t base0, size_t base1) : vdc0(base0), vdc1(base1) {}
+        CONSTEXPR14 Halton(const size_t base0, const size_t base1) : vdc0(base0), vdc1(base1) {}
 
         /**
          * @brief pop
@@ -171,7 +171,7 @@ namespace ldsgen {
          *
          * @param[in] seed
          */
-        CONSTEXPR14 auto reseed(size_t seed) -> void {
+        CONSTEXPR14 auto reseed(const size_t seed) -> void {
             this->vdc0.reseed(seed);
             this->vdc1.reseed(seed);
         }
@@ -205,7 +205,7 @@ namespace ldsgen {
          *
          * @param[in] base
          */
-        CONSTEXPR14 explicit Circle(size_t base) : vdc(base) {}
+        CONSTEXPR14 explicit Circle(const size_t base) : vdc(base) {}
 
         /**
          * @brief pop
@@ -238,7 +238,7 @@ namespace ldsgen {
          *
          * @param[in] seed
          */
-        CONSTEXPR14 auto reseed(size_t seed) -> void { this->vdc.reseed(seed); }
+        CONSTEXPR14 auto reseed(const size_t seed) -> void { this->vdc.reseed(seed); }
     };
 
     /**
@@ -269,7 +269,7 @@ namespace ldsgen {
          * @param[in] base0
          * @param[in] base1
          */
-        CONSTEXPR14 Disk(size_t base0, size_t base1) : vdc0(base0), vdc1(base1) {}
+        CONSTEXPR14 Disk(const size_t base0, const size_t base1) : vdc0(base0), vdc1(base1) {}
 
         /**
          * @brief pop
@@ -303,7 +303,7 @@ namespace ldsgen {
          *
          * @param[in] seed
          */
-        CONSTEXPR14 auto reseed(size_t seed) -> void {
+        CONSTEXPR14 auto reseed(const size_t seed) -> void {
             this->vdc0.reseed(seed);
             this->vdc1.reseed(seed);
         }
@@ -368,7 +368,7 @@ namespace ldsgen {
          *
          * @param[in] seed
          */
-        CONSTEXPR14 auto reseed(size_t seed) -> void {
+        CONSTEXPR14 auto reseed(const size_t seed) -> void {
             this->cirgen.reseed(seed);
             this->vdcgen.reseed(seed);
         }
