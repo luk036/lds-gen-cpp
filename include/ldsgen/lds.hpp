@@ -24,6 +24,14 @@ namespace ldsgen {
      * The `vdc` function is calculating the Van der Corput sequence value for a
      * given index `k` and base `base`. It returns a `double` value.
      *
+     * ```svgbob
+     *     Base 2 Example:
+     *     k=1 -> 0.5  (0.1 in base 2)
+     *     k=2 -> 0.25 (0.01 in base 2)
+     *     k=3 -> 0.75 (0.11 in base 2)
+     *     k=4 -> 0.125(0.001 in base 2)
+     * ```
+     *
      * @param[in] k index of the sequence
      * @param[in] base base of the sequence
      * @return double
@@ -49,6 +57,15 @@ namespace ldsgen {
      * and calculating the fractional part of the number in that base. The
      * `VdCorput` class keeps track of the current count and base, and provides a
      * `pop()` method that returns the next value in the sequence.
+     *
+     * ```svgbob
+     *     VdCorput(2) sequence:
+     *     pop() -> 0.5   (0.1 base 2)
+     *     pop() -> 0.25  (0.01 base 2)
+     *     pop() -> 0.75  (0.11 base 2)
+     *     pop() -> 0.125 (0.001 base 2)
+     *     ...
+     * ```
      */
     class VdCorput {
         size_t count;
@@ -121,6 +138,14 @@ namespace ldsgen {
      * fractional parts of the numbers in those bases. The `Halton` class keeps
      * track of the current count and bases, and provides a `pop()` method that
      * returns the next point in the sequence as a `std::array<double, 2>`.
+     *
+     * ```svgbob
+     *     Halton(2,3) sequence:
+     *     pop() -> (0.5, 0.333)  (VdC(2) -> 0.5, VdC(3) -> 0.333)
+     *     pop() -> (0.25, 0.666) (VdC(2) -> 0.25, VdC(3) -> 0.666)
+     *     pop() -> (0.75, 0.111) (VdC(2) -> 0.75, VdC(3) -> 0.111)
+     *     ...
+     * ```
      */
     class Halton {
         VdCorput vdc0;
@@ -189,6 +214,17 @@ namespace ldsgen {
      * `reseed()` method is used to reset the state of the sequence generator to a
      * specific seed value.
      *
+     * ```svgbob
+     *     Unit Circle:
+     *         (0,1)
+     *           *
+     *    (-1,0) *   * (1,0)
+     *           *
+     *        (0,-1)
+     *
+     *     Points distributed more evenly
+     *     than random sampling
+     * ```
      */
     class Circle {
         VdCorput vdc;
@@ -251,6 +287,19 @@ namespace ldsgen {
      * fractional parts of the numbers in those bases. The `Disk` class keeps
      * track of the current count and bases, and provides a `pop()` method that
      * returns the next point in the sequence as a `std::array<double, 2>`.
+     *
+     * ```svgbob
+     *     Unit Disk:
+     *         *****
+     *      ***     ***
+     *    **         **
+     *   *             *
+     *   *             *  More evenly
+     *   *             *  distributed
+     *    **         **   than random
+     *      ***     ***
+     *         *****
+     * ```
      */
     class Disk {
         VdCorput vdc0;
@@ -321,6 +370,19 @@ namespace ldsgen {
      * element represents the z-coordinate of the point. The
      * `reseed()` method is used to reset the state of the sequence generator to a
      * specific seed value.
+     *
+     * ```svgbob
+     *     Unit Sphere:
+     *          *****
+     *       **       **
+     *     **           **
+     *    *               *
+     *    *      O        *  Points distributed
+     *    *               *  evenly on surface
+     *     **           **
+     *       **       **
+     *          *****
+     * ```
      */
     class Sphere {
         VdCorput vdcgen;
@@ -385,6 +447,22 @@ namespace ldsgen {
      * and z coordinates of the point, and the fourth element represents the w
      * coordinate. The `reseed()` method is used to reset the state of the sequence
      * generator to a specific seed value.
+     *
+     * ```svgbob
+     *     3-Sphere (S3) visualization:
+     *     A 4D hypersphere where points (x,y,z,w)
+     *     satisfy x²+y²+z²+w² = 1
+     *
+     *         4D hypersurface
+     *            _____
+     *         .-'     '-.
+     *       ,'           ',
+     *      /               \
+     *     |        O        |  (4D analog of sphere)
+     *      \               /
+     *       '.           .'
+     *         '-.....-'
+     * ```
      */
     class Sphere3Hopf {
         VdCorput vdc0;

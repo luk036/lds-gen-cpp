@@ -21,6 +21,14 @@ namespace ldsgen {
      * fractional parts of the numbers in those bases. The `HaltonN` class keeps
      * track of the current count and bases, and provides a `pop()` method that
      * returns the next point in the sequence as a `std::vector<double>`.
+     *
+     * ```svgbob
+     *     HaltonN([2,3,5]) sequence (3D):
+     *     pop() -> [0.5, 0.333, 0.2]    (VdC bases [2,3,5])
+     *     pop() -> [0.25, 0.666, 0.4]   (next in each sequence)
+     *     pop() -> [0.75, 0.111, 0.6]   (etc...)
+     *     ...
+     * ```
      */
     class HaltonN {
       private:
@@ -38,10 +46,10 @@ namespace ldsgen {
          *
          * @param[in] base
          */
-        explicit HaltonN(const vector<size_t> &base) {
+        explicit HaltonN(const vector<size_t>& base) {
             // std::transform(base.begin(), base.end(), std::back_inserter(this->vdcs),
             //                [](size_t b) { return VdCorput(b); });
-            for (const auto &b : base) {
+            for (const auto& b : base) {
                 this->vdcs.emplace_back(VdCorput(b));
             }
         }
@@ -66,7 +74,7 @@ namespace ldsgen {
             auto res = vector<double>{};
             // std::transform(this->vdcs.begin(), this->vdcs.end(), std::back_inserter(res),
             //                [](auto &vdc) { return vdc.pop(); });
-            for (auto &vdc : this->vdcs) {
+            for (auto& vdc : this->vdcs) {
                 res.emplace_back(vdc.pop());
             }
             return res;
@@ -83,7 +91,7 @@ namespace ldsgen {
          * @param[in] seed
          */
         auto reseed(size_t seed) -> void {
-            for (auto &vdc : this->vdcs) {
+            for (auto& vdc : this->vdcs) {
                 vdc.reseed(seed);
             }
         }

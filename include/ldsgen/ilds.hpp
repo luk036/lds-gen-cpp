@@ -16,6 +16,13 @@ namespace ildsgen {
     /**
      * @brief Van der Corput sequence
      *
+     * ```svgbob
+     *     Integer version with scale:
+     *     vdc_i(1, 2, 3) -> 4 (binary: 100, from reversed 001)
+     *     vdc_i(2, 2, 3) -> 2 (binary: 010, from reversed 010)
+     *     vdc_i(3, 2, 3) -> 6 (binary: 110, from reversed 011)
+     * ```
+     *
      * @param[in] k
      * @param[in] base
      * @param[in] scale
@@ -36,6 +43,13 @@ namespace ildsgen {
     /**
      * @brief Van der Corput sequence generator
      *
+     * ```svgbob
+     *     Integer VdCorput(2, 3):
+     *     pop() -> 4  (binary: 100, from reversed 001)
+     *     pop() -> 2  (binary: 010, from reversed 010)
+     *     pop() -> 6  (binary: 110, from reversed 011)
+     *     ...
+     * ```
      */
     class VdCorput {
         size_t count;
@@ -74,6 +88,12 @@ namespace ildsgen {
     /**
      * @brief Halton sequence generator
      *
+     * ```svgbob
+     *     Integer Halton([2,3], [2,2]):
+     *     pop() -> [1, 4]   (VdC_i(2,2,2), VdC_i(2,3,2))
+     *     pop() -> [2, 5]   (next in each sequence)
+     *     ...
+     * ```
      */
     class Halton {
         VdCorput vdc0;
