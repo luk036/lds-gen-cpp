@@ -21,7 +21,6 @@ namespace ildsgen {
      */
     class VdCorput {
         size_t _base;
-        unsigned int _scale;
         size_t _count;
         size_t _factor;
 
@@ -33,7 +32,7 @@ namespace ildsgen {
          * @param[in] scale The number of digits (default: 10)
          */
         explicit VdCorput(size_t base = 2, unsigned int scale = 10)
-            : _base{base}, _scale{scale}, _count{0} {
+            : _base{base}, _count{0} {
             // Python: self._factor = base**scale
             // We use static_cast because std::pow returns double
             this->_factor = static_cast<size_t>(std::pow(base, scale));
