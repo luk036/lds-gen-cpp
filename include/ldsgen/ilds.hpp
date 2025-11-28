@@ -28,7 +28,7 @@ namespace ildsgen {
      * @param[in] scale
      * @return size_t
      */
-    inline auto vdc_i(size_t k, const size_t base, const unsigned int scale) -> size_t {
+    CONSTEXPR14 auto vdc_i(size_t k, const size_t base, const unsigned int scale) -> size_t {
         size_t vdc{0};
         auto factor = size_t(std::pow(base, scale));
         while (k != 0U) {

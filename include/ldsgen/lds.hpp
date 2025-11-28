@@ -259,7 +259,7 @@ namespace ldsgen {
          *
          * @return std::array<double, 2>
          */
-        inline auto pop() -> std::array<double, 2> {
+        CONSTEXPR14 auto pop() -> std::array<double, 2> {
             auto theta = this->vdc.pop() * TWO_PI;  // map to [0, 2*pi];
             return {std::cos(theta), std::sin(theta)};
         }
@@ -336,7 +336,7 @@ namespace ldsgen {
          *
          * @return std::array<double, 2>
          */
-        inline auto pop() -> std::array<double, 2> {  //
+        CONSTEXPR14 auto pop() -> std::array<double, 2> {  //
             auto theta = this->vdc0.pop() * TWO_PI;   // map to [0, 2*pi];
             auto radius = std::sqrt(this->vdc1.pop());
             return {radius * std::cos(theta), radius * std::sin(theta)};
@@ -413,7 +413,7 @@ namespace ldsgen {
          *
          * @return std::array<double, 3>
          */
-        inline auto pop() -> std::array<double, 3> {
+        CONSTEXPR14 auto pop() -> std::array<double, 3> {
             auto cosphi = 2.0 * this->vdcgen.pop() - 1.0;  // map to [-1, 1];
             auto sinphi = std::sqrt(1.0 - cosphi * cosphi);
             auto arr = this->cirgen.pop();
@@ -496,7 +496,7 @@ namespace ldsgen {
          *
          * @return std::array<double, 4>
          */
-        inline auto pop() -> std::array<double, 4> {
+        CONSTEXPR14 auto pop() -> std::array<double, 4> {
             auto phi = this->vdc0.pop() * TWO_PI;  // map to [0, 2*pi];
             auto psy = this->vdc1.pop() * TWO_PI;  // map to [0, 2*pi];
             auto vdc = this->vdc2.pop();
