@@ -14,75 +14,67 @@ namespace ildsgen {
     using std::array;
 
     /**
-     * @brief Van der Corput sequence
-     *
-     * ```svgbob
-     *     Integer version with scale:
-     *     vdc_i(1, 2, 3) -> 4 (binary: 100, from reversed 001)
-     *     vdc_i(2, 2, 3) -> 2 (binary: 010, from reversed 010)
-     *     vdc_i(3, 2, 3) -> 6 (binary: 110, from reversed 011)
-     * ```
-     *
-     * @param[in] k
-     * @param[in] base
-     * @param[in] scale
-     * @return size_t
-     */
-    CONSTEXPR14 auto vdc_i(size_t k, const size_t base, const unsigned int scale) -> size_t {
-        size_t vdc{0};
-        auto factor = size_t(std::pow(base, scale));
-        while (k != 0U) {
-            const auto remainder = k % base;
-            factor /= base;
-            k /= base;
-            vdc += remainder * factor;
-        }
-        return vdc;
-    }
-
-    /**
      * @brief Van der Corput sequence generator
      *
-     * ```svgbob
-     *     Integer VdCorput(2, 3):
-     *     pop() -> 4  (binary: 100, from reversed 001)
-     *     pop() -> 2  (binary: 010, from reversed 010)
-     *     pop() -> 6  (binary: 110, from reversed 011)
-     *     ...
-     * ```
+     * Implementation based on pre-calculating the scale factor.
+     *
      */
     class VdCorput {
-        size_t count;
-        size_t base;
-        unsigned int scale;
+        size_t _base;
+        unsigned int _scale;
+        size_t _count;
+        size_t _factor;
 
       public:
         /**
-         * @brief Construct a new Vdcorputorput object
+         * @brief Construct a new VdCorput object
          *
-         * @param[in] base
-         * @param[in] scale
+         * @param[in] base The base of the number system (default: 2)
+         * @param[in] scale The number of digits (default: 10)
          */
-        CONSTEXPR14 explicit VdCorput(const size_t base, const unsigned int scale)
-            : count{0}, base{base}, scale{scale} {}
-
-        /**
-         * @brief
-         *
-         * @return size_t
-         */
-        inline auto pop() -> size_t {
-            this->count += 1;
-            return vdc_i(this->count, this->base, this->scale);
+        explicit VdCorput(size_t base = 2, unsigned int scale = 10)
+            : _base{base}, _scale{scale}, _count{0} {
+            // Python: self._factor = base**scale
+            // We use static_cast because std::pow returns double
+            this->_factor = static_cast<size_t>(std::pow(base, scale));
         }
 
         /**
-         * @brief
+         * @brief Increments count and calculates the next value in the sequence.
+         *
+         * @return size_t
+         */
+        [[nodiscard]] auto pop() -> size_t {
+            this->_count += 1;
+            
+            size_t k = this->_count;
+            size_t vdc = 0;
+            size_t factor = this->_factor;
+
+            while (k != 0) {
+                // Python: factor //= self._base
+                factor /= this->_base;
+                
+                // Python: remainder = k % self._base
+                const size_t remainder = k % this->_base;
+                
+                // Python: k //= self._base
+                k /= this->_base;
+                
+                // Python: vdc += remainder * factor
+                vdc += remainder * factor;
+            }
+            return vdc;
+        }
+
+        /**
+         * @brief Resets the state of the sequence generator.
          *
          * @param[in] seed
-         * @return auto
          */
-        CONSTEXPR14 auto reseed(const size_t seed) -> void { this->count = seed; }
+        auto reseed(const size_t seed) -> void {
+            this->_count = seed;
+        }
     };
 
     /**
@@ -106,7 +98,7 @@ namespace ildsgen {
          * @param[in] base
          * @param[in] scale
          */
-        CONSTEXPR14 explicit Halton(const size_t base[], const unsigned int scale[])
+        explicit Halton(const size_t base[], const unsigned int scale[])
             : vdc0(base[0], scale[0]), vdc1(base[1], scale[1]) {}
 
         /**
@@ -123,7 +115,7 @@ namespace ildsgen {
          *
          * @param[in] seed
          */
-        CONSTEXPR14 auto reseed(const size_t seed) -> void {
+        auto reseed(const size_t seed) -> void {
             this->vdc0.reseed(seed);
             this->vdc1.reseed(seed);
         }

@@ -3,14 +3,6 @@
 #include <ldsgen/ilds.hpp>  // for Halton
 #include <vector>           // for vector
 
-TEST_CASE("vdc_i") { CHECK_EQ(ildsgen::vdc_i(1, 2, 10), 512); }
-
-TEST_CASE("vdc_i with different values") {
-    CHECK_EQ(ildsgen::vdc_i(0, 2, 10), 0);
-    CHECK_EQ(ildsgen::vdc_i(2, 2, 10), 256);
-    CHECK_EQ(ildsgen::vdc_i(3, 2, 10), 768);
-}
-
 TEST_CASE("VdCorput_i") {
     auto vgen = ildsgen::VdCorput(2, 10);
     CHECK_EQ(vgen.pop(), 512);
