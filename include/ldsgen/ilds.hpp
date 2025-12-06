@@ -45,7 +45,7 @@ namespace ildsgen {
          */
         [[nodiscard]] auto pop() -> size_t {
             this->_count += 1;
-            
+
             size_t k = this->_count;
             size_t vdc = 0;
             size_t factor = this->_factor;
@@ -53,13 +53,13 @@ namespace ildsgen {
             while (k != 0) {
                 // Python: factor //= self._base
                 factor /= this->_base;
-                
+
                 // Python: remainder = k % self._base
                 const size_t remainder = k % this->_base;
-                
+
                 // Python: k //= self._base
                 k /= this->_base;
-                
+
                 // Python: vdc += remainder * factor
                 vdc += remainder * factor;
             }
