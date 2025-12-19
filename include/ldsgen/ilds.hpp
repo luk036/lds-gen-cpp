@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <atomic>
 #include <cmath>
 
 namespace ildsgen {
@@ -14,9 +15,9 @@ namespace ildsgen {
      *
      */
     class VdCorput {
-        size_t _base;
-        size_t _count;
-        size_t _factor;
+        std::atomic<size_t> _base;
+        std::atomic<size_t> _count;
+        std::atomic<size_t> _factor;
 
       public:
         /**
@@ -29,7 +30,7 @@ namespace ildsgen {
             : _base{base}, _count{0} {
             // Python: self._factor = base**scale
             // We use static_cast because std::pow returns double
-            this->_factor = static_cast<size_t>(std::pow(base, scale));
+            this->_factor.store(static_cast<size_t>(std::pow(base, scale)));
         }
 
         /**
@@ -38,21 +39,22 @@ namespace ildsgen {
          * @return size_t
          */
         [[nodiscard]] auto pop() -> size_t {
-            this->_count += 1;
+            this->_count.fetch_add(1, std::memory_order_relaxed);
 
-            size_t k = this->_count;
+            size_t k = this->_count.load(std::memory_order_relaxed);
             size_t vdc = 0;
-            size_t factor = this->_factor;
+            size_t factor = this->_factor.load(std::memory_order_relaxed);
+            size_t base = this->_base.load(std::memory_order_relaxed);
 
             while (k != 0) {
                 // Python: factor //= self._base
-                factor /= this->_base;
+                factor /= base;
 
                 // Python: remainder = k % self._base
-                const size_t remainder = k % this->_base;
+                const size_t remainder = k % base;
 
                 // Python: k //= self._base
-                k /= this->_base;
+                k /= base;
 
                 // Python: vdc += remainder * factor
                 vdc += remainder * factor;
@@ -66,7 +68,25 @@ namespace ildsgen {
          * @param[in] seed
          */
         auto reseed(const size_t seed) -> void {
-            this->_count = seed;
+            this->_count.store(seed, std::memory_order_relaxed);
+        }
+
+        /**
+         * @brief Move constructor
+         */
+        VdCorput(VdCorput&& other) noexcept 
+            : _base(other._base.load()), _count(other._count.load()), _factor(other._factor.load()) {}
+
+        /**
+         * @brief Move assignment operator
+         */
+        VdCorput& operator=(VdCorput&& other) noexcept {
+            if (this != &other) {
+                _base.store(other._base.load());
+                _count.store(other._count.load());
+                _factor.store(other._factor.load());
+            }
+            return *this;
         }
     };
 
