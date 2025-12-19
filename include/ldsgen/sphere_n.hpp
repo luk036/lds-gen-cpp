@@ -8,6 +8,7 @@
 #include <numbers>
 #include <span>
 #include <array>
+#include <mutex>
 
 namespace ldsgen {
 
@@ -42,6 +43,7 @@ public:
 private:
     VdCorput vdc_;
     Sphere sphere2_;
+    mutable std::mutex mutex_;
 };
 
 // Wrapper class to make Sphere compatible with SphereGen interface
@@ -54,6 +56,7 @@ public:
     
 private:
     Sphere sphere_;
+    mutable std::mutex mutex_;
 };
 
 // Sphere-N sequence generator
@@ -69,5 +72,6 @@ private:
     std::unique_ptr<SphereGen> s_gen_;
     int n_;
     double range_;
+    mutable std::mutex mutex_;
 };
 } // namespace ldsgen

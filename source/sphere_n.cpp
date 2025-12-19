@@ -5,6 +5,8 @@
 #include <memory>
 #include <stdexcept>
 #include <numbers>
+#include <mutex>
+#include <unordered_map>
 
 namespace ldsgen {
 
@@ -108,7 +110,20 @@ std::vector<double> get_tp(int n) {
     if (n < 0) {
         throw std::invalid_argument("n must be non-negative");
     }
-    return get_tp_recursive(n);
+    
+    static std::unordered_map<int, std::vector<double>> tp_cache;
+    static std::mutex tp_cache_mutex;
+    
+    std::lock_guard<std::mutex> lock(tp_cache_mutex);
+    
+    auto it = tp_cache.find(n);
+    if (it != tp_cache.end()) {
+        return it->second;
+    }
+    
+    auto result = get_tp_recursive(n);
+    tp_cache[n] = result;
+    return result;
 }
 
 Sphere3::Sphere3(std::span<const std::uint64_t> base)
@@ -119,6 +134,7 @@ Sphere3::Sphere3(std::span<const std::uint64_t> base)
 }
 
 std::vector<double> Sphere3::pop() {
+    std::lock_guard<std::mutex> lock(mutex_);
     double ti = HALF_PI * vdc_.pop(); // map to [t0, tm-1]
     double xi = simple_interp(ti, F2, X);
     double cosxi = std::cos(xi);
@@ -136,6 +152,7 @@ std::vector<double> Sphere3::pop() {
 }
 
 void Sphere3::reseed(std::uint64_t seed) {
+    std::lock_guard<std::mutex> lock(mutex_);
     vdc_.reseed(seed);
     sphere2_.reseed(seed);
 }
@@ -146,11 +163,13 @@ SphereWrapper::SphereWrapper(std::span<const std::uint64_t> base)
 }
 
 std::vector<double> SphereWrapper::pop() {
+    std::lock_guard<std::mutex> lock(mutex_);
     auto arr = sphere_.pop();
     return std::vector<double>(arr.begin(), arr.end());
 }
 
 void SphereWrapper::reseed(std::uint64_t seed) {
+    std::lock_guard<std::mutex> lock(mutex_);
     sphere_.reseed(seed);
 }
 
@@ -174,6 +193,7 @@ SphereN::SphereN(std::span<const std::uint64_t> base)
     range_ = tp.back() - tp.front();
 }
 std::vector<double> SphereN::pop() {
+    std::lock_guard<std::mutex> lock(mutex_);
     if (n_ == 2) {
         double ti = HALF_PI * vdc_.pop(); // map to [t0, tm-1]
         double xi = simple_interp(ti, F2, X);
@@ -211,6 +231,7 @@ std::vector<double> SphereN::pop() {
 }
 
 void SphereN::reseed(std::uint64_t seed) {
+    std::lock_guard<std::mutex> lock(mutex_);
     vdc_.reseed(seed);
     s_gen_->reseed(seed);
 }
