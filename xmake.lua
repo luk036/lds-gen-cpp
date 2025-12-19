@@ -16,14 +16,14 @@ elseif is_plat("windows") then
 end
 
 target("LdsGen")
-    set_languages("c++14")
+    set_languages("c++20")
     set_kind("static")
     add_includedirs("include", {public = true})
     add_files("source/*.cpp")
     add_packages("fmt")
 
 target("test_ldsgen")
-    set_languages("c++17")
+    set_languages("c++20")
     set_kind("binary")
     add_deps("LdsGen")
     add_files("test/source/*.cpp")
