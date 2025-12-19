@@ -1,14 +1,9 @@
 #pragma once
 
 #include <array>
+#include <atomic>
 #include <cmath>
 #include <cstddef>
-
-#if __cpp_constexpr >= 201304
-#    define CONSTEXPR14 constexpr
-#else
-#    define CONSTEXPR14 inline
-#endif
 
 #ifndef M_PI
 #    define M_PI 3.14159265358979323846264338327950288
@@ -36,7 +31,7 @@ namespace ldsgen {
      * @param[in] base base of the sequence
      * @return double
      */
-    CONSTEXPR14 auto vdc(size_t k, const size_t base) -> double {
+    constexpr auto vdc(size_t k, const size_t base) -> double {
         auto vdc = 0.0;
         auto denom = 1.0;
         while (k != 0) {
@@ -68,7 +63,7 @@ namespace ldsgen {
      * ```
      */
     class VdCorput {
-        size_t count;
+        std::atomic<size_t> count;
         size_t base;
         std::array<double, 64> rev_lst;
 
@@ -82,7 +77,7 @@ namespace ldsgen {
          *
          * @param[in] base the base of the Van der Corput sequence
          */
-        CONSTEXPR14 explicit VdCorput(const size_t base) : count{0}, base{base}, rev_lst{} {
+        explicit VdCorput(const size_t base) : count{0}, base{base}, rev_lst{} {
             double reverse = 1.0;
             for (size_t i = 0; i < 64; ++i) {
                 reverse /= double(base);
@@ -101,9 +96,8 @@ namespace ldsgen {
          *
          * @return double
          */
-        CONSTEXPR14 auto pop() -> double {
-            ++this->count;  // ignore 0
-            size_t k = this->count;
+        auto pop() -> double {
+            size_t k = this->count.fetch_add(1, std::memory_order_relaxed) + 1;  // ignore 0
             size_t i = 0;
             double res = 0.0;
             while (k != 0) {
@@ -125,7 +119,25 @@ namespace ldsgen {
          *
          * @param[in] seed the seed value to reset the sequence generator to
          */
-        CONSTEXPR14 auto reseed(const size_t seed) -> void { this->count = seed; }
+        auto reseed(const size_t seed) -> void { this->count.store(seed, std::memory_order_relaxed); }
+
+        /**
+         * @brief Move constructor
+         */
+        VdCorput(VdCorput&& other) noexcept 
+            : count(other.count.load()), base(other.base), rev_lst(other.rev_lst) {}
+
+        /**
+         * @brief Move assignment operator
+         */
+        VdCorput& operator=(VdCorput&& other) noexcept {
+            if (this != &other) {
+                count.store(other.count.load());
+                base = other.base;
+                rev_lst = other.rev_lst;
+            }
+            return *this;
+        }
     };
 
     /**
@@ -158,13 +170,13 @@ namespace ldsgen {
          * The `Halton(const size_t base0, const size_t base1)` is a constructor for
          * the `Halton` class. It takes two parameters `base0` and `base1`, which
          * are used as the bases for generating the Halton sequence. The
-         * `CONSTEXPR14` keyword indicates that the constructor is constexpr,
+         * `constexpr` keyword indicates that the constructor is constexpr,
          * meaning it can be evaluated at compile-time if possible.
          *
          * @param[in] base0
          * @param[in] base1
          */
-        CONSTEXPR14 Halton(const size_t base0, const size_t base1) : vdc0(base0), vdc1(base1) {}
+        Halton(const size_t base0, const size_t base1) : vdc0(base0), vdc1(base1) {}
 
         /**
          * @brief pop
@@ -182,7 +194,7 @@ namespace ldsgen {
          *
          * @return std::array<double, 2>
          */
-        CONSTEXPR14 auto pop() -> std::array<double, 2> {  //
+        auto pop() -> std::array<double, 2> {  //
             return {this->vdc0.pop(), this->vdc1.pop()};
         }
 
@@ -196,7 +208,7 @@ namespace ldsgen {
          *
          * @param[in] seed
          */
-        CONSTEXPR14 auto reseed(const size_t seed) -> void {
+        auto reseed(const size_t seed) -> void {
             this->vdc0.reseed(seed);
             this->vdc1.reseed(seed);
         }
@@ -241,7 +253,7 @@ namespace ldsgen {
          *
          * @param[in] base
          */
-        CONSTEXPR14 explicit Circle(const size_t base) : vdc(base) {}
+        explicit Circle(const size_t base) : vdc(base) {}
 
         /**
          * @brief pop
@@ -274,7 +286,7 @@ namespace ldsgen {
          *
          * @param[in] seed
          */
-        CONSTEXPR14 auto reseed(const size_t seed) -> void { this->vdc.reseed(seed); }
+        auto reseed(const size_t seed) -> void { this->vdc.reseed(seed); }
     };
 
     /**
@@ -312,13 +324,13 @@ namespace ldsgen {
          * The `Disk(const size_t base0, const size_t base1)` is a constructor for
          * the `Disk` class. It takes two parameters `base0` and `base1`, which
          * are used as the bases for generating the Disk sequence. The
-         * `CONSTEXPR14` keyword indicates that the constructor is constexpr,
+         * `constexpr` keyword indicates that the constructor is constexpr,
          * meaning it can be evaluated at compile-time if possible.
          *
          * @param[in] base0
          * @param[in] base1
          */
-        CONSTEXPR14 Disk(const size_t base0, const size_t base1) : vdc0(base0), vdc1(base1) {}
+        Disk(const size_t base0, const size_t base1) : vdc0(base0), vdc1(base1) {}
 
         /**
          * @brief pop
@@ -352,7 +364,7 @@ namespace ldsgen {
          *
          * @param[in] seed
          */
-        CONSTEXPR14 auto reseed(const size_t seed) -> void {
+        auto reseed(const size_t seed) -> void {
             this->vdc0.reseed(seed);
             this->vdc1.reseed(seed);
         }
@@ -395,7 +407,7 @@ namespace ldsgen {
          * @param[in] base0
          * @param[in] base1
          */
-        CONSTEXPR14 Sphere(const size_t base0, const size_t base1) : vdcgen(base0), cirgen(base1) {}
+        Sphere(const size_t base0, const size_t base1) : vdcgen(base0), cirgen(base1) {}
 
         /**
          * @brief pop
@@ -430,7 +442,7 @@ namespace ldsgen {
          *
          * @param[in] seed
          */
-        CONSTEXPR14 auto reseed(const size_t seed) -> void {
+        auto reseed(const size_t seed) -> void {
             this->cirgen.reseed(seed);
             this->vdcgen.reseed(seed);
         }
@@ -477,7 +489,7 @@ namespace ldsgen {
          * @param[in] base1
          * @param[in] base2
          */
-        CONSTEXPR14 Sphere3Hopf(const size_t base0, const size_t base1, const size_t base2)
+        Sphere3Hopf(const size_t base0, const size_t base1, const size_t base2)
             : vdc0(base0), vdc1(base1), vdc2(base2) {}
 
         /**
@@ -520,7 +532,7 @@ namespace ldsgen {
          *
          * @param[in] seed
          */
-        CONSTEXPR14 auto reseed(size_t seed) -> void {
+        auto reseed(size_t seed) -> void {
             this->vdc0.reseed(seed);
             this->vdc1.reseed(seed);
             this->vdc2.reseed(seed);

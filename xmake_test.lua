@@ -1,0 +1,6 @@
+target("test_atomic")
+    set_languages("c++14")
+    set_kind("binary")
+    add_deps("LdsGen")
+    add_files("test_atomic.cpp")
+    add_packages("fmt")

@@ -1,11 +1,5 @@
 #pragma once
 
-#if __cpp_constexpr >= 201304
-#    define CONSTEXPR14 constexpr
-#else
-#    define CONSTEXPR14 inline
-#endif
-
 #include <array>
 #include <cmath>
 
