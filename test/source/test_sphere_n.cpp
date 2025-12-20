@@ -233,3 +233,178 @@ TEST_CASE("Test comparison with Python implementation") {
         CHECK(resultN[i] == doctest::Approx(expected_spheren[i]).epsilon(1e-10));
     }
 }
+
+#include <thread>
+#include <vector>
+#include <mutex>
+#include <atomic>
+
+TEST_CASE("Sphere3 thread safety") {
+    const int num_threads = 8;
+    const int values_per_thread = 50;
+    std::vector<std::uint64_t> base = {2, 3, 5};
+    ldsgen::Sphere3 sgen(base);
+    std::vector<std::thread> threads;
+    std::vector<std::vector<std::vector<double>>> results(num_threads);
+    std::mutex mtx;
+    
+    for (int i = 0; i < num_threads; ++i) {
+        threads.emplace_back([&sgen, &results, &mtx, i, values_per_thread]() {
+            std::vector<std::vector<double>> local_results;
+            for (int j = 0; j < values_per_thread; ++j) {
+                local_results.push_back(sgen.pop());
+            }
+            std::lock_guard<std::mutex> lock(mtx);
+            results[i] = std::move(local_results);
+        });
+    }
+    
+    for (auto& t : threads) {
+        t.join();
+    }
+    
+    // Check that we got the expected number of values
+    size_t total_points = 0;
+    for (const auto& thread_results : results) {
+        total_points += thread_results.size();
+        // Verify all points are on unit 3-sphere
+        for (const auto& point : thread_results) {
+            REQUIRE(point.size() == 4);
+            double radius_sq = std::inner_product(point.begin(), point.end(), point.begin(), 0.0);
+            CHECK(radius_sq == doctest::Approx(1.0).epsilon(1e-10));
+        }
+    }
+    CHECK_EQ(total_points, num_threads * values_per_thread);
+}
+
+TEST_CASE("SphereN thread safety") {
+    const int num_threads = 8;
+    const int values_per_thread = 50;
+    std::vector<std::uint64_t> base = {2, 3, 5, 7, 11};
+    ldsgen::SphereN sgen(base);
+    std::vector<std::thread> threads;
+    std::vector<std::vector<std::vector<double>>> results(num_threads);
+    std::mutex mtx;
+    
+    for (int i = 0; i < num_threads; ++i) {
+        threads.emplace_back([&sgen, &results, &mtx, i, values_per_thread]() {
+            std::vector<std::vector<double>> local_results;
+            for (int j = 0; j < values_per_thread; ++j) {
+                local_results.push_back(sgen.pop());
+            }
+            std::lock_guard<std::mutex> lock(mtx);
+            results[i] = std::move(local_results);
+        });
+    }
+    
+    for (auto& t : threads) {
+        t.join();
+    }
+    
+    // Check that we got the expected number of values
+    size_t total_points = 0;
+    for (const auto& thread_results : results) {
+        total_points += thread_results.size();
+        // Verify all points are on unit N-sphere
+        for (const auto& point : thread_results) {
+            REQUIRE(point.size() == 6); // 5 bases produce 6D point
+            double radius_sq = std::inner_product(point.begin(), point.end(), point.begin(), 0.0);
+            CHECK(radius_sq == doctest::Approx(1.0).epsilon(1e-10));
+        }
+    }
+    CHECK_EQ(total_points, num_threads * values_per_thread);
+}
+
+TEST_CASE("SphereWrapper thread safety") {
+    const int num_threads = 8;
+    const int values_per_thread = 50;
+    std::vector<std::uint64_t> base = {2, 3};
+    ldsgen::SphereWrapper sgen(base);
+    std::vector<std::thread> threads;
+    std::vector<std::vector<std::vector<double>>> results(num_threads);
+    std::mutex mtx;
+    
+    for (int i = 0; i < num_threads; ++i) {
+        threads.emplace_back([&sgen, &results, &mtx, i, values_per_thread]() {
+            std::vector<std::vector<double>> local_results;
+            for (int j = 0; j < values_per_thread; ++j) {
+                local_results.push_back(sgen.pop());
+            }
+            std::lock_guard<std::mutex> lock(mtx);
+            results[i] = std::move(local_results);
+        });
+    }
+    
+    for (auto& t : threads) {
+        t.join();
+    }
+    
+    // Check that we got the expected number of values
+    size_t total_points = 0;
+    for (const auto& thread_results : results) {
+        total_points += thread_results.size();
+        // Verify all points are on unit sphere
+        for (const auto& point : thread_results) {
+            REQUIRE(point.size() == 3);
+            double radius_sq = std::inner_product(point.begin(), point.end(), point.begin(), 0.0);
+            CHECK(radius_sq == doctest::Approx(1.0).epsilon(1e-10));
+        }
+    }
+    CHECK_EQ(total_points, num_threads * values_per_thread);
+}
+
+TEST_CASE("Concurrent reseed thread safety for sphere classes") {
+    const int num_threads = 8;
+    const int operations_per_thread = 25;
+    std::vector<std::uint64_t> base3 = {2, 3, 5};
+    std::vector<std::uint64_t> baseN = {2, 3, 5, 7};
+    ldsgen::Sphere3 sgen3(base3);
+    ldsgen::SphereN sgenN(baseN);
+    std::vector<std::thread> threads;
+    std::atomic<int> pop_count{0};
+    std::atomic<int> reseed_count{0};
+    std::mutex mtx;
+    std::vector<std::vector<double>> results;
+    
+    for (int i = 0; i < num_threads; ++i) {
+        threads.emplace_back([&sgen3, &sgenN, &pop_count, &reseed_count, &mtx, &results, i, operations_per_thread]() {
+            for (int j = 0; j < operations_per_thread; ++j) {
+                if (j % 5 == 0) {
+                    // Occasionally reseed
+                    if (i % 2 == 0) {
+                        sgen3.reseed(i * 10 + j);
+                    } else {
+                        sgenN.reseed(i * 10 + j);
+                    }
+                    reseed_count++;
+                } else {
+                    // Mostly pop
+                    std::vector<double> point;
+                    if (i % 2 == 0) {
+                        point = sgen3.pop();
+                    } else {
+                        point = sgenN.pop();
+                    }
+                    std::lock_guard<std::mutex> lock(mtx);
+                    results.push_back(point);
+                    pop_count++;
+                }
+            }
+        });
+    }
+    
+    for (auto& t : threads) {
+        t.join();
+    }
+    
+    // Check that operations completed without crashes
+    CHECK_GT(pop_count.load(), 0);
+    CHECK_GT(reseed_count.load(), 0);
+    CHECK_EQ(results.size(), pop_count.load());
+    
+    // Verify all generated points are valid
+    for (const auto& point : results) {
+        double radius_sq = std::inner_product(point.begin(), point.end(), point.begin(), 0.0);
+        CHECK(radius_sq == doctest::Approx(1.0).epsilon(1e-10));
+    }
+}
