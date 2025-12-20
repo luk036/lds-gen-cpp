@@ -207,16 +207,15 @@ TEST_CASE("VdCorput thread safety") {
     std::vector<std::vector<double>> results(num_threads);
     std::mutex mtx;
     
-    for (int i = 0; i < num_threads; ++i) {
-        threads.emplace_back([&vgen, &results, &mtx, i, values_per_thread]() {
-            std::vector<double> local_results;
-            for (int j = 0; j < values_per_thread; ++j) {
-                local_results.push_back(vgen.pop());
-            }
-            std::lock_guard<std::mutex> lock(mtx);
-            results[i] = std::move(local_results);
-        });
-    }
+            for (int i = 0; i < num_threads; ++i) {
+                threads.emplace_back([&vgen, &results, &mtx, i, values_per_thread]() {
+                    std::vector<double> local_results;
+                    for (int j = 0; j < values_per_thread; ++j) {
+                        local_results.push_back(vgen.pop());
+                    }
+                    std::lock_guard<std::mutex> lock(mtx);
+                    results[static_cast<size_t>(i)] = std::move(local_results);
+                });    }
     
     for (auto& t : threads) {
         t.join();
@@ -252,7 +251,7 @@ TEST_CASE("Halton thread safety") {
                 local_results.push_back(hgen.pop());
             }
             std::lock_guard<std::mutex> lock(mtx);
-            results[i] = std::move(local_results);
+            results[static_cast<size_t>(i)] = std::move(local_results);
         });
     }
     
@@ -283,7 +282,7 @@ TEST_CASE("Circle thread safety") {
                 local_results.push_back(cgen.pop());
             }
             std::lock_guard<std::mutex> lock(mtx);
-            results[i] = std::move(local_results);
+            results[static_cast<size_t>(i)] = std::move(local_results);
         });
     }
     
@@ -322,7 +321,7 @@ TEST_CASE("Disk thread safety") {
                 local_results.push_back(dgen.pop());
             }
             std::lock_guard<std::mutex> lock(mtx);
-            results[i] = std::move(local_results);
+            results[static_cast<size_t>(i)] = std::move(local_results);
         });
     }
     
@@ -361,7 +360,7 @@ TEST_CASE("Sphere thread safety") {
                 local_results.push_back(sgen.pop());
             }
             std::lock_guard<std::mutex> lock(mtx);
-            results[i] = std::move(local_results);
+            results[static_cast<size_t>(i)] = std::move(local_results);
         });
     }
     
@@ -400,7 +399,7 @@ TEST_CASE("Sphere3Hopf thread safety") {
                 local_results.push_back(shfgen.pop());
             }
             std::lock_guard<std::mutex> lock(mtx);
-            results[i] = std::move(local_results);
+            results[static_cast<size_t>(i)] = std::move(local_results);
         });
     }
     
@@ -440,7 +439,7 @@ TEST_CASE("Concurrent reseed thread safety") {
             for (int j = 0; j < operations_per_thread; ++j) {
                 if (j % 10 == 0) {
                     // Occasionally reseed
-                    vgen.reseed(i * 10 + j);
+                    vgen.reseed(static_cast<size_t>(i * 10 + j));
                     reseed_count++;
                 } else {
                     // Mostly pop

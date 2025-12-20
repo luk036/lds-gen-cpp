@@ -8,9 +8,12 @@ end
 
 if is_plat("linux") then
     add_cxflags("-Wconversion", {force = true})
-    -- add_cxflags("-nostdinc++", {force = true})
-    -- add_sysincludedirs(os.getenv("PREFIX") .. "/include/c++/v1", {public = true})
-    -- add_sysincludedirs(os.getenv("PREFIX") .. "/include", {public = true})
+    -- Check if we're on Termux/Android
+    local termux_prefix = os.getenv("PREFIX")
+    if termux_prefix then
+        add_sysincludedirs(termux_prefix .. "/include/c++/v1", {public = true})
+        add_sysincludedirs(termux_prefix .. "/include", {public = true})
+    end
 elseif is_plat("windows") then
     add_cxflags("/EHsc /W4 /WX", {force = true})
 end
@@ -21,6 +24,9 @@ target("LdsGen")
     add_includedirs("include", {public = true})
     add_files("source/*.cpp")
     add_packages("fmt")
+    if is_plat("linux") then
+        add_syslinks("pthread")
+    end
 
 target("test_ldsgen")
     set_languages("c++20")
@@ -29,6 +35,9 @@ target("test_ldsgen")
     add_files("test/source/*.cpp")
     add_packages("doctest", "fmt")
     add_tests("default")
+    if is_plat("linux") then
+        add_syslinks("pthread")
+    end
 
 -- If you want to known more usage about xmake, please see https://xmake.io
 --
