@@ -249,7 +249,7 @@ TEST_CASE("Sphere3 thread safety") {
     std::mutex mtx;
     
     for (int i = 0; i < num_threads; ++i) {
-        threads.emplace_back([&sgen, &results, &mtx, i, values_per_thread]() {
+        threads.emplace_back([&sgen, &results, &mtx, i]() {
             std::vector<std::vector<double>> local_results;
             for (int j = 0; j < values_per_thread; ++j) {
                 local_results.push_back(sgen.pop());
@@ -287,7 +287,7 @@ TEST_CASE("SphereN thread safety") {
     std::mutex mtx;
     
     for (int i = 0; i < num_threads; ++i) {
-        threads.emplace_back([&sgen, &results, &mtx, i, values_per_thread]() {
+        threads.emplace_back([&sgen, &results, &mtx, i]() {
             std::vector<std::vector<double>> local_results;
             for (int j = 0; j < values_per_thread; ++j) {
                 local_results.push_back(sgen.pop());
@@ -325,7 +325,7 @@ TEST_CASE("SphereWrapper thread safety") {
     std::mutex mtx;
     
     for (int i = 0; i < num_threads; ++i) {
-        threads.emplace_back([&sgen, &results, &mtx, i, values_per_thread]() {
+        threads.emplace_back([&sgen, &results, &mtx, i]() {
             std::vector<std::vector<double>> local_results;
             for (int j = 0; j < values_per_thread; ++j) {
                 local_results.push_back(sgen.pop());
@@ -367,7 +367,7 @@ TEST_CASE("Concurrent reseed thread safety for sphere classes") {
     std::vector<std::vector<double>> results;
     
     for (int i = 0; i < num_threads; ++i) {
-        threads.emplace_back([&sgen3, &sgenN, &pop_count, &reseed_count, &mtx, &results, i, operations_per_thread]() {
+        threads.emplace_back([&sgen3, &sgenN, &pop_count, &reseed_count, &mtx, &results, i]() {
             for (int j = 0; j < operations_per_thread; ++j) {
                 if (j % 5 == 0) {
                     // Occasionally reseed
