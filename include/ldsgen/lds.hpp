@@ -32,15 +32,15 @@ namespace ldsgen {
      * @return double
      */
     constexpr auto vdc(size_t count, const size_t base) -> double {
-        auto vdc = 0.0;
+        auto reslt = 0.0;
         auto denom = 1.0;
         while (count != 0) {
             const auto remainder = count % base;
             count /= base;
             denom *= double(base);
-            vdc += double(remainder) / denom;
+            reslt += double(remainder) / denom;
         }
-        return vdc;
+        return reslt;
     }
 
     /**
@@ -98,13 +98,13 @@ namespace ldsgen {
          */
         auto pop() -> double {
             size_t k = this->count.fetch_add(1, std::memory_order_relaxed) + 1;  // ignore 0
-            size_t i = 0;
+            size_t idx = 0;
             double res = 0.0;
             while (k != 0) {
                 const auto remainder = k % this->base;
                 k /= this->base;
-                res += this->rev_lst[i] * double(remainder);
-                ++i;
+                res += this->rev_lst[idx] * double(remainder);
+                ++idx;
             }
             return res;
         }

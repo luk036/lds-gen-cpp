@@ -42,7 +42,7 @@ namespace ildsgen {
             this->_count.fetch_add(1, std::memory_order_relaxed);
 
             size_t count = this->_count.load(std::memory_order_relaxed);
-            size_t vdc = 0;
+            size_t reslt = 0;
             size_t factor = this->_factor.load(std::memory_order_relaxed);
             size_t base = this->_base.load(std::memory_order_relaxed);
 
@@ -57,9 +57,9 @@ namespace ildsgen {
                 count /= base;
 
                 // Python: vdc += remainder * factor
-                vdc += remainder * factor;
+                reslt += remainder * factor;
             }
-            return vdc;
+            return reslt;
         }
 
         /**
@@ -71,23 +71,26 @@ namespace ildsgen {
             this->_count.store(seed, std::memory_order_relaxed);
         }
 
-        /**
-         * @brief Move constructor
-         */
-        VdCorput(VdCorput&& other) noexcept 
-            : _base(other._base.load()), _count(other._count.load()), _factor(other._factor.load()) {}
+        VdCorput(VdCorput&&) noexcept = delete;
+        VdCorput& operator=(VdCorput&& other) noexcept = delete;
 
-        /**
-         * @brief Move assignment operator
-         */
-        VdCorput& operator=(VdCorput&& other) noexcept {
-            if (this != &other) {
-                _base.store(other._base.load());
-                _count.store(other._count.load());
-                _factor.store(other._factor.load());
-            }
-            return *this;
-        }
+        // /**
+        //  * @brief Move constructor
+        //  */
+        // VdCorput(VdCorput&& other) noexcept 
+        //     : _base(other._base.load()), _count(other._count.load()), _factor(other._factor.load()) {}
+        //
+        // /**
+        //  * @brief Move assignment operator
+        //  */
+        // VdCorput& operator=(VdCorput&& other) noexcept {
+        //     if (this != &other) {
+        //         _base.store(other._base.load());
+        //         _count.store(other._count.load());
+        //         _factor.store(other._factor.load());
+        //     }
+        //     return *this;
+        // }
     };
 
     /**
