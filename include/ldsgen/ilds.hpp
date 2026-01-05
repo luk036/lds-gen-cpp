@@ -41,20 +41,20 @@ namespace ildsgen {
         [[nodiscard]] auto pop() -> size_t {
             this->_count.fetch_add(1, std::memory_order_relaxed);
 
-            size_t k = this->_count.load(std::memory_order_relaxed);
+            size_t count = this->_count.load(std::memory_order_relaxed);
             size_t vdc = 0;
             size_t factor = this->_factor.load(std::memory_order_relaxed);
             size_t base = this->_base.load(std::memory_order_relaxed);
 
-            while (k != 0) {
+            while (count != 0) {
                 // Python: factor //= self._base
                 factor /= base;
 
-                // Python: remainder = k % self._base
-                const size_t remainder = k % base;
+                // Python: remainder = count % self._base
+                const size_t remainder = count % base;
 
-                // Python: k //= self._base
-                k /= base;
+                // Python: count //= self._base
+                count /= base;
 
                 // Python: vdc += remainder * factor
                 vdc += remainder * factor;

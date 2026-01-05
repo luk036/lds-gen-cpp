@@ -17,26 +17,26 @@ namespace ldsgen {
      * @brief Van der Corput sequence
      *
      * The `vdc` function is calculating the Van der Corput sequence value for a
-     * given index `k` and base `base`. It returns a `double` value.
+     * given index `count` and base `base`. It returns a `double` value.
      *
      * ```svgbob
      *     Base 2 Example:
-     *     k=1 -> 0.5  (0.1 in base 2)
-     *     k=2 -> 0.25 (0.01 in base 2)
-     *     k=3 -> 0.75 (0.11 in base 2)
-     *     k=4 -> 0.125(0.001 in base 2)
+     *     count=1 -> 0.5  (0.1 in base 2)
+     *     count=2 -> 0.25 (0.01 in base 2)
+     *     count=3 -> 0.75 (0.11 in base 2)
+     *     count=4 -> 0.125(0.001 in base 2)
      * ```
      *
-     * @param[in] k index of the sequence
+     * @param[in] count index of the sequence
      * @param[in] base base of the sequence
      * @return double
      */
-    constexpr auto vdc(size_t k, const size_t base) -> double {
+    constexpr auto vdc(size_t count, const size_t base) -> double {
         auto vdc = 0.0;
         auto denom = 1.0;
-        while (k != 0) {
-            const auto remainder = k % base;
-            k /= base;
+        while (count != 0) {
+            const auto remainder = count % base;
+            count /= base;
             denom *= double(base);
             vdc += double(remainder) / denom;
         }
