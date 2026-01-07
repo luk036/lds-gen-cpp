@@ -124,25 +124,12 @@ namespace ldsgen {
          *
          * @param[in] seed the seed value to reset the sequence generator to
          */
-        auto reseed(const size_t seed) -> void { this->count.store(seed, std::memory_order_relaxed); }
-
-        /**
-         * @brief Move constructor
-         */
-        VdCorput(VdCorput&& other) noexcept 
-            : count(other.count.load()), base(other.base), rev_lst(other.rev_lst) {}
-
-        /**
-         * @brief Move assignment operator
-         */
-        VdCorput& operator=(VdCorput&& other) noexcept {
-            if (this != &other) {
-                count.store(other.count.load());
-                base = other.base;
-                rev_lst = other.rev_lst;
-            }
-            return *this;
+        auto reseed(const size_t seed) -> void {
+            this->count.store(seed, std::memory_order_relaxed);
         }
+
+        VdCorput(VdCorput&&) noexcept = delete;
+        VdCorput& operator=(VdCorput&&) noexcept = delete;
     };
 
     /**
@@ -353,8 +340,8 @@ namespace ldsgen {
          *
          * @return std::array<double, 2>
          */
-        auto pop() -> std::array<double, 2> {  //
-            auto theta = this->vdc0.pop() * TWO_PI;   // map to [0, 2*pi];
+        auto pop() -> std::array<double, 2> {        //
+            auto theta = this->vdc0.pop() * TWO_PI;  // map to [0, 2*pi];
             auto radius = std::sqrt(this->vdc1.pop());
             return {radius * std::cos(theta), radius * std::sin(theta)};
         }
