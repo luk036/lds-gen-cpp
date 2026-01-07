@@ -19,7 +19,7 @@ constexpr double HALF_PI = PI / 2.0;
 std::vector<double> linspace(double start, double stop, std::size_t num);
 
 // Simple implementation of numpy.interp for 1D interpolation
-double simple_interp(double x, std::span<const double> xp, std::span<const double> yp);
+double simple_interp(double x_value, std::span<const double> x_points, std::span<const double> y_points);
 
 // Calculates the table-lookup of the mapping function for n
 std::vector<double> get_tp(int n);

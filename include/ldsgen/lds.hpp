@@ -13,6 +13,10 @@ namespace ldsgen {
 
     constexpr const auto TWO_PI = 2.0 * M_PI;
 
+    // Constants for magic numbers
+    constexpr size_t MAX_REVERSE_BITS = 64;
+    constexpr double MAPPING_FACTOR = 2.0;
+
     /**
      * @brief Van der Corput sequence
      *
@@ -34,9 +38,10 @@ namespace ldsgen {
     constexpr auto vdc(size_t count, const size_t base) -> double {
         auto reslt = 0.0;
         auto denom = 1.0;
-        while (count != 0) {
-            const auto remainder = count % base;
-            count /= base;
+        auto temp_count = count;
+        while (temp_count != 0) {
+            const auto remainder = temp_count % base;
+            temp_count /= base;
             denom *= double(base);
             reslt += double(remainder) / denom;
         }
@@ -65,7 +70,7 @@ namespace ldsgen {
     class VdCorput {
         std::atomic<size_t> count;
         size_t base;
-        std::array<double, 64> rev_lst;
+        std::array<double, MAX_REVERSE_BITS> rev_lst;
 
       public:
         /**
@@ -79,7 +84,7 @@ namespace ldsgen {
          */
         explicit VdCorput(const size_t base) : count{0}, base{base}, rev_lst{} {
             double reverse = 1.0;
-            for (size_t i = 0; i < 64; ++i) {
+            for (size_t i = 0; i < MAX_REVERSE_BITS; ++i) {
                 reverse /= double(base);
                 this->rev_lst[i] = reverse;
             }
@@ -97,12 +102,12 @@ namespace ldsgen {
          * @return double
          */
         auto pop() -> double {
-            size_t k = this->count.fetch_add(1, std::memory_order_relaxed) + 1;  // ignore 0
+            size_t count_value = this->count.fetch_add(1, std::memory_order_relaxed) + 1;  // ignore 0
             size_t idx = 0;
             double res = 0.0;
-            while (k != 0) {
-                const auto remainder = k % this->base;
-                k /= this->base;
+            while (count_value != 0) {
+                const auto remainder = count_value % this->base;
+                count_value /= this->base;
                 res += this->rev_lst[idx] * double(remainder);
                 ++idx;
             }
@@ -426,8 +431,8 @@ namespace ldsgen {
          * @return std::array<double, 3>
          */
         auto pop() -> std::array<double, 3> {
-            auto cosphi = 2.0 * this->vdcgen.pop() - 1.0;  // map to [-1, 1];
-            auto sinphi = std::sqrt(1.0 - cosphi * cosphi);
+            auto cosphi = (MAPPING_FACTOR * this->vdcgen.pop()) - 1.0;  // map to [-1, 1];
+            auto sinphi = std::sqrt(1.0 - (cosphi * cosphi));
             auto arr = this->cirgen.pop();
             return {sinphi * arr[0], sinphi * arr[1], cosphi};
         }
@@ -539,5 +544,5 @@ namespace ldsgen {
         }
     };
 
-    extern size_t dummy(size_t i);
+    extern size_t dummy(size_t index);
 }  // namespace ldsgen

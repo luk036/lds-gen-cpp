@@ -20,33 +20,33 @@ std::vector<double> linspace(double start, double stop, std::size_t num) {
 
     double step = (stop - start) / static_cast<double>(num - 1);
     for (std::size_t i = 0; i < num; ++i) {
-        result.push_back(start + static_cast<double>(i) * step);
+        result.push_back(start + (static_cast<double>(i) * step));
     }
 
     return result;
 }
 
-double simple_interp(double x, std::span<const double> xp, std::span<const double> yp) {
-    if (xp.empty() || yp.empty() || xp.size() != yp.size()) {
-        throw std::invalid_argument("xp and yp must be non-empty and same size");
+double simple_interp(double x_value, std::span<const double> x_points, std::span<const double> y_points) {
+    if (x_points.empty() || y_points.empty() || x_points.size() != y_points.size()) {
+        throw std::invalid_argument("x_points and y_points must be non-empty and same size");
     }
 
-    if (x <= xp[0]) {
-        return yp[0];
+    if (x_value <= x_points[0]) {
+        return y_points[0];
     }
-    if (x >= xp.back()) {
-        return yp.back();
+    if (x_value >= x_points.back()) {
+        return y_points.back();
     }
 
-    for (std::size_t i = 0; i < xp.size() - 1; ++i) {
-        if (xp[i] <= x && x <= xp[i + 1]) {
+    for (std::size_t i = 0; i < x_points.size() - 1; ++i) {
+        if (x_points[i] <= x_value && x_value <= x_points[i + 1]) {
             // Linear interpolation
-            double t = (x - xp[i]) / (xp[i + 1] - xp[i]);
-            return yp[i] + t * (yp[i + 1] - yp[i]);
+            double t = (x_value - x_points[i]) / (x_points[i + 1] - x_points[i]);
+            return y_points[i] + t * (y_points[i + 1] - y_points[i]);
         }
     }
 
-    return yp.back(); // fallback
+    return y_points.back(); // fallback
 }
 
 // Precomputed tables (similar to Python version)

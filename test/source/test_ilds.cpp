@@ -1,5 +1,6 @@
 #include <doctest/doctest.h>  // for ResultBuilder, TestCase, CHECK
 
+#include <array>            // for array
 #include <ldsgen/ilds.hpp>  // for Halton
 #include <vector>           // for vector
 
@@ -36,8 +37,8 @@ TEST_CASE("VdCorput_i different base and scale") {
 }
 
 TEST_CASE("Halton_i") {
-    const size_t base[] = {2, 3};
-    const unsigned int scale[] = {11, 7};
+    const std::array<size_t, 2> base = {2, 3};
+    const std::array<unsigned int, 2> scale = {11, 7};
     auto hgen = ildsgen::Halton(base, scale);
     const auto arr = hgen.pop();
     CHECK_EQ(arr[0], 1024);
@@ -49,8 +50,8 @@ TEST_CASE("Halton_i") {
 }
 
 TEST_CASE("Halton_i different bases and scales") {
-    const size_t base[] = {3, 5};
-    const unsigned int scale[] = {6, 4};
+    const std::array<size_t, 2> base = {3, 5};
+    const std::array<unsigned int, 2> scale = {6, 4};
     auto hgen = ildsgen::Halton(base, scale);
     hgen.reseed(0);
 

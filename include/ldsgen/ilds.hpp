@@ -7,6 +7,9 @@
 namespace ildsgen {
 
     using std::array;
+    
+    // Constants for magic numbers
+    constexpr unsigned int DEFAULT_SCALE = 10;
 
     /**
      * @brief Van der Corput sequence generator
@@ -26,7 +29,7 @@ namespace ildsgen {
          * @param[in] base The base of the number system (default: 2)
          * @param[in] scale The number of digits (default: 10)
          */
-        explicit VdCorput(size_t base = 2, unsigned int scale = 10)
+        explicit VdCorput(size_t base = 2, unsigned int scale = DEFAULT_SCALE)
             : _base{base}, _count{0} {
             // Python: self._factor = base**scale
             // We use static_cast because std::pow returns double
@@ -114,7 +117,7 @@ namespace ildsgen {
          * @param[in] base
          * @param[in] scale
          */
-        explicit Halton(const size_t base[], const unsigned int scale[])
+        explicit Halton(const std::array<size_t, 2>& base, const std::array<unsigned int, 2>& scale)
             : vdc0(base[0], scale[0]), vdc1(base[1], scale[1]) {}
 
         /**

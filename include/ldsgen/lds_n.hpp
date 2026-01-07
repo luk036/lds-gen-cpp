@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>   // for unique_ptr
-#include <stddef.h>  // for size_t
+#include <cstddef>  // for size_t
 
 // #include <algorithm>  // for std::transform
 // #include <iterator>
@@ -48,8 +48,8 @@ namespace ldsgen {
          * @param[in] base
          */
         explicit HaltonN(const vector<size_t>& base) {
-            for (const auto& b : base) {
-                this->vdcs.emplace_back(std::make_unique<VdCorput>(b));
+            for (const auto& base_value : base) {
+                this->vdcs.emplace_back(std::make_unique<ldsgen::VdCorput>(base_value));
             }
         }
 
