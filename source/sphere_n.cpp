@@ -23,7 +23,7 @@ std::vector<double> linspace(double start, double stop, std::size_t num) {
         result.push_back(start + (static_cast<double>(i) * step));
     }
 
-    return std::move(result);
+    return result;
 }
 
 double simple_interp(double x_value, std::span<const double> x_points, std::span<const double> y_points) {
@@ -59,7 +59,7 @@ namespace {
         for (double x : X) {
             result.push_back(-std::cos(x));
         }
-        return std::move(result);
+        return result;
     }
 
     std::vector<double> compute_sine() {
@@ -68,7 +68,7 @@ namespace {
         for (double x : X) {
             result.push_back(std::sin(x));
         }
-        return std::move(result);
+        return result;
     }
 
     std::vector<double> compute_f2(const std::vector<double>& neg_cosine, const std::vector<double>& sine) {
@@ -77,7 +77,7 @@ namespace {
         for (std::size_t i = 0; i < X.size(); ++i) {
             result.push_back((X[i] + neg_cosine[i] * sine[i]) / 2.0);
         }
-        return std::move(result);
+        return result;
     }
 
     const std::vector<double> NEG_COSINE = compute_neg_cosine();
@@ -103,7 +103,7 @@ static std::vector<double> get_tp_recursive(int n) {
         result.push_back(value);
     }
 
-    return std::move(result);
+    return result;
 }
 
 std::vector<double> get_tp(int n) {
@@ -123,7 +123,7 @@ std::vector<double> get_tp(int n) {
     
     auto result = get_tp_recursive(n);
     tp_cache[n] = result;
-    return std::move(result);
+    return result;
 }
 
 Sphere3::Sphere3(std::span<const std::uint64_t> base)
@@ -148,7 +148,7 @@ std::vector<double> Sphere3::pop() {
     result.push_back(sinxi * sphere2_point[2]);
     result.push_back(cosxi);
 
-    return std::move(result);
+    return result;
 }
 
 void Sphere3::reseed(std::uint64_t seed) {
@@ -166,7 +166,7 @@ std::vector<double> SphereWrapper::pop() {
     std::lock_guard<std::mutex> lock(mutex_);
     auto arr = sphere_.pop();
     std::vector<double> result(arr.begin(), arr.end());
-    return std::move(result);
+    return result;
 }
 
 void SphereWrapper::reseed(std::uint64_t seed) {
@@ -210,7 +210,7 @@ std::vector<double> SphereN::pop() {
         }
         result.push_back(cosxi);
 
-        return std::move(result);
+        return result;
     }
 
     double vd = vdc_.pop();
@@ -228,7 +228,7 @@ std::vector<double> SphereN::pop() {
     }
     result.push_back(std::cos(xi));
 
-    return std::move(result);
+    return result;
 }
 
 void SphereN::reseed(std::uint64_t seed) {

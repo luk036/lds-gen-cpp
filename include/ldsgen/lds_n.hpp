@@ -74,7 +74,7 @@ namespace ldsgen {
             for (auto& vdc : this->vdcs) {
                 res.emplace_back(vdc->pop());
             }
-            return std::move(res);
+            return res;
         }
 
         /**
