@@ -4,6 +4,9 @@
 #include <atomic>
 #include <cmath>
 #include <cstddef>
+#include <iterator>
+#include <limits>
+#include <vector>
 
 #ifndef M_PI
 #    define M_PI 3.14159265358979323846264338327950288
@@ -16,6 +19,86 @@ namespace ldsgen {
     // Constants for magic numbers
     constexpr size_t MAX_REVERSE_BITS = 64;
     constexpr double MAPPING_FACTOR = 2.0;
+
+    /**
+     * @brief Forward iterator for sequence generators
+     *
+     * Provides STL-compatible iterator interface for all generators.
+     * Allows use in range-based for loops and STL algorithms.
+     *
+     * ```cpp
+     * VdCorput gen(2);
+     * std::vector<double> points(gen.begin(), gen.begin() + 100);
+     * ```
+     *
+     * @tparam Generator The generator class
+     * @tparam Value The value type (double or array)
+     */
+    template<typename Generator, typename Value>
+    class GeneratorIterator {
+        Generator* gen;
+        size_t index;
+
+      public:
+        using iterator_category = std::input_iterator_tag;
+        using value_type = Value;
+        using difference_type = std::ptrdiff_t;
+        using pointer = const value_type*;
+        using reference = value_type;
+
+        explicit GeneratorIterator(Generator* g = nullptr, size_t idx = 0)
+            : gen{g}, index{idx} {}
+
+        /**
+         * @brief Dereference operator
+         */
+        auto operator*() const -> Value {
+            if (gen) {
+                auto temp_idx = gen->get_index();
+                gen->reseed(index);
+                auto value = gen->pop();
+                gen->reseed(temp_idx);
+                return value;
+            }
+            return Value{};
+        }
+
+        /**
+         * @brief Pre-increment operator
+         */
+        auto operator++() -> GeneratorIterator& {
+            ++index;
+            return *this;
+        }
+
+        /**
+         * @brief Post-increment operator
+         */
+        auto operator++(int) -> GeneratorIterator {
+            auto temp = *this;
+            ++index;
+            return temp;
+        }
+
+        /**
+         * @brief Equality comparison
+         */
+        auto operator==(const GeneratorIterator& other) const -> bool {
+            return index == other.index;
+        }
+
+        /**
+         * @brief Inequality comparison
+         */
+        auto operator!=(const GeneratorIterator& other) const -> bool {
+            return index != other.index;
+        }
+
+        /**
+         * @brief Get current index
+         */
+        [[nodiscard]] auto get_index() const -> size_t { return index; }
+    };
 
     /**
      * @brief Van der Corput sequence
@@ -115,6 +198,48 @@ namespace ldsgen {
         }
 
         /**
+         * @brief Peek at the next value without advancing state
+         *
+         * @return double the next value in the sequence
+         */
+        [[nodiscard]] auto peek() -> double {
+            size_t count_value = this->count.load(std::memory_order_relaxed) + 1;
+            size_t idx = 0;
+            double res = 0.0;
+            while (count_value != 0) {
+                const auto remainder = count_value % this->base;
+                count_value /= this->base;
+                res += this->rev_lst[idx] * double(remainder);
+                ++idx;
+            }
+            return res;
+        }
+
+        /**
+         * @brief Generate multiple values efficiently
+         *
+         * @param[in] n number of values to generate
+         * @return std::vector<double> vector of values
+         */
+        [[nodiscard]] auto batch(size_t n) -> std::vector<double> {
+            std::vector<double> result;
+            result.reserve(n);
+            for (size_t i = 0; i < n; ++i) {
+                result.push_back(this->pop());
+            }
+            return result;
+        }
+
+        /**
+         * @brief Skip n values in the sequence
+         *
+         * @param[in] n number of values to skip
+         */
+        auto skip(size_t n) -> void {
+            this->count.fetch_add(n, std::memory_order_relaxed);
+        }
+
+        /**
          * @brief reseed
          *
          * The `reseed(size_t seed)` function is used to reset the state of the
@@ -126,6 +251,35 @@ namespace ldsgen {
          */
         auto reseed(const size_t seed) -> void {
             this->count.store(seed, std::memory_order_relaxed);
+        }
+
+        /**
+         * @brief Get current index
+         *
+         * @return size_t current index in the sequence
+         */
+        [[nodiscard]] auto get_index() const -> size_t {
+            return this->count.load(std::memory_order_relaxed);
+        }
+
+        /**
+         * @brief Get iterator to beginning
+         *
+         * @return GeneratorIterator<VdCorput, double>
+         */
+        auto begin() -> GeneratorIterator<VdCorput, double> {
+            return GeneratorIterator<VdCorput, double>(this);
+        }
+
+        /**
+         * @brief Get iterator to end (infinite sequence)
+         *
+         * For infinite sequences, you typically use begin() + n to get a specific position
+         *
+         * @return GeneratorIterator<VdCorput, double>
+         */
+        [[nodiscard]] auto end() const -> GeneratorIterator<VdCorput, double> {
+            return GeneratorIterator<VdCorput, double>(nullptr, std::numeric_limits<size_t>::max());
         }
 
         VdCorput(VdCorput&&) noexcept = delete;
@@ -191,6 +345,40 @@ namespace ldsgen {
         }
 
         /**
+         * @brief Peek at the next value without advancing state
+         *
+         * @return std::array<double, 2> the next point in the sequence
+         */
+        [[nodiscard]] auto peek() -> std::array<double, 2> {
+            return {this->vdc0.peek(), this->vdc1.peek()};
+        }
+
+        /**
+         * @brief Generate multiple values efficiently
+         *
+         * @param[in] n number of values to generate
+         * @return std::vector<std::array<double, 2>> vector of points
+         */
+        [[nodiscard]] auto batch(size_t n) -> std::vector<std::array<double, 2>> {
+            std::vector<std::array<double, 2>> result;
+            result.reserve(n);
+            for (size_t i = 0; i < n; ++i) {
+                result.push_back(this->pop());
+            }
+            return result;
+        }
+
+        /**
+         * @brief Skip n values in the sequence
+         *
+         * @param[in] n number of values to skip
+         */
+        auto skip(size_t n) -> void {
+            this->vdc0.skip(n);
+            this->vdc1.skip(n);
+        }
+
+        /**
          * @brief reseed
          *
          * The `reseed(size_t seed)` function is used to reset the state of the
@@ -203,6 +391,34 @@ namespace ldsgen {
         auto reseed(const size_t seed) -> void {
             this->vdc0.reseed(seed);
             this->vdc1.reseed(seed);
+        }
+
+        /**
+         * @brief Get current index
+         *
+         * @return size_t current index in the sequence
+         */
+        [[nodiscard]] auto get_index() const -> size_t {
+            return this->vdc0.get_index();
+        }
+
+        /**
+         * @brief Get iterator to beginning
+         *
+         * @return GeneratorIterator<Halton, std::array<double, 2>>
+         */
+        auto begin() -> GeneratorIterator<Halton, std::array<double, 2>> {
+            return GeneratorIterator<Halton, std::array<double, 2>>(this);
+        }
+
+        /**
+         * @brief Get iterator to end (infinite sequence)
+         *
+         * @return GeneratorIterator<Halton, std::array<double, 2>>
+         */
+        [[nodiscard]] auto end() const -> GeneratorIterator<Halton, std::array<double, 2>> {
+            return GeneratorIterator<Halton, std::array<double, 2>>(nullptr,
+                                                                   std::numeric_limits<size_t>::max());
         }
     };
 
@@ -269,6 +485,38 @@ namespace ldsgen {
         }
 
         /**
+         * @brief Peek at the next value without advancing state
+         *
+         * @return std::array<double, 2> next point on the circle
+         */
+        [[nodiscard]] auto peek() -> std::array<double, 2> {
+            auto theta = this->vdc.peek() * TWO_PI;  // map to [0, 2*pi];
+            return {std::cos(theta), std::sin(theta)};
+        }
+
+        /**
+         * @brief Generate multiple values efficiently
+         *
+         * @param[in] n number of values to generate
+         * @return std::vector<std::array<double, 2>> vector of points
+         */
+        [[nodiscard]] auto batch(size_t n) -> std::vector<std::array<double, 2>> {
+            std::vector<std::array<double, 2>> result;
+            result.reserve(n);
+            for (size_t i = 0; i < n; ++i) {
+                result.push_back(this->pop());
+            }
+            return result;
+        }
+
+        /**
+         * @brief Skip n values in the sequence
+         *
+         * @param[in] n number of values to skip
+         */
+        auto skip(size_t n) -> void { this->vdc.skip(n); }
+
+        /**
          * @brief reseed
          *
          * The `reseed(size_t seed)` function is used to reset the state of the
@@ -279,6 +527,34 @@ namespace ldsgen {
          * @param[in] seed
          */
         auto reseed(const size_t seed) -> void { this->vdc.reseed(seed); }
+
+        /**
+         * @brief Get current index
+         *
+         * @return size_t current index in sequence
+         */
+        [[nodiscard]] auto get_index() const -> size_t {
+            return this->vdc.get_index();
+        }
+
+        /**
+         * @brief Get iterator to beginning
+         *
+         * @return GeneratorIterator<Circle, std::array<double, 2>>
+         */
+        auto begin() -> GeneratorIterator<Circle, std::array<double, 2>> {
+            return GeneratorIterator<Circle, std::array<double, 2>>(this);
+        }
+
+        /**
+         * @brief Get iterator to end (infinite sequence)
+         *
+         * @return GeneratorIterator<Circle, std::array<double, 2>>
+         */
+        [[nodiscard]] auto end() const -> GeneratorIterator<Circle, std::array<double, 2>> {
+            return GeneratorIterator<Circle, std::array<double, 2>>(nullptr,
+                                                                   std::numeric_limits<size_t>::max());
+        }
     };
 
     /**
@@ -347,6 +623,42 @@ namespace ldsgen {
         }
 
         /**
+         * @brief Peek at the next value without advancing state
+         *
+         * @return std::array<double, 2> next point in the disk
+         */
+        [[nodiscard]] auto peek() -> std::array<double, 2> {
+            auto theta = this->vdc0.peek() * TWO_PI;  // map to [0, 2*pi];
+            auto radius = std::sqrt(this->vdc1.peek());
+            return {radius * std::cos(theta), radius * std::sin(theta)};
+        }
+
+        /**
+         * @brief Generate multiple values efficiently
+         *
+         * @param[in] n number of values to generate
+         * @return std::vector<std::array<double, 2>> vector of points
+         */
+        [[nodiscard]] auto batch(size_t n) -> std::vector<std::array<double, 2>> {
+            std::vector<std::array<double, 2>> result;
+            result.reserve(n);
+            for (size_t i = 0; i < n; ++i) {
+                result.push_back(this->pop());
+            }
+            return result;
+        }
+
+        /**
+         * @brief Skip n values in the sequence
+         *
+         * @param[in] n number of values to skip
+         */
+        auto skip(size_t n) -> void {
+            this->vdc0.skip(n);
+            this->vdc1.skip(n);
+        }
+
+        /**
          * @brief reseed
          *
          * The `reseed(size_t seed)` function is used to reset the state of the
@@ -359,6 +671,34 @@ namespace ldsgen {
         auto reseed(const size_t seed) -> void {
             this->vdc0.reseed(seed);
             this->vdc1.reseed(seed);
+        }
+
+        /**
+         * @brief Get current index
+         *
+         * @return size_t current index in sequence
+         */
+        [[nodiscard]] auto get_index() const -> size_t {
+            return this->vdc0.get_index();
+        }
+
+        /**
+         * @brief Get iterator to beginning
+         *
+         * @return GeneratorIterator<Disk, std::array<double, 2>>
+         */
+        auto begin() -> GeneratorIterator<Disk, std::array<double, 2>> {
+            return GeneratorIterator<Disk, std::array<double, 2>>(this);
+        }
+
+        /**
+         * @brief Get iterator to end (infinite sequence)
+         *
+         * @return GeneratorIterator<Disk, std::array<double, 2>>
+         */
+        [[nodiscard]] auto end() const -> GeneratorIterator<Disk, std::array<double, 2>> {
+            return GeneratorIterator<Disk, std::array<double, 2>>(nullptr,
+                                                                   std::numeric_limits<size_t>::max());
         }
     };
 
@@ -425,6 +765,43 @@ namespace ldsgen {
         }
 
         /**
+         * @brief Peek at the next value without advancing state
+         *
+         * @return std::array<double, 3> next point on the sphere
+         */
+        [[nodiscard]] auto peek() -> std::array<double, 3> {
+            auto cosphi = (MAPPING_FACTOR * this->vdcgen.peek()) - 1.0;  // map to [-1, 1];
+            auto sinphi = std::sqrt(1.0 - (cosphi * cosphi));
+            auto arr = this->cirgen.peek();
+            return {sinphi * arr[0], sinphi * arr[1], cosphi};
+        }
+
+        /**
+         * @brief Generate multiple values efficiently
+         *
+         * @param[in] n number of values to generate
+         * @return std::vector<std::array<double, 3>> vector of points
+         */
+        [[nodiscard]] auto batch(size_t n) -> std::vector<std::array<double, 3>> {
+            std::vector<std::array<double, 3>> result;
+            result.reserve(n);
+            for (size_t i = 0; i < n; ++i) {
+                result.push_back(this->pop());
+            }
+            return result;
+        }
+
+        /**
+         * @brief Skip n values in the sequence
+         *
+         * @param[in] n number of values to skip
+         */
+        auto skip(size_t n) -> void {
+            this->vdcgen.skip(n);
+            this->cirgen.skip(n);
+        }
+
+        /**
          * @brief reseed
          *
          * The `reseed(size_t seed)` function is used to reset the state of the
@@ -437,6 +814,34 @@ namespace ldsgen {
         auto reseed(const size_t seed) -> void {
             this->cirgen.reseed(seed);
             this->vdcgen.reseed(seed);
+        }
+
+        /**
+         * @brief Get current index
+         *
+         * @return size_t current index in sequence
+         */
+        [[nodiscard]] auto get_index() const -> size_t {
+            return this->vdcgen.get_index();
+        }
+
+        /**
+         * @brief Get iterator to beginning
+         *
+         * @return GeneratorIterator<Sphere, std::array<double, 3>>
+         */
+        auto begin() -> GeneratorIterator<Sphere, std::array<double, 3>> {
+            return GeneratorIterator<Sphere, std::array<double, 3>>(this);
+        }
+
+        /**
+         * @brief Get iterator to end (infinite sequence)
+         *
+         * @return GeneratorIterator<Sphere, std::array<double, 3>>
+         */
+        [[nodiscard]] auto end() const -> GeneratorIterator<Sphere, std::array<double, 3>> {
+            return GeneratorIterator<Sphere, std::array<double, 3>>(nullptr,
+                                                                    std::numeric_limits<size_t>::max());
         }
     };
 
@@ -515,6 +920,51 @@ namespace ldsgen {
         }
 
         /**
+         * @brief Peek at the next value without advancing state
+         *
+         * @return std::array<double, 4> next point on the 3-sphere
+         */
+        [[nodiscard]] auto peek() -> std::array<double, 4> {
+            auto phi = this->vdc0.peek() * TWO_PI;  // map to [0, 2*pi];
+            auto psy = this->vdc1.peek() * TWO_PI;  // map to [0, 2*pi];
+            auto vdc = this->vdc2.peek();
+            auto cos_eta = std::sqrt(vdc);
+            auto sin_eta = std::sqrt(1.0 - vdc);
+            return {
+                cos_eta * std::cos(psy),
+                cos_eta * std::sin(psy),
+                sin_eta * std::cos(phi + psy),
+                sin_eta * std::sin(phi + psy),
+            };
+        }
+
+        /**
+         * @brief Generate multiple values efficiently
+         *
+         * @param[in] n number of values to generate
+         * @return std::vector<std::array<double, 4>> vector of points
+         */
+        [[nodiscard]] auto batch(size_t n) -> std::vector<std::array<double, 4>> {
+            std::vector<std::array<double, 4>> result;
+            result.reserve(n);
+            for (size_t i = 0; i < n; ++i) {
+                result.push_back(this->pop());
+            }
+            return result;
+        }
+
+        /**
+         * @brief Skip n values in the sequence
+         *
+         * @param[in] n number of values to skip
+         */
+        auto skip(size_t n) -> void {
+            this->vdc0.skip(n);
+            this->vdc1.skip(n);
+            this->vdc2.skip(n);
+        }
+
+        /**
          * @brief reseed
          *
          * The `reseed(size_t seed)` function is used to reset the state of the
@@ -528,6 +978,34 @@ namespace ldsgen {
             this->vdc0.reseed(seed);
             this->vdc1.reseed(seed);
             this->vdc2.reseed(seed);
+        }
+
+        /**
+         * @brief Get current index
+         *
+         * @return size_t current index in sequence
+         */
+        [[nodiscard]] auto get_index() const -> size_t {
+            return this->vdc0.get_index();
+        }
+
+        /**
+         * @brief Get iterator to beginning
+         *
+         * @return GeneratorIterator<Sphere3Hopf, std::array<double, 4>>
+         */
+        auto begin() -> GeneratorIterator<Sphere3Hopf, std::array<double, 4>> {
+            return GeneratorIterator<Sphere3Hopf, std::array<double, 4>>(this);
+        }
+
+        /**
+         * @brief Get iterator to end (infinite sequence)
+         *
+         * @return GeneratorIterator<Sphere3Hopf, std::array<double, 4>>
+         */
+        [[nodiscard]] auto end() const -> GeneratorIterator<Sphere3Hopf, std::array<double, 4>> {
+            return GeneratorIterator<Sphere3Hopf, std::array<double, 4>>(nullptr,
+                                                                        std::numeric_limits<size_t>::max());
         }
     };
 
