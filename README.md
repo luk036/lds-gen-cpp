@@ -1,7 +1,6 @@
 [![Actions Status](https://github.com/luk036/lds-gen-cpp/workflows/MacOS/badge.svg)](https://github.com/luk036/lds-gen-cpp/actions)
 [![Actions Status](https://github.com/luk036/lds-gen-cpp/workflows/Windows/badge.svg)](https://github.com/luk036/lds-gen-cpp/actions)
 [![Actions Status](https://github.com/luk036/lds-gen-cpp/workflows/Ubuntu/badge.svg)](https://github.com/luk036/lds-gen-cpp/actions)
-[![Actions Status](https://github.com/luk036/lds-gen-cpp/workflows/Style/badge.svg)](https://github.com/luk036/lds-gen-cpp/actions)
 [![Actions Status](https://github.com/luk036/lds-gen-cpp/workflows/Install/badge.svg)](https://github.com/luk036/lds-gen-cpp/actions)
 [![codecov](https://codecov.io/gh/luk036/lds-gen-cpp/branch/master/graph/badge.svg)](https://codecov.io/gh/luk036/lds-gen-cpp)
 
