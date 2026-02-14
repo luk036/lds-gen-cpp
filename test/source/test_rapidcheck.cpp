@@ -246,11 +246,11 @@ TEST_CASE("Property-based test: get_index reflects correct position") {
                   auto base = static_cast<size_t>(*rc::gen::inRange(2, 51));
                   
                   ldsgen::VdCorput gen(base);
-                  RC_ASSERT(gen.get_index() == 0);
+                  RC_ASSERT(gen.get_index() == static_cast<size_t>(0));
                   
                   for (size_t i = 0; i < 100; ++i) {
                       gen.pop();
-                      RC_ASSERT(gen.get_index() == i + 1);
+                      RC_ASSERT(gen.get_index() == i + static_cast<size_t>(1));
                   }
               });
 }
@@ -267,7 +267,7 @@ TEST_CASE("Property-based test: reseed and get_index consistency") {
                   RC_ASSERT(gen.get_index() == seed);
                   
                   gen.pop();
-                  RC_ASSERT(gen.get_index() == seed + 1);
+                  RC_ASSERT(gen.get_index() == seed + static_cast<size_t>(1));
               });
 }
 
