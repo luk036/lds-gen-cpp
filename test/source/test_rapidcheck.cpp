@@ -35,13 +35,12 @@ TEST_CASE("Property-based test: VdCorput sequence is deterministic") {
               });
 }
 
-TEST_CASE("Property-based test: VdCorput sequence is strictly increasing for base 2") {
+TEST_CASE("Property-based test: VdCorput generates values in [0,1)") {
     ldsgen::VdCorput gen(2);
-    double prev = -1.0;
     for (size_t i = 0; i < 100; ++i) {
         auto curr = gen.pop();
-        RC_ASSERT(curr > prev);
-        prev = curr;
+        CHECK(curr >= 0.0);
+        CHECK(curr < 1.0);
     }
 }
 
