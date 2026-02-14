@@ -64,12 +64,8 @@ endif()
 
 enable_testing()
 
-# Note: doctest and similar testing frameworks can automatically configure CMake tests. For other
-# testing frameworks add the tests target instead: add_test(NAME ${PROJECT_NAME} COMMAND
-# ${PROJECT_NAME})
-
-include(../cmake/doctest.cmake)
-doctest_discover_tests(${PROJECT_NAME})
+# Add a single test that runs all tests (both doctest and RapidCheck)
+add_test(NAME LdsGenAllTests COMMAND ${PROJECT_NAME})
 
 # ---- code coverage ----
 
