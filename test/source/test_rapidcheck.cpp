@@ -9,7 +9,7 @@
 TEST_CASE("Property-based test: VdCorput values in [0,1]") {
     rc::check("vdc(n, base) returns values in [0, 1]",
               []() {
-                  auto base = *rc::gen::inRange(2, 101);
+                  auto base = static_cast<size_t>(*rc::gen::inRange(2, 101));
                   for (size_t i = 0; i < 100; ++i) {
                       auto val = ldsgen::vdc(i, base);
                       RC_ASSERT(val >= 0.0 && val < 1.0);
@@ -20,8 +20,8 @@ TEST_CASE("Property-based test: VdCorput values in [0,1]") {
 TEST_CASE("Property-based test: VdCorput sequence is deterministic") {
     rc::check("VdCorput produces same sequence after reseed",
               []() {
-                  auto base = *rc::gen::inRange(2, 51);
-                  auto seed = *rc::gen::inRange(0, 1000);
+                  auto base = static_cast<size_t>(*rc::gen::inRange(2, 51));
+                  auto seed = static_cast<size_t>(*rc::gen::inRange(0, 1000));
                   
                   ldsgen::VdCorput gen1(base);
                   ldsgen::VdCorput gen2(base);
@@ -48,7 +48,7 @@ TEST_CASE("Property-based test: VdCorput sequence is strictly increasing for bas
 TEST_CASE("Property-based test: Circle points on unit circle") {
     rc::check("All Circle points lie on unit circle",
               []() {
-                  auto base = *rc::gen::inRange(2, 101);
+                  auto base = static_cast<size_t>(*rc::gen::inRange(2, 101));
                   ldsgen::Circle gen(base);
                   
                   for (size_t i = 0; i < 50; ++i) {
@@ -62,8 +62,8 @@ TEST_CASE("Property-based test: Circle points on unit circle") {
 TEST_CASE("Property-based test: Disk points inside unit disk") {
     rc::check("All Disk points lie inside unit disk",
               []() {
-                  auto base0 = *rc::gen::inRange(2, 51);
-                  auto base1 = *rc::gen::inRange(2, 51);
+                  auto base0 = static_cast<size_t>(*rc::gen::inRange(2, 51));
+                  auto base1 = static_cast<size_t>(*rc::gen::inRange(2, 51));
                   ldsgen::Disk gen(base0, base1);
                   
                   for (size_t i = 0; i < 50; ++i) {
@@ -77,8 +77,8 @@ TEST_CASE("Property-based test: Disk points inside unit disk") {
 TEST_CASE("Property-based test: Sphere points on unit sphere") {
     rc::check("All Sphere points lie on unit sphere",
               []() {
-                  auto base0 = *rc::gen::inRange(2, 51);
-                  auto base1 = *rc::gen::inRange(2, 51);
+                  auto base0 = static_cast<size_t>(*rc::gen::inRange(2, 51));
+                  auto base1 = static_cast<size_t>(*rc::gen::inRange(2, 51));
                   ldsgen::Sphere gen(base0, base1);
                   
                   for (size_t i = 0; i < 50; ++i) {
@@ -94,8 +94,8 @@ TEST_CASE("Property-based test: Sphere points on unit sphere") {
 TEST_CASE("Property-based test: Halton points in [0,1]^2") {
     rc::check("All Halton points lie in unit square [0,1]x[0,1]",
               []() {
-                  auto base0 = *rc::gen::inRange(2, 51);
-                  auto base1 = *rc::gen::inRange(2, 51);
+                  auto base0 = static_cast<size_t>(*rc::gen::inRange(2, 51));
+                  auto base1 = static_cast<size_t>(*rc::gen::inRange(2, 51));
                   ldsgen::Halton gen(base0, base1);
                   
                   for (size_t i = 0; i < 50; ++i) {
@@ -109,9 +109,9 @@ TEST_CASE("Property-based test: Halton points in [0,1]^2") {
 TEST_CASE("Property-based test: Sphere3Hopf points on unit 3-sphere") {
     rc::check("All Sphere3Hopf points lie on unit 3-sphere",
               []() {
-                  auto base0 = *rc::gen::inRange(2, 31);
-                  auto base1 = *rc::gen::inRange(2, 31);
-                  auto base2 = *rc::gen::inRange(2, 31);
+                  auto base0 = static_cast<size_t>(*rc::gen::inRange(2, 31));
+                  auto base1 = static_cast<size_t>(*rc::gen::inRange(2, 31));
+                  auto base2 = static_cast<size_t>(*rc::gen::inRange(2, 31));
                   ldsgen::Sphere3Hopf gen(base0, base1, base2);
                   
                   for (size_t i = 0; i < 50; ++i) {
@@ -128,7 +128,7 @@ TEST_CASE("Property-based test: Sphere3Hopf points on unit 3-sphere") {
 TEST_CASE("Property-based test: peek does not advance state") {
     rc::check("peek() returns same value as subsequent pop()",
               []() {
-                  auto base = *rc::gen::inRange(2, 51);
+                  auto base = static_cast<size_t>(*rc::gen::inRange(2, 51));
                   ldsgen::VdCorput gen(base);
                   
                   for (size_t i = 0; i < 10; ++i) {
@@ -142,8 +142,8 @@ TEST_CASE("Property-based test: peek does not advance state") {
 TEST_CASE("Property-based test: skip advances state correctly") {
     rc::check("skip(n) advances state by n positions",
               []() {
-                  auto base = *rc::gen::inRange(2, 51);
-                  auto skip_count = *rc::gen::inRange(0, 100);
+                  auto base = static_cast<size_t>(*rc::gen::inRange(2, 51));
+                  auto skip_count = static_cast<size_t>(*rc::gen::inRange(0, 100));
                   
                   ldsgen::VdCorput gen1(base);
                   ldsgen::VdCorput gen2(base);
@@ -161,8 +161,8 @@ TEST_CASE("Property-based test: skip advances state correctly") {
 TEST_CASE("Property-based test: batch returns correct number of values") {
     rc::check("batch(n) returns exactly n values",
               []() {
-                  auto base = *rc::gen::inRange(2, 51);
-                  auto batch_size = *rc::gen::inRange(1, 100);
+                  auto base = static_cast<size_t>(*rc::gen::inRange(2, 51));
+                  auto batch_size = static_cast<size_t>(*rc::gen::inRange(1, 100));
                   
                   ldsgen::VdCorput gen(base);
                   auto batch = gen.batch(batch_size);
@@ -178,8 +178,8 @@ TEST_CASE("Property-based test: batch returns correct number of values") {
 TEST_CASE("Property-based test: reseed resets generator state") {
     rc::check("reseed(n) produces deterministic sequence",
               []() {
-                  auto base = *rc::gen::inRange(2, 51);
-                  auto seed = *rc::gen::inRange(0, 1000);
+                  auto base = static_cast<size_t>(*rc::gen::inRange(2, 51));
+                  auto seed = static_cast<size_t>(*rc::gen::inRange(0, 1000));
                   
                   ldsgen::VdCorput gen1(base);
                   ldsgen::VdCorput gen2(base);
@@ -196,7 +196,7 @@ TEST_CASE("Property-based test: reseed resets generator state") {
 TEST_CASE("Property-based test: iterator produces same values as pop") {
     rc::check("Iterator produces same sequence as pop()",
               []() {
-                  auto base = *rc::gen::inRange(2, 51);
+                  auto base = static_cast<size_t>(*rc::gen::inRange(2, 51));
                   
                   ldsgen::VdCorput gen1(base);
                   ldsgen::VdCorput gen2(base);
@@ -211,7 +211,7 @@ TEST_CASE("Property-based test: iterator produces same values as pop") {
 TEST_CASE("Property-based test: Circle iterator produces points on unit circle") {
     rc::check("Circle iterator produces points on unit circle",
               []() {
-                  auto base = *rc::gen::inRange(2, 51);
+                  auto base = static_cast<size_t>(*rc::gen::inRange(2, 51));
                   
                   ldsgen::Circle gen(base);
                   auto it = gen.begin();
@@ -227,8 +227,8 @@ TEST_CASE("Property-based test: Circle iterator produces points on unit circle")
 TEST_CASE("Property-based test: Halton iterator produces points in unit square") {
     rc::check("Halton iterator produces points in [0,1]^2",
               []() {
-                  auto base0 = *rc::gen::inRange(2, 51);
-                  auto base1 = *rc::gen::inRange(2, 51);
+                  auto base0 = static_cast<size_t>(*rc::gen::inRange(2, 51));
+                  auto base1 = static_cast<size_t>(*rc::gen::inRange(2, 51));
                   
                   ldsgen::Halton gen(base0, base1);
                   auto it = gen.begin();
@@ -244,7 +244,7 @@ TEST_CASE("Property-based test: Halton iterator produces points in unit square")
 TEST_CASE("Property-based test: get_index reflects correct position") {
     rc::check("get_index() returns current sequence position",
               []() {
-                  auto base = *rc::gen::inRange(2, 51);
+                  auto base = static_cast<size_t>(*rc::gen::inRange(2, 51));
                   
                   ldsgen::VdCorput gen(base);
                   RC_ASSERT(gen.get_index() == 0);
@@ -259,8 +259,8 @@ TEST_CASE("Property-based test: get_index reflects correct position") {
 TEST_CASE("Property-based test: reseed and get_index consistency") {
     rc::check("reseed(n) sets index to n",
               []() {
-                  auto base = *rc::gen::inRange(2, 51);
-                  auto seed = *rc::gen::inRange(0, 1000);
+                  auto base = static_cast<size_t>(*rc::gen::inRange(2, 51));
+                  auto seed = static_cast<size_t>(*rc::gen::inRange(0, 1000));
                   
                   ldsgen::VdCorput gen(base);
                   gen.reseed(seed);
