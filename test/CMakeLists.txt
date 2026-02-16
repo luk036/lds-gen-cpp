@@ -14,6 +14,7 @@ include(../cmake/tools.cmake)
 # ---- Dependencies ----
 
 include(../cmake/CPM.cmake)
+include(../cmake/specific.cmake)
 
 CPMAddPackage("gh:doctest/doctest@2.4.11")
 CPMAddPackage("gh:TheLartians/Format.cmake@1.7.3")
@@ -35,7 +36,7 @@ endif()
 
 file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
 add_executable(${PROJECT_NAME} ${sources})
-target_link_libraries(${PROJECT_NAME} doctest::doctest LdsGen::LdsGen)
+target_link_libraries(${PROJECT_NAME} doctest::doctest LdsGen::LdsGen ${SPECIFIC_LIBS})
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20)
 
 if(rapidcheck_ADDED)

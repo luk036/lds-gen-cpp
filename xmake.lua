@@ -1,6 +1,7 @@
 add_rules("mode.debug", "mode.release", "mode.coverage")
 add_requires("doctest", {alias = "doctest"})
 add_requires("fmt", {alias = "fmt"})
+add_requires("spdlog", {alias = "spdlog"})
 
 if is_mode("coverage") then
     add_cxflags("-ftest-coverage", "-fprofile-arcs", {force = true})
@@ -24,7 +25,7 @@ target("LdsGen")
     set_kind("static")
     add_includedirs("include", {public = true})
     add_files("source/*.cpp")
-    add_packages("fmt")
+    add_packages("fmt", "spdlog")
     if is_plat("linux") then
         add_syslinks("pthread")
     end
@@ -34,11 +35,55 @@ target("test_ldsgen")
     set_kind("binary")
     add_deps("LdsGen")
     add_files("test/source/*.cpp")
-    add_packages("doctest", "fmt")
+    add_packages("doctest", "fmt", "spdlog")
     add_tests("default")
     if is_plat("linux") then
         add_syslinks("pthread")
     end
+
+target("test_spdlogger")
+    set_languages("c++20")
+    set_kind("binary")
+    add_files("test_spdlogger.cpp")
+    add_files("source/logger.cpp")
+    add_includedirs("include", {public = true})
+    add_packages("spdlog", "fmt")
+
+target("test_spdlogger_simple")
+    set_languages("c++20")
+    set_kind("binary")
+    add_files("test_spdlogger_simple.cpp")
+    add_packages("spdlog")
+
+target("test_spdlogger_debug")
+    set_languages("c++20")
+    set_kind("binary")
+    add_files("test_spdlogger_debug.cpp")
+    add_files("source/logger.cpp")
+    add_includedirs("include", {public = true})
+    add_packages("spdlog", "fmt")
+
+target("test_logger_diagnostic")
+    set_languages("c++20")
+    set_kind("binary")
+    add_files("test_logger_diagnostic.cpp")
+    add_packages("spdlog")
+
+target("test_final_spdlogger")
+    set_languages("c++20")
+    set_kind("binary")
+    add_files("test_final_spdlogger.cpp")
+    add_files("source/logger.cpp")
+    add_includedirs("include", {public = true})
+    add_packages("spdlog", "fmt")
+
+target("test_wrapper_only")
+    set_languages("c++20")
+    set_kind("binary")
+    add_files("test_wrapper_only.cpp")
+    add_files("source/logger.cpp")
+    add_includedirs("include", {public = true})
+    add_packages("spdlog", "fmt")
 
     -- Check if rapidcheck was downloaded by CMake
     local rapidcheck_dir = path.join(os.projectdir(), "build", "_deps", "rapidcheck-src")
