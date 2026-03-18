@@ -174,15 +174,13 @@ namespace ldsgen {
         }
 
         /**
-         * @brief pop
+         * @brief Generate the next value in the Van der Corput sequence
          *
-         * The `auto pop() -> double` function is a member function of the
-         * `VdCorput` class. It returns a `double` value. This function is used to
-         * generate the next value in the Van der Corput sequence. It increments the
-         * count and calculates the Van der Corput sequence value for that count and
-         * base.
+         * Generates the next value in the Van der Corput sequence by incrementing
+         * the count and calculating the Van der Corput sequence value for that count
+         * and base.
          *
-         * @return double
+         * @return double the next value in the sequence
          */
         auto pop() -> double {
             size_t count_value = this->count.fetch_add(1, std::memory_order_relaxed) + 1;  // ignore 0
@@ -313,32 +311,20 @@ namespace ldsgen {
         /**
          * @brief Construct a new Halton object
          *
-         * The `Halton(const size_t base0, const size_t base1)` is a constructor for
-         * the `Halton` class. It takes two parameters `base0` and `base1`, which
-         * are used as the bases for generating the Halton sequence. The
-         * `constexpr` keyword indicates that the constructor is constexpr,
-         * meaning it can be evaluated at compile-time if possible.
+         * Constructs a Halton sequence generator with the specified bases for the
+         * two dimensions.
          *
-         * @param[in] base0
-         * @param[in] base1
+         * @param[in] base0 the base for the first dimension
+         * @param[in] base1 the base for the second dimension
          */
         Halton(const size_t base0, const size_t base1) : vdc0(base0), vdc1(base1) {}
 
         /**
-         * @brief pop
+         * @brief Generate the next point in the Halton sequence
          *
-         * The `pop()` function is used to generate the next value in the sequence.
-         * For example, in the `VdCorput` class, `pop()` increments the count and
-         * calculates the Van der Corput sequence value for that count and base. In
-         * the `Halton` class, `pop()` returns the next point in the Halton sequence
-         * as a `std::array<double, 2>`. Similarly, in the `Circle` class, `pop()`
-         * returns the next point on the unit circle as a `std::array<double, 2>`.
-         * In the `Sphere` class, `pop()` returns the next point on the unit sphere
-         * as a `std::array<double, 3>`. And in the `Sphere3Hopf` class, `pop()`
-         * returns the next point on the 3-sphere using the Hopf fibration as a
-         * `std::array<double, 4>`.
+         * Returns the next point in the Halton sequence as an array of two double values.
          *
-         * @return std::array<double, 2>
+         * @return std::array<double, 2> the next point in the sequence
          */
         auto pop() -> std::array<double, 2> {  //
             return {this->vdc0.pop(), this->vdc1.pop()};
@@ -379,14 +365,11 @@ namespace ldsgen {
         }
 
         /**
-         * @brief reseed
+         * @brief Reset the state of the Halton sequence generator
          *
-         * The `reseed(size_t seed)` function is used to reset the state of the
-         * sequence generator to a specific seed value. This allows the sequence
-         * generator to start generating the sequence from the beginning, or from a
-         * specific point in the sequence, depending on the value of the seed.
+         * Resets the state of the sequence generator to a specific seed value.
          *
-         * @param[in] seed
+         * @param[in] seed the seed value to reset the sequence generator to
          */
         auto reseed(const size_t seed) -> void {
             this->vdc0.reseed(seed);
@@ -453,31 +436,19 @@ namespace ldsgen {
         /**
          * @brief Construct a new Circle object
          *
-         * The `Circle(size_t base)` constructor is initializing a `Circle` object
-         * with a given base. The base is used to generate the Van der Corput
-         * sequence, which is then mapped to points on the unit circle. The
-         * `explicit` keyword indicates that this constructor can only be used for
-         * explicit construction and not for implicit conversions.
+         * Constructs a Circle sequence generator with the specified base for generating
+         * the Van der Corput sequence, which is then mapped to points on the unit circle.
          *
-         * @param[in] base
+         * @param[in] base the base for the Van der Corput sequence generator
          */
         explicit Circle(const size_t base) : vdc(base) {}
 
         /**
-         * @brief pop
+         * @brief Generate the next point on the unit circle
          *
-         * The `pop()` function is used to generate the next value in the sequence.
-         * In the `VdCorput` class, `pop()` increments the count and calculates the
-         * Van der Corput sequence value for that count and base. In the `Halton`
-         * class, `pop()` returns the next point in the Halton sequence as a
-         * `std::array<double, 2>`. Similarly, in the `Circle` class, `pop()`
-         * returns the next point on the unit circle as a `std::array<double, 2>`.
-         * In the `Sphere` class, `pop()` returns the next point on the unit sphere
-         * as a `std::array<double, 3>`. And in the `Sphere3Hopf` class, `pop()`
-         * returns the next point on the 3-sphere using the Hopf fibration as a
-         * `std::array<double, 4>`.
+         * Returns the next point on the unit circle as an array of two double values.
          *
-         * @return std::array<double, 2>
+         * @return std::array<double, 2> the next point on the unit circle
          */
         auto pop() -> std::array<double, 2> {
             auto theta = this->vdc.pop() * TWO_PI;  // map to [0, 2*pi];
@@ -517,14 +488,11 @@ namespace ldsgen {
         auto skip(size_t n) -> void { this->vdc.skip(n); }
 
         /**
-         * @brief reseed
+         * @brief Reset the state of the Circle sequence generator
          *
-         * The `reseed(size_t seed)` function is used to reset the state of the
-         * sequence generator to a specific seed value. This allows the sequence
-         * generator to start generating the sequence from the beginning, or from a
-         * specific point in the sequence, depending on the value of the seed.
+         * Resets the state of the sequence generator to a specific seed value.
          *
-         * @param[in] seed
+         * @param[in] seed the seed value to reset the sequence generator to
          */
         auto reseed(const size_t seed) -> void { this->vdc.reseed(seed); }
 
@@ -589,32 +557,19 @@ namespace ldsgen {
         /**
          * @brief Construct a new Disk object
          *
-         * The `Disk(const size_t base0, const size_t base1)` is a constructor for
-         * the `Disk` class. It takes two parameters `base0` and `base1`, which
-         * are used as the bases for generating the Disk sequence. The
-         * `constexpr` keyword indicates that the constructor is constexpr,
-         * meaning it can be evaluated at compile-time if possible.
+         * Constructs a Disk sequence generator with the specified bases for the two dimensions.
          *
-         * @param[in] base0
-         * @param[in] base1
+         * @param[in] base0 the base for the first dimension (angle)
+         * @param[in] base1 the base for the second dimension (radius)
          */
         Disk(const size_t base0, const size_t base1) : vdc0(base0), vdc1(base1) {}
 
         /**
-         * @brief pop
+         * @brief Generate the next point in the unit disk
          *
-         * The `pop()` function is used to generate the next value in the sequence.
-         * For example, in the `VdCorput` class, `pop()` increments the count and
-         * calculates the Van der Corput sequence value for that count and base. In
-         * the `Disk` class, `pop()` returns the next point in the Disk sequence
-         * as a `std::array<double, 2>`. Similarly, in the `Circle` class, `pop()`
-         * returns the next point on the unit circle as a `std::array<double, 2>`.
-         * In the `Sphere` class, `pop()` returns the next point on the unit sphere
-         * as a `std::array<double, 3>`. And in the `Sphere3Hopf` class, `pop()`
-         * returns the next point on the 3-sphere using the Hopf fibration as a
-         * `std::array<double, 4>`.
+         * Returns the next point in the unit disk as an array of two double values.
          *
-         * @return std::array<double, 2>
+         * @return std::array<double, 2> the next point in the unit disk
          */
         auto pop() -> std::array<double, 2> {        //
             auto theta = this->vdc0.pop() * TWO_PI;  // map to [0, 2*pi];
@@ -659,14 +614,11 @@ namespace ldsgen {
         }
 
         /**
-         * @brief reseed
+         * @brief Reset the state of the Disk sequence generator
          *
-         * The `reseed(size_t seed)` function is used to reset the state of the
-         * sequence generator to a specific seed value. This allows the sequence
-         * generator to start generating the sequence from the beginning, or from a
-         * specific point in the sequence, depending on the value of the seed.
+         * Resets the state of the sequence generator to a specific seed value.
          *
-         * @param[in] seed
+         * @param[in] seed the seed value to reset the sequence generator to
          */
         auto reseed(const size_t seed) -> void {
             this->vdc0.reseed(seed);
@@ -736,26 +688,20 @@ namespace ldsgen {
         /**
          * @brief Construct a new Sphere object
          *
-         * @param[in] base0
-         * @param[in] base1
+         * Constructs a Sphere sequence generator with the specified bases for generating
+         * points on the unit sphere.
+         *
+         * @param[in] base0 the base for the Van der Corput generator (phi coordinate)
+         * @param[in] base1 the base for the Circle generator (theta coordinate)
          */
         Sphere(const size_t base0, const size_t base1) : vdcgen(base0), cirgen(base1) {}
 
         /**
-         * @brief pop
+         * @brief Generate the next point on the unit sphere
          *
-         * The `pop()` function is used to generate the next value in the sequence.
-         * In the `VdCorput` class, `pop()` increments the count and calculates the
-         * Van der Corput sequence value for that count and base. In the `Disk`
-         * class, `pop()` returns the next point in the Disk sequence as a
-         * `std::array<double, 2>`. Similarly, in the `Circle` class, `pop()`
-         * returns the next point on the unit circle as a `std::array<double, 2>`.
-         * In the `Sphere` class, `pop()` returns the next point on the unit sphere
-         * as a `std::array<double, 3>`. And in the `Sphere3Hopf` class, `pop()`
-         * returns the next point on the 3-sphere using the Hopf fibration as a
-         * `std::array<double, 4>`.
+         * Returns the next point on the unit sphere as an array of three double values.
          *
-         * @return std::array<double, 3>
+         * @return std::array<double, 3> the next point on the unit sphere
          */
         auto pop() -> std::array<double, 3> {
             auto cosphi = (MAPPING_FACTOR * this->vdcgen.pop()) - 1.0;  // map to [-1, 1];
@@ -802,14 +748,11 @@ namespace ldsgen {
         }
 
         /**
-         * @brief reseed
+         * @brief Reset the state of the Sphere sequence generator
          *
-         * The `reseed(size_t seed)` function is used to reset the state of the
-         * sequence generator to a specific seed value. This allows the sequence
-         * generator to start generating the sequence from the beginning, or from a
-         * specific point in the sequence, depending on the value of the seed.
+         * Resets the state of the sequence generator to a specific seed value.
          *
-         * @param[in] seed
+         * @param[in] seed the seed value to reset the sequence generator to
          */
         auto reseed(const size_t seed) -> void {
             this->cirgen.reseed(seed);
@@ -882,28 +825,21 @@ namespace ldsgen {
         /**
          * @brief Construct a new Sphere 3 Hopf object
          *
-         * @param[in] base0
-         * @param[in] base1
-         * @param[in] base2
+         * Constructs a 3-sphere sequence generator using the Hopf fibration with the specified bases.
+         *
+         * @param[in] base0 the base for the first Van der Corput generator (phi coordinate)
+         * @param[in] base1 the base for the second Van der Corput generator (psi coordinate)
+         * @param[in] base2 the base for the third Van der Corput generator (eta coordinate)
          */
         Sphere3Hopf(const size_t base0, const size_t base1, const size_t base2)
             : vdc0(base0), vdc1(base1), vdc2(base2) {}
 
         /**
-         * @brief pop
+         * @brief Generate the next point on the 3-sphere using Hopf fibration
          *
-         * The `pop()` function is used to generate the next value in the sequence.
-         * In the `VdCorput` class, `pop()` increments the count and calculates the
-         * Van der Corput sequence value for that count and base. In the `Disk`
-         * class, `pop()` returns the next point in the Disk sequence as a
-         * `std::array<double, 2>`. Similarly, in the `Circle` class, `pop()`
-         * returns the next point on the unit circle as a `std::array<double, 2>`.
-         * In the `Sphere` class, `pop()` returns the next point on the unit sphere
-         * as a `std::array<double, 3>`. And in the `Sphere3Hopf` class, `pop()`
-         * returns the next point on the 3-sphere using the Hopf fibration as a
-         * `std::array<double, 4>`.
+         * Returns the next point on the 3-sphere using the Hopf fibration as an array of four double values.
          *
-         * @return std::array<double, 4>
+         * @return std::array<double, 4> the next point on the 3-sphere
          */
         auto pop() -> std::array<double, 4> {
             auto phi = this->vdc0.pop() * TWO_PI;  // map to [0, 2*pi];
@@ -965,14 +901,11 @@ namespace ldsgen {
         }
 
         /**
-         * @brief reseed
+         * @brief Reset the state of the Sphere3Hopf sequence generator
          *
-         * The `reseed(size_t seed)` function is used to reset the state of the
-         * sequence generator to a specific seed value. This allows the sequence
-         * generator to start generating the sequence from the beginning, or from a
-         * specific point in the sequence, depending on the value of the seed.
+         * Resets the state of the sequence generator to a specific seed value.
          *
-         * @param[in] seed
+         * @param[in] seed the seed value to reset the sequence generator to
          */
         auto reseed(size_t seed) -> void {
             this->vdc0.reseed(seed);

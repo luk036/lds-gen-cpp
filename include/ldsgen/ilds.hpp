@@ -84,25 +84,31 @@ explicit VdCorput(size_t base = 2, unsigned int scale = DEFAULT_SCALE)
         /**
          * @brief Construct a new Halton object
          *
-         * @param[in] base
-         * @param[in] scale
+         * Constructs a Halton sequence generator with the specified bases and scale values.
+         *
+         * @param[in] base array of two size_t values representing the bases for the two Van der Corput generators
+         * @param[in] scale array of two unsigned int values representing the number of digits for each generator
          */
         explicit Halton(const std::array<size_t, 2>& base, const std::array<unsigned int, 2>& scale)
             : vdc0(base[0], scale[0]), vdc1(base[1], scale[1]) {}
 
         /**
-         * @brief
+         * @brief Generate the next point in the Halton sequence
          *
-         * @return array<size_t, 2>
+         * Returns the next point in the Halton sequence as an array of two size_t values.
+         *
+         * @return array<size_t, 2> the next point in the sequence
          */
         inline auto pop() -> array<size_t, 2> {  //
             return {this->vdc0.pop(), this->vdc1.pop()};
         }
 
         /**
-         * @brief
+         * @brief Reset the state of the Halton sequence generator
          *
-         * @param[in] seed
+         * Resets the state of the sequence generator to a specific seed value.
+         *
+         * @param[in] seed the seed value to reset the sequence generator to
          */
         auto reseed(const size_t seed) -> void {
             this->vdc0.reseed(seed);
