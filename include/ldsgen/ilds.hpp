@@ -9,6 +9,12 @@ namespace ildsgen {
     using std::array;
     
     // Constants for magic numbers
+    /**
+     * @brief Default number of digits for the Van der Corput sequence
+     *
+     * This value determines the precision/scale of the integer Halton sequence.
+     * Default is 10 digits.
+     */
     constexpr unsigned int DEFAULT_SCALE = 10;
 
     /**
@@ -18,9 +24,9 @@ namespace ildsgen {
      *
      */
     class VdCorput {
-        size_t _base;
-        std::atomic<size_t> _count;
-        size_t _factor;
+        size_t _base;  ///< Base of the number system
+        std::atomic<size_t> _count;  ///< Current count in the sequence
+        size_t _factor;  ///< Precomputed scale factor (base^scale)
 
       public:
         /**
