@@ -1,8 +1,9 @@
-#include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/spdlog.h>
+
+#include <fstream>
 #include <iostream>
 #include <memory>
-#include <fstream>
 
 int main() {
     std::cout << "=== Logger Diagnostic Test ===" << std::endl;

@@ -1,5 +1,6 @@
-#include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/spdlog.h>
+
 #include <iostream>
 
 int main() {

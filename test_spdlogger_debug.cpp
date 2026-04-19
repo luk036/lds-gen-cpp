@@ -1,8 +1,9 @@
-#include <ldsgen/logger.hpp>
-#include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
-#include <iostream>
+#include <spdlog/spdlog.h>
+
 #include <fstream>
+#include <iostream>
+#include <ldsgen/logger.hpp>
 
 int main() {
     std::cout << "=== Testing spdlogger integration with debug output ===" << std::endl;

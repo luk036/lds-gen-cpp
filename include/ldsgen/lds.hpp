@@ -34,8 +34,7 @@ namespace ldsgen {
      * @tparam Generator The generator class
      * @tparam Value The value type (double or array)
      */
-    template<typename Generator, typename Value>
-    class GeneratorIterator {
+    template <typename Generator, typename Value> class GeneratorIterator {
         Generator* gen;
         size_t index;
 
@@ -46,8 +45,7 @@ namespace ldsgen {
         using pointer = const value_type*;
         using reference = value_type;
 
-        explicit GeneratorIterator(Generator* g = nullptr, size_t idx = 0)
-            : gen{g}, index{idx} {}
+        explicit GeneratorIterator(Generator* g = nullptr, size_t idx = 0) : gen{g}, index{idx} {}
 
         /**
          * @brief Dereference operator
@@ -183,7 +181,8 @@ namespace ldsgen {
          * @return double the next value in the sequence
          */
         auto pop() -> double {
-            size_t count_value = this->count.fetch_add(1, std::memory_order_relaxed) + 1;  // ignore 0
+            size_t count_value
+                = this->count.fetch_add(1, std::memory_order_relaxed) + 1;  // ignore 0
             size_t idx = 0;
             double res = 0.0;
             while (count_value != 0) {
@@ -233,9 +232,7 @@ namespace ldsgen {
          *
          * @param[in] n number of values to skip
          */
-        auto skip(size_t n) -> void {
-            this->count.fetch_add(n, std::memory_order_relaxed);
-        }
+        auto skip(size_t n) -> void { this->count.fetch_add(n, std::memory_order_relaxed); }
 
         /**
          * @brief reseed
@@ -381,9 +378,7 @@ namespace ldsgen {
          *
          * @return size_t current index in the sequence
          */
-        [[nodiscard]] auto get_index() const -> size_t {
-            return this->vdc0.get_index();
-        }
+        [[nodiscard]] auto get_index() const -> size_t { return this->vdc0.get_index(); }
 
         /**
          * @brief Get iterator to beginning
@@ -400,8 +395,8 @@ namespace ldsgen {
          * @return GeneratorIterator<Halton, std::array<double, 2>>
          */
         [[nodiscard]] auto end() const -> GeneratorIterator<Halton, std::array<double, 2>> {
-            return GeneratorIterator<Halton, std::array<double, 2>>(nullptr,
-                                                                   std::numeric_limits<size_t>::max());
+            return GeneratorIterator<Halton, std::array<double, 2>>(
+                nullptr, std::numeric_limits<size_t>::max());
         }
     };
 
@@ -501,9 +496,7 @@ namespace ldsgen {
          *
          * @return size_t current index in sequence
          */
-        [[nodiscard]] auto get_index() const -> size_t {
-            return this->vdc.get_index();
-        }
+        [[nodiscard]] auto get_index() const -> size_t { return this->vdc.get_index(); }
 
         /**
          * @brief Get iterator to beginning
@@ -520,8 +513,8 @@ namespace ldsgen {
          * @return GeneratorIterator<Circle, std::array<double, 2>>
          */
         [[nodiscard]] auto end() const -> GeneratorIterator<Circle, std::array<double, 2>> {
-            return GeneratorIterator<Circle, std::array<double, 2>>(nullptr,
-                                                                   std::numeric_limits<size_t>::max());
+            return GeneratorIterator<Circle, std::array<double, 2>>(
+                nullptr, std::numeric_limits<size_t>::max());
         }
     };
 
@@ -630,9 +623,7 @@ namespace ldsgen {
          *
          * @return size_t current index in sequence
          */
-        [[nodiscard]] auto get_index() const -> size_t {
-            return this->vdc0.get_index();
-        }
+        [[nodiscard]] auto get_index() const -> size_t { return this->vdc0.get_index(); }
 
         /**
          * @brief Get iterator to beginning
@@ -649,8 +640,8 @@ namespace ldsgen {
          * @return GeneratorIterator<Disk, std::array<double, 2>>
          */
         [[nodiscard]] auto end() const -> GeneratorIterator<Disk, std::array<double, 2>> {
-            return GeneratorIterator<Disk, std::array<double, 2>>(nullptr,
-                                                                   std::numeric_limits<size_t>::max());
+            return GeneratorIterator<Disk, std::array<double, 2>>(
+                nullptr, std::numeric_limits<size_t>::max());
         }
     };
 
@@ -764,9 +755,7 @@ namespace ldsgen {
          *
          * @return size_t current index in sequence
          */
-        [[nodiscard]] auto get_index() const -> size_t {
-            return this->vdcgen.get_index();
-        }
+        [[nodiscard]] auto get_index() const -> size_t { return this->vdcgen.get_index(); }
 
         /**
          * @brief Get iterator to beginning
@@ -783,8 +772,8 @@ namespace ldsgen {
          * @return GeneratorIterator<Sphere, std::array<double, 3>>
          */
         [[nodiscard]] auto end() const -> GeneratorIterator<Sphere, std::array<double, 3>> {
-            return GeneratorIterator<Sphere, std::array<double, 3>>(nullptr,
-                                                                    std::numeric_limits<size_t>::max());
+            return GeneratorIterator<Sphere, std::array<double, 3>>(
+                nullptr, std::numeric_limits<size_t>::max());
         }
     };
 
@@ -825,7 +814,8 @@ namespace ldsgen {
         /**
          * @brief Construct a new Sphere 3 Hopf object
          *
-         * Constructs a 3-sphere sequence generator using the Hopf fibration with the specified bases.
+         * Constructs a 3-sphere sequence generator using the Hopf fibration with the specified
+         * bases.
          *
          * @param[in] base0 the base for the first Van der Corput generator (phi coordinate)
          * @param[in] base1 the base for the second Van der Corput generator (psi coordinate)
@@ -837,7 +827,8 @@ namespace ldsgen {
         /**
          * @brief Generate the next point on the 3-sphere using Hopf fibration
          *
-         * Returns the next point on the 3-sphere using the Hopf fibration as an array of four double values.
+         * Returns the next point on the 3-sphere using the Hopf fibration as an array of four
+         * double values.
          *
          * @return std::array<double, 4> the next point on the 3-sphere
          */
@@ -918,9 +909,7 @@ namespace ldsgen {
          *
          * @return size_t current index in sequence
          */
-        [[nodiscard]] auto get_index() const -> size_t {
-            return this->vdc0.get_index();
-        }
+        [[nodiscard]] auto get_index() const -> size_t { return this->vdc0.get_index(); }
 
         /**
          * @brief Get iterator to beginning
@@ -937,8 +926,8 @@ namespace ldsgen {
          * @return GeneratorIterator<Sphere3Hopf, std::array<double, 4>>
          */
         [[nodiscard]] auto end() const -> GeneratorIterator<Sphere3Hopf, std::array<double, 4>> {
-            return GeneratorIterator<Sphere3Hopf, std::array<double, 4>>(nullptr,
-                                                                        std::numeric_limits<size_t>::max());
+            return GeneratorIterator<Sphere3Hopf, std::array<double, 4>>(
+                nullptr, std::numeric_limits<size_t>::max());
         }
     };
 

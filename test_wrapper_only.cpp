@@ -1,6 +1,6 @@
-#include <ldsgen/logger.hpp>
-#include <iostream>
 #include <fstream>
+#include <iostream>
+#include <ldsgen/logger.hpp>
 
 int main() {
     std::cout << "Testing wrapper function only..." << std::endl;

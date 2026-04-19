@@ -1,7 +1,8 @@
-#include <ldsgen/logger.hpp>
-#include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/spdlog.h>
+
 #include <iostream>
+#include <ldsgen/logger.hpp>
 
 int main() {
     std::cout << "Testing spdlogger integration..." << std::endl;
@@ -19,7 +20,8 @@ int main() {
     std::cout << "Logging third message..." << std::endl;
     ldsgen::log_with_spdlog("Testing message 3");
 
-    std::cout << "Check build\\windows\\x64\\debug\\ldsgen.log for the logged messages" << std::endl;
+    std::cout << "Check build\\windows\\x64\\debug\\ldsgen.log for the logged messages"
+              << std::endl;
 
     // Also test direct spdlog usage
     std::cout << "\nTesting direct spdlog usage..." << std::endl;

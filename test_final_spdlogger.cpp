@@ -5,12 +5,13 @@
  * integrated into the project following the guidelines in spdlogger.md.
  */
 
-#include <ldsgen/logger.hpp>
-#include <ldsgen/lds.hpp>
-#include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
-#include <iostream>
+#include <spdlog/spdlog.h>
+
 #include <fstream>
+#include <iostream>
+#include <ldsgen/lds.hpp>
+#include <ldsgen/logger.hpp>
 
 int main() {
     std::cout << "========================================" << std::endl;

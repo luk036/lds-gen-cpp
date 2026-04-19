@@ -1,7 +1,7 @@
 #pragma once
 
-#include <memory>   // for unique_ptr
 #include <cstddef>  // for size_t
+#include <memory>   // for unique_ptr
 
 // #include <algorithm>  // for std::transform
 // #include <iterator>

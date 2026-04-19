@@ -9,9 +9,9 @@
  *   xmake run test_final_spdlogger
  */
 
-#include <ldsgen/logger.hpp>
-#include <ldsgen/lds.hpp>
 #include <iostream>
+#include <ldsgen/lds.hpp>
+#include <ldsgen/logger.hpp>
 
 int main() {
     std::cout << "LdsGen Spdlogger Example" << std::endl;

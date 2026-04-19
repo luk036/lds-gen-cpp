@@ -1,6 +1,5 @@
-#include <cstddef>  // for size_t
-
 #include <array>
+#include <cstddef>  // for size_t
 
 namespace ldsgen {
 
