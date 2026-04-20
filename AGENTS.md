@@ -1,14 +1,22 @@
 # AGENTS.md - Agent Guidelines for lds-gen-cpp
 
-## Build System (CMake 3.14+)
+> Low Discrepancy Sequence Generation in Modern C++ (C++20)
 
-### Build Commands
+This file provides guidelines for agentic coding agents operating in this repository.
+
+---
+
+## Build System
+
+### CMake (Primary - 3.14+)
+
 ```bash
 # Build and run all tests
 cmake -S test -B build/test
 cmake --build build/test
 CTEST_OUTPUT_ON_FAILURE=1 cmake --build build/test --target test
-# OR run executable directly
+
+# Run executable directly
 ./build/test/LdsGenTests
 
 # Build standalone executable
@@ -20,16 +28,16 @@ cmake --build build/standalone
 cmake -S all -B build
 cmake --build build
 
-# Code formatting
+# Code formatting (view or apply)
 cmake --build build/test --target format        # view changes
 cmake --build build/test --target fix-format   # apply changes
+
+# Clean build artifacts
+cmake --build build/test --target clean    # use CMake clean
 ```
 
-## Build System (xmake)
+### xmake (Alternative)
 
-This project can also be built using xmake as an alternative to CMake.
-
-### Build Commands
 ```bash
 # Build project
 xmake
@@ -47,15 +55,18 @@ xmake run LdsGen
 xmake clean
 ```
 
-### Running Single Tests
-This project uses Doctest. Run specific test cases:
+### Running Single Tests (Doctest)
+
 ```bash
 ./build/test/LdsGenTests --test-case="VdCorput"
 ./build/test/LdsGenTests --test-case="Halton"
 ./build/test/LdsGenTests --test-case="Circle"
 ./build/test/LdsGenTests --test-case="Sphere"
+# Wildcards supported
+./build/test/LdsGenTests --test-case="*thread*"
 ```
-Wildcards supported: `--test-case="*thread*"` to run thread-safety tests.
+
+---
 
 ## Code Style Guidelines
 
@@ -64,7 +75,7 @@ Wildcards supported: `--test-case="*thread*"` to run thread-safety tests.
 - **Column limit**: 100 characters
 - **Indentation**: 4 spaces
 - **Braces**: Attach style (opening brace on same line)
-- **Namespace indentation**: Indent all namespace contents
+- **Namespace indentation**: Indent all namespace contents (`NamespaceIndentation: All`)
 
 Always format before committing:
 ```bash
@@ -72,16 +83,18 @@ cmake --build build/test --target fix-format
 ```
 
 ### Naming Conventions
+
 | Type | Convention | Examples |
 |------|------------|----------|
 | Classes | PascalCase | `VdCorput`, `Halton`, `Circle`, `Sphere`, `SphereN` |
 | Functions | snake_case | `vdc()`, `pop()`, `reseed()`, `simple_interp()` |
 | Constants | UPPER_SNAKE_CASE | `TWO_PI`, `MAX_REVERSE_BITS`, `PRIME_TABLE` |
 | Member variables | snake_case_ (trailing underscore) | `count`, `base`, `vdc_`, `s_gen_` |
-| Private methods | snake_case | same as public methods |
+| Private methods | snake_case | (same as public) |
 | Parameters | snake_case | `base`, `seed`, `x_value`, `n` |
 
 ### Modern C++ Practices (C++20)
+
 - Use `auto` for type inference when type is obvious
 - Prefer `std::span` for passing arrays/views
 - Use `constexpr` for compile-time constants and functions
@@ -89,14 +102,17 @@ cmake --build build/test --target fix-format
 - Use `std::unique_ptr` for single ownership
 - Prefer range-based for loops: `for (auto x : container)`
 - Use `override` keyword when overriding virtual functions
+- Use `[[nodiscard]]` attribute for functions that should not ignore return values
 
 ### Headers & Includes
+
 - Use `#pragma once` for header guards (no traditional #ifndef)
 - Include order: 1) Standard library, 2) Third-party (doctest, fmt), 3) Project headers
-- Relative includes for project headers: `#include <ldsgen/lds.hpp>`
+- Project headers use angle brackets: `#include <ldsgen/lds.hpp>`
 - Headers in `include/ldsgen/*.hpp`, implementations in `source/*.cpp`
 
 ### Member Functions
+
 ```cpp
 // Use trailing return types for clarity
 auto pop() -> double;
@@ -111,18 +127,21 @@ VdCorput& operator=(VdCorput&&) noexcept = delete;
 ```
 
 ### Thread Safety
+
 - Use `std::atomic<T>` for thread-safe counters
 - Use `std::mutex` + `std::lock_guard` for protecting sections
 - Use `std::memory_order_relaxed` for atomic operations when synchronization not needed
-- Always test thread safety (see test_lds.cpp for examples)
+- Always test thread safety (see `test_lds.cpp` for examples)
 
 ### Error Handling
+
 - Throw `std::invalid_argument` for invalid input arguments
 - Throw `std::runtime_error` or similar for runtime errors
 - Check preconditions and throw early
 - NO error suppression: never catch exceptions silently
 
 ### Testing Patterns (Doctest)
+
 ```cpp
 #include <doctest/doctest.h>
 
@@ -140,41 +159,67 @@ TEST_CASE("ClassName::method_name") {
 TEST_CASE("ClassName::pop multiple") {
     auto obj = ldsgen::ClassName(2);
     obj.reseed(0);
-    auto res = obj.pop();
     CHECK_EQ(res[0], expected1);
     CHECK_EQ(res[1], expected2);
 }
 ```
 
-### Constants & Magic Numbers
-```cpp
-// Define constexpr constants in header
-namespace ldsgen {
-    constexpr size_t MAX_REVERSE_BITS = 64;
-    constexpr double TWO_PI = 2.0 * M_PI;
-    constexpr double MAPPING_FACTOR = 2.0;
-}
-```
-
-### Documentation
-- Use Doxygen-style comments for public APIs
-- Include `@brief`, `@param[in]`, `@return` tags
-- Use svgbob diagrams for visual explanations when appropriate
+---
 
 ## Project Structure
+
 ```
 include/ldsgen/    # Public headers (*.hpp)
 source/             # Implementation files (*.cpp)
 test/               # Test suite (doctest)
 standalone/         # Executable demo
 all/                # Build all targets together
+cmake/              # CMake modules (CPM.cmake, Format.cmake, etc.)
+.github/workflows/  # CI/CD workflows
 ```
 
+---
+
+## Dependencies
+
+The project uses:
+- **CPM.cmake** for dependency management
+- **doctest** for testing
+- **fmt** for string formatting
+- **spdlog** for logging (optional)
+- **rapidcheck** for property-based testing (optional, see test/CMakeLists.txt)
+
+---
+
 ## Important Notes
-- NO `.h` files - use `.hpp` for C++ headers
-- NO type error suppression - fix type issues properly
-- NO empty catch blocks
+
+- **NO `.h` files** - use `.hpp` for C++ headers
+- **NO type error suppression** (`as any`, `@ts-ignore`, `@ts-expect-error`) - fix type issues properly
+- **NO empty catch blocks** (`catch(e) {}`)
 - Always run format target before committing
 - Tests must pass before merging
 - Thread safety is a requirement for generators
-- **DO NOT delete the build/ directory directly without permission** - use `xmake clean` or CMake clean targets instead
+- **DO NOT delete the build/ directory directly** - use CMake targets or `xmake clean` instead
+- C++ standard: **C++20 minimum**
+- Compiler warnings as errors enabled (`-Werror`, `/WX`)
+
+---
+
+## Additional Tools
+
+### Sanitizers
+```bash
+cmake -S test -B build/test -DUSE_SANITIZER=Address
+cmake -S test -B build/test -DUSE_SANITIZER=Thread
+```
+
+### Static Analyzers
+```bash
+cmake -S test -B build/test -DUSE_STATIC_ANALYZER=clang-tidy
+```
+
+### Code Coverage
+```bash
+cmake -S test -B build/test -DENABLE_TEST_COVERAGE=1
+cmake --build build/test
+```
