@@ -5,16 +5,20 @@
 #include <cstdint>
 #include <memory>
 #include <mutex>
-#include <numbers>
+// #include <numbers>
 #include <span>
 #include <vector>
 
 #include "lds.hpp"
 
+#ifndef M_PI
+#    define M_PI 3.14159265358979323846264338327950288
+#endif
+
 namespace ldsgen {
 
-    constexpr double PI = std::numbers::pi;
-    constexpr double HALF_PI = PI / 2.0;
+    constexpr double PI = M_PI;
+    constexpr double HALF_PI = M_PI / 2.0;
 
     /**
      * @brief Generate evenly spaced numbers over a specified interval
