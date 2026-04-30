@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides a comprehensive guide on how spdlog is integrated into the csd-cpp project using both CMake and xmake build systems. spdlog (version 1.12.0) is a fast C++ logging library that provides a simple and efficient logging interface.
+This document provides a comprehensive guide on how spdlog is integrated into the csd-cpp project using both CMake and xmake build systems. spdlog (version 1.17.0) is a fast C++ logging library that provides a simple and efficient logging interface.
 
 ## Configuration Summary
 
@@ -25,7 +25,7 @@ Location: `cmake/specific.cmake:11-16`
 ```cmake
 CPMAddPackage(
   NAME spdlog
-  GIT_TAG v1.12.0
+  GIT_TAG v1.17.0
   GITHUB_REPOSITORY gabime/spdlog
   OPTIONS "SPDLOG_INSTALL YES" # create an installable target
 )
