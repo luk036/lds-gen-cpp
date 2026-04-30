@@ -211,7 +211,7 @@ TEST_CASE("VdCorput thread safety") {
         threads.emplace_back([&vgen, &results, &mtx, i]() {
             std::vector<double> local_results;
             for (int j = 0; j < values_per_thread; ++j) {
-                local_results.push_back(vgen.pop());
+                local_results.emplace_back(vgen.pop());
             }
             std::lock_guard<std::mutex> lock(mtx);
             results[static_cast<size_t>(i)] = std::move(local_results);
@@ -249,7 +249,7 @@ TEST_CASE("Halton thread safety") {
         threads.emplace_back([&hgen, &results, &mtx, i]() {
             std::vector<std::array<double, 2>> local_results;
             for (int j = 0; j < values_per_thread; ++j) {
-                local_results.push_back(hgen.pop());
+                local_results.emplace_back(hgen.pop());
             }
             std::lock_guard<std::mutex> lock(mtx);
             results[static_cast<size_t>(i)] = std::move(local_results);
@@ -280,7 +280,7 @@ TEST_CASE("Circle thread safety") {
         threads.emplace_back([&cgen, &results, &mtx, i]() {
             std::vector<std::array<double, 2>> local_results;
             for (int j = 0; j < values_per_thread; ++j) {
-                local_results.push_back(cgen.pop());
+                local_results.emplace_back(cgen.pop());
             }
             std::lock_guard<std::mutex> lock(mtx);
             results[static_cast<size_t>(i)] = std::move(local_results);
@@ -319,7 +319,7 @@ TEST_CASE("Disk thread safety") {
         threads.emplace_back([&dgen, &results, &mtx, i]() {
             std::vector<std::array<double, 2>> local_results;
             for (int j = 0; j < values_per_thread; ++j) {
-                local_results.push_back(dgen.pop());
+                local_results.emplace_back(dgen.pop());
             }
             std::lock_guard<std::mutex> lock(mtx);
             results[static_cast<size_t>(i)] = std::move(local_results);
@@ -358,7 +358,7 @@ TEST_CASE("Sphere thread safety") {
         threads.emplace_back([&sgen, &results, &mtx, i]() {
             std::vector<std::array<double, 3>> local_results;
             for (int j = 0; j < values_per_thread; ++j) {
-                local_results.push_back(sgen.pop());
+                local_results.emplace_back(sgen.pop());
             }
             std::lock_guard<std::mutex> lock(mtx);
             results[static_cast<size_t>(i)] = std::move(local_results);
@@ -397,7 +397,7 @@ TEST_CASE("Sphere3Hopf thread safety") {
         threads.emplace_back([&shfgen, &results, &mtx, i]() {
             std::vector<std::array<double, 4>> local_results;
             for (int j = 0; j < values_per_thread; ++j) {
-                local_results.push_back(shfgen.pop());
+                local_results.emplace_back(shfgen.pop());
             }
             std::lock_guard<std::mutex> lock(mtx);
             results[static_cast<size_t>(i)] = std::move(local_results);
@@ -446,7 +446,7 @@ TEST_CASE("Concurrent reseed thread safety") {
                     // Mostly pop
                     double val = vgen.pop();
                     std::lock_guard<std::mutex> lock(mtx);
-                    results.push_back(val);
+                    results.emplace_back(val);
                     pop_count++;
                 }
             }
@@ -505,7 +505,7 @@ TEST_CASE("VdCorput::iterator with STL") {
     auto it = vgen.begin();
     std::vector<double> values;
     for (int i = 0; i < 10; ++i, ++it) {
-        values.push_back(*it);
+        values.emplace_back(*it);
     }
     CHECK_EQ(values.size(), 10);
     CHECK_EQ(values[0], doctest::Approx(0.5));

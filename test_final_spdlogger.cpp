@@ -14,75 +14,75 @@
 #include <ldsgen/logger.hpp>
 
 int main() {
-    std::cout << "========================================" << std::endl;
-    std::cout << "  LdsGen Spdlogger Integration Test      " << std::endl;
-    std::cout << "========================================" << std::endl;
+    std::cout << "========================================\n";
+    std::cout << "  LdsGen Spdlogger Integration Test      \n";
+    std::cout << "========================================\n";
 
     // Part 1: Test the ldsgen logger wrapper
-    std::cout << "\n[Part 1] Testing ldsgen::log_with_spdlog()..." << std::endl;
-    std::cout << "----------------------------------------" << std::endl;
+    std::cout << "\n[Part 1] Testing ldsgen::log_with_spdlog()...\n";
+    std::cout << "----------------------------------------\n";
 
     try {
-        std::cout << "→ Logging initialization message..." << std::endl;
+        std::cout << "→ Logging initialization message...\n";
         ldsgen::log_with_spdlog("Spdlogger test initialization");
 
-        std::cout << "→ Logging Van der Corput sequence test..." << std::endl;
+        std::cout << "→ Logging Van der Corput sequence test...\n";
         ldsgen::log_with_spdlog("Testing VdCorput sequence generation");
 
         // Create a VdCorput sequence generator
         ldsgen::VdCorput vdc(2);
-        std::cout << "→ Generating 5 Van der Corput points..." << std::endl;
+        std::cout << "→ Generating 5 Van der Corput points...\n";
         for (int i = 0; i < 5; ++i) {
             auto point = vdc.pop();
-            std::cout << "  Point " << i << ": " << point << std::endl;
+            std::cout << "  Point " << i << ": " << point << '\n';
         }
 
-        std::cout << "→ Logging completion message..." << std::endl;
+        std::cout << "→ Logging completion message...\n";
         ldsgen::log_with_spdlog("VdCorput sequence test completed successfully");
 
     } catch (const std::exception& e) {
-        std::cerr << "✗ Error in Part 1: " << e.what() << std::endl;
+        std::cerr << "✗ Error in Part 1: " << e.what() << '\n';
         return 1;
     }
 
     // Part 2: Test direct spdlog usage (for comparison)
-    std::cout << "\n[Part 2] Testing direct spdlog usage..." << std::endl;
-    std::cout << "----------------------------------------" << std::endl;
+    std::cout << "\n[Part 2] Testing direct spdlog usage...\n";
+    std::cout << "----------------------------------------\n";
 
     try {
         auto logger = spdlog::basic_logger_mt("direct_test", "direct_test.log");
         logger->set_level(spdlog::level::info);
 
-        std::cout << "→ Logging with direct spdlog..." << std::endl;
+        std::cout << "→ Logging with direct spdlog...\n";
         logger->info("Direct spdlog test message 1");
         logger->info("Direct spdlog test message 2");
         logger->info("Direct spdlog test message 3");
         logger->flush();
 
-        std::cout << "✓ Direct spdlog logging completed" << std::endl;
+        std::cout << "✓ Direct spdlog logging completed\n";
 
     } catch (const spdlog::spdlog_ex& ex) {
-        std::cerr << "✗ Error in Part 2: " << ex.what() << std::endl;
+        std::cerr << "✗ Error in Part 2: " << ex.what() << '\n';
         return 1;
     }
 
     // Part 3: Verify log files
-    std::cout << "\n[Part 3] Verifying log files..." << std::endl;
-    std::cout << "----------------------------------------" << std::endl;
+    std::cout << "\n[Part 3] Verifying log files...\n";
+    std::cout << "----------------------------------------\n";
 
     auto verify_log = [](const char* filename, const char* description) {
         std::ifstream file(filename);
         if (file.good()) {
-            std::cout << "✓ " << description << " exists" << std::endl;
+            std::cout << "✓ " << description << " exists\n";
             std::string line;
             int line_count = 0;
             while (std::getline(file, line)) {
                 line_count++;
             }
-            std::cout << "  Contains " << line_count << " line(s)" << std::endl;
+            std::cout << "  Contains " << line_count << " line(s)\n";
             return true;
         } else {
-            std::cout << "✗ " << description << " NOT found" << std::endl;
+            std::cout << "✗ " << description << " NOT found\n";
             return false;
         }
     };
@@ -91,31 +91,31 @@ int main() {
     bool direct_log_ok = verify_log("direct_test.log", "direct_test.log (direct)");
 
     // Part 4: Display log file contents
-    std::cout << "\n[Part 4] Log file contents..." << std::endl;
-    std::cout << "----------------------------------------" << std::endl;
+    std::cout << "\n[Part 4] Log file contents...\n";
+    std::cout << "----------------------------------------\n";
 
     if (direct_log_ok) {
-        std::cout << "Contents of direct_test.log:" << std::endl;
+        std::cout << "Contents of direct_test.log:\n";
         std::ifstream file("direct_test.log");
         std::string line;
         while (std::getline(file, line)) {
-            std::cout << "  " << line << std::endl;
+            std::cout << "  " << line << '\n';
         }
     }
 
     // Part 5: Summary
-    std::cout << "\n[Summary]" << std::endl;
-    std::cout << "========================================" << std::endl;
-    std::cout << "✓ Spdlogger integration test completed" << std::endl;
-    std::cout << "✓ Logger wrapper function works" << std::endl;
-    std::cout << "✓ Direct spdlog usage works" << std::endl;
-    std::cout << "✓ Log files created successfully" << std::endl;
-    std::cout << "========================================" << std::endl;
+    std::cout << "\n[Summary]\n";
+    std::cout << "========================================\n";
+    std::cout << "✓ Spdlogger integration test completed\n";
+    std::cout << "✓ Logger wrapper function works\n";
+    std::cout << "✓ Direct spdlog usage works\n";
+    std::cout << "✓ Log files created successfully\n";
+    std::cout << "========================================\n";
 
     if (!ldsgen_log_ok) {
-        std::cout << "\nNote: ldsgen.log file not found in current directory." << std::endl;
-        std::cout << "It may be located in the build directory." << std::endl;
-        std::cout << "The wrapper function itself executed without errors." << std::endl;
+        std::cout << "\nNote: ldsgen.log file not found in current directory.\n";
+        std::cout << "It may be located in the build directory.\n";
+        std::cout << "The wrapper function itself executed without errors.\n";
     }
 
     return 0;

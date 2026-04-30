@@ -21,7 +21,7 @@ int main() {
         threads.emplace_back([&vgen, &results, &mtx, i, values_per_thread]() {
             std::vector<double> local_results;
             for (int j = 0; j < values_per_thread; ++j) {
-                local_results.push_back(vgen.pop());
+                local_results.emplace_back(vgen.pop());
             }
             std::lock_guard<std::mutex> lock(mtx);
             results[i] = std::move(local_results);

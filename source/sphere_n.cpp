@@ -21,7 +21,7 @@ namespace ldsgen {
 
         double step = (stop - start) / static_cast<double>(num - 1);
         for (std::size_t i = 0; i < num; ++i) {
-            result.push_back(start + (static_cast<double>(i) * step));
+            result.emplace_back(start + (static_cast<double>(i) * step));
         }
 
         return result;
@@ -59,7 +59,7 @@ namespace ldsgen {
             std::vector<double> result;
             result.reserve(X.size());
             for (double x : X) {
-                result.push_back(-std::cos(x));
+                result.emplace_back(-std::cos(x));
             }
             return result;
         }
@@ -68,7 +68,7 @@ namespace ldsgen {
             std::vector<double> result;
             result.reserve(X.size());
             for (double x : X) {
-                result.push_back(std::sin(x));
+                result.emplace_back(std::sin(x));
             }
             return result;
         }
@@ -78,7 +78,7 @@ namespace ldsgen {
             std::vector<double> result;
             result.reserve(X.size());
             for (std::size_t i = 0; i < X.size(); ++i) {
-                result.push_back((X[i] + neg_cosine[i] * sine[i]) / 2.0);
+                result.emplace_back((X[i] + neg_cosine[i] * sine[i]) / 2.0);
             }
             return result;
         }
@@ -103,7 +103,7 @@ namespace ldsgen {
 
         for (std::size_t i = 0; i < tp_minus2.size(); ++i) {
             double value = ((n - 1) * tp_minus2[i] + NEG_COSINE[i] * std::pow(SINE[i], n - 1)) / n;
-            result.push_back(value);
+            result.emplace_back(value);
         }
 
         return result;
@@ -146,10 +146,10 @@ namespace ldsgen {
         auto sphere2_point = sphere2_.pop();
         std::vector<double> result;
         result.reserve(4);
-        result.push_back(sinxi * sphere2_point[0]);
-        result.push_back(sinxi * sphere2_point[1]);
-        result.push_back(sinxi * sphere2_point[2]);
-        result.push_back(cosxi);
+        result.emplace_back(sinxi * sphere2_point[0]);
+        result.emplace_back(sinxi * sphere2_point[1]);
+        result.emplace_back(sinxi * sphere2_point[2]);
+        result.emplace_back(cosxi);
 
         return result;
     }
@@ -206,9 +206,9 @@ namespace ldsgen {
             result.reserve(sub_point.size() + 1);
 
             for (double s : sub_point) {
-                result.push_back(sinxi * s);
+                result.emplace_back(sinxi * s);
             }
-            result.push_back(cosxi);
+            result.emplace_back(cosxi);
 
             return result;
         }
@@ -224,9 +224,9 @@ namespace ldsgen {
         result.reserve(sub_point.size() + 1);
 
         for (double s : sub_point) {
-            result.push_back(s * sinphi);
+            result.emplace_back(s * sinphi);
         }
-        result.push_back(std::cos(xi));
+        result.emplace_back(std::cos(xi));
 
         return result;
     }

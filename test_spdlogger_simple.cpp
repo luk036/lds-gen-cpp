@@ -4,7 +4,7 @@
 #include <iostream>
 
 int main() {
-    std::cout << "Testing spdlogger directly..." << std::endl;
+    std::cout << "Testing spdlogger directly...\n";
 
     try {
         // Create a simple file logger
@@ -19,9 +19,9 @@ int main() {
         // Flush to ensure messages are written
         logger->flush();
 
-        std::cout << "Messages logged to test_spdlog.log" << std::endl;
+        std::cout << "Messages logged to test_spdlog.log\n";
     } catch (const spdlog::spdlog_ex& ex) {
-        std::cerr << "Log init failed: " << ex.what() << std::endl;
+        std::cerr << "Log init failed: " << ex.what() << '\n';
         return 1;
     }
 

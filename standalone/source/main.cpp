@@ -26,7 +26,7 @@ auto main(int argc, char** argv) -> int {
     auto result = options.parse(argc, argv);
 
     if (result["help"].as<bool>()) {
-        std::cout << options.help() << std::endl;
+        std::cout << options.help() << '\n';
         return 0;
     }
 
@@ -36,45 +36,45 @@ auto main(int argc, char** argv) -> int {
     }
 
     std::cout << "Generating " << count << " points using " << sequence_type << " sequence"
-              << std::endl;
+              << '\n';
 
     if (sequence_type == "vdc") {
         ldsgen::VdCorput vdc(base);
         for (int i = 0; i < count; ++i) {
             auto point = vdc.pop();
-            std::cout << "  Point " << i << ": " << point << std::endl;
+            std::cout << "  Point " << i << ": " << point << '\n';
         }
     } else if (sequence_type == "halton") {
         ldsgen::Halton halton(2, 3);
         for (int i = 0; i < count; ++i) {
             auto point = halton.pop();
             std::cout << "  Point " << i << ": (" << point[0] << ", " << point[1] << ")"
-                      << std::endl;
+                      << '\n';
         }
     } else if (sequence_type == "circle") {
         ldsgen::Circle circle(base);
         for (int i = 0; i < count; ++i) {
             auto point = circle.pop();
             std::cout << "  Point " << i << ": (" << point[0] << ", " << point[1] << ")"
-                      << std::endl;
+                      << '\n';
         }
     } else if (sequence_type == "disk") {
         ldsgen::Disk disk(2, 3);
         for (int i = 0; i < count; ++i) {
             auto point = disk.pop();
             std::cout << "  Point " << i << ": (" << point[0] << ", " << point[1] << ")"
-                      << std::endl;
+                      << '\n';
         }
     } else if (sequence_type == "sphere") {
         ldsgen::Sphere sphere(2, 3);
         for (int i = 0; i < count; ++i) {
             auto point = sphere.pop();
             std::cout << "  Point " << i << ": (" << point[0] << ", " << point[1] << ", "
-                      << point[2] << ")" << std::endl;
+                      << point[2] << ")\n";
         }
     } else {
-        std::cerr << "Unknown sequence type: " << sequence_type << std::endl;
-        std::cerr << "Available types: vdc, halton, circle, disk, sphere" << std::endl;
+        std::cerr << "Unknown sequence type: " << sequence_type << '\n';
+        std::cerr << "Available types: vdc, halton, circle, disk, sphere\n";
         return 1;
     }
 
@@ -82,6 +82,6 @@ auto main(int argc, char** argv) -> int {
         ldsgen::log_with_spdlog("Sequence generation completed");
     }
 
-    std::cout << "Done!" << std::endl;
+    std::cout << "Done!\n";
     return 0;
 }

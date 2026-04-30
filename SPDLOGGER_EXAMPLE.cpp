@@ -14,24 +14,24 @@
 #include <ldsgen/logger.hpp>
 
 int main() {
-    std::cout << "LdsGen Spdlogger Example" << std::endl;
-    std::cout << "=========================" << std::endl;
+    std::cout << "LdsGen Spdlogger Example\n";
+    std::cout << "=========================\n";
 
     // Example 1: Basic logging
-    std::cout << "\nExample 1: Basic logging" << std::endl;
+    std::cout << "\nExample 1: Basic logging\n";
     ldsgen::log_with_spdlog("Application started");
     ldsgen::log_with_spdlog("Processing data...");
 
     // Example 2: Logging with sequence generation
-    std::cout << "\nExample 2: Logging with sequence generation" << std::endl;
+    std::cout << "\nExample 2: Logging with sequence generation\n";
     ldsgen::VdCorput vdc(2);
     for (int i = 0; i < 5; ++i) {
         auto point = vdc.pop();
-        std::cout << "  Generated point: " << point << std::endl;
+        std::cout << "  Generated point: " << point << '\n';
     }
     ldsgen::log_with_spdlog("Sequence generation completed");
 
-    std::cout << "\nCheck ldsgen.log for logged messages" << std::endl;
+    std::cout << "\nCheck ldsgen.log for logged messages\n";
 
     return 0;
 }

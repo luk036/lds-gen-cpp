@@ -222,7 +222,7 @@ namespace ldsgen {
             std::vector<double> result;
             result.reserve(n);
             for (size_t i = 0; i < n; ++i) {
-                result.push_back(this->pop());
+                result.emplace_back(this->pop());
             }
             return result;
         }
@@ -346,7 +346,7 @@ namespace ldsgen {
             std::vector<std::array<double, 2>> result;
             result.reserve(n);
             for (size_t i = 0; i < n; ++i) {
-                result.push_back(this->pop());
+                result.emplace_back(this->pop());
             }
             return result;
         }
@@ -470,7 +470,7 @@ namespace ldsgen {
             std::vector<std::array<double, 2>> result;
             result.reserve(n);
             for (size_t i = 0; i < n; ++i) {
-                result.push_back(this->pop());
+                result.emplace_back(this->pop());
             }
             return result;
         }
@@ -591,7 +591,7 @@ namespace ldsgen {
             std::vector<std::array<double, 2>> result;
             result.reserve(n);
             for (size_t i = 0; i < n; ++i) {
-                result.push_back(this->pop());
+                result.emplace_back(this->pop());
             }
             return result;
         }
@@ -723,7 +723,7 @@ namespace ldsgen {
             std::vector<std::array<double, 3>> result;
             result.reserve(n);
             for (size_t i = 0; i < n; ++i) {
-                result.push_back(this->pop());
+                result.emplace_back(this->pop());
             }
             return result;
         }
@@ -875,7 +875,7 @@ namespace ldsgen {
             std::vector<std::array<double, 4>> result;
             result.reserve(n);
             for (size_t i = 0; i < n; ++i) {
-                result.push_back(this->pop());
+                result.emplace_back(this->pop());
             }
             return result;
         }

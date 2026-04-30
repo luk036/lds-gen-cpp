@@ -81,7 +81,7 @@ TEST_CASE("Test Sphere3 consistency") {
         // Generate multiple points
         std::vector<std::vector<double>> points;
         for (int i = 0; i < 5; ++i) {
-            points.push_back(sgen.pop());
+            points.emplace_back(sgen.pop());
         }
 
         // Check all points are on unit 3-sphere
@@ -100,14 +100,14 @@ TEST_CASE("Test Sphere3 reseed functionality") {
     sgen.reseed(0);
     std::vector<std::vector<double>> seq1;
     for (int i = 0; i < 3; ++i) {
-        seq1.push_back(sgen.pop());
+        seq1.emplace_back(sgen.pop());
     }
 
     // Generate sequence with seed 0 again
     sgen.reseed(0);
     std::vector<std::vector<double>> seq2;
     for (int i = 0; i < 3; ++i) {
-        seq2.push_back(sgen.pop());
+        seq2.emplace_back(sgen.pop());
     }
 
     // Should be identical
@@ -121,7 +121,7 @@ TEST_CASE("Test Sphere3 reseed functionality") {
     sgen.reseed(1);
     std::vector<std::vector<double>> seq3;
     for (int i = 0; i < 3; ++i) {
-        seq3.push_back(sgen.pop());
+        seq3.emplace_back(sgen.pop());
     }
 
     // Should be different from seed 0
@@ -173,14 +173,14 @@ TEST_CASE("Test SphereN reseed functionality") {
     sgen.reseed(0);
     std::vector<std::vector<double>> seq1;
     for (int i = 0; i < 3; ++i) {
-        seq1.push_back(sgen.pop());
+        seq1.emplace_back(sgen.pop());
     }
 
     // Generate sequence with seed 0 again
     sgen.reseed(0);
     std::vector<std::vector<double>> seq2;
     for (int i = 0; i < 3; ++i) {
-        seq2.push_back(sgen.pop());
+        seq2.emplace_back(sgen.pop());
     }
 
     // Should be identical
@@ -241,7 +241,7 @@ TEST_CASE("Sphere3 thread safety") {
         threads.emplace_back([&sgen, &results, &mtx, i]() {
             std::vector<std::vector<double>> local_results;
             for (int j = 0; j < values_per_thread; ++j) {
-                local_results.push_back(sgen.pop());
+                local_results.emplace_back(sgen.pop());
             }
             std::lock_guard<std::mutex> lock(mtx);
             results[static_cast<size_t>(i)] = std::move(local_results);
@@ -279,7 +279,7 @@ TEST_CASE("SphereN thread safety") {
         threads.emplace_back([&sgen, &results, &mtx, i]() {
             std::vector<std::vector<double>> local_results;
             for (int j = 0; j < values_per_thread; ++j) {
-                local_results.push_back(sgen.pop());
+                local_results.emplace_back(sgen.pop());
             }
             std::lock_guard<std::mutex> lock(mtx);
             results[static_cast<size_t>(i)] = std::move(local_results);
@@ -317,7 +317,7 @@ TEST_CASE("SphereWrapper thread safety") {
         threads.emplace_back([&sgen, &results, &mtx, i]() {
             std::vector<std::vector<double>> local_results;
             for (int j = 0; j < values_per_thread; ++j) {
-                local_results.push_back(sgen.pop());
+                local_results.emplace_back(sgen.pop());
             }
             std::lock_guard<std::mutex> lock(mtx);
             results[static_cast<size_t>(i)] = std::move(local_results);
@@ -375,7 +375,7 @@ TEST_CASE("Concurrent reseed thread safety for sphere classes") {
                         point = sgenN.pop();
                     }
                     std::lock_guard<std::mutex> lock(mtx);
-                    results.push_back(point);
+                    results.emplace_back(point);
                     pop_count++;
                 }
             }
