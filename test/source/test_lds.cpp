@@ -341,7 +341,7 @@ TEST_CASE("Disk thread safety") {
     for (const auto& thread_results : results) {
         for (const auto& point : thread_results) {
             double radius_squared = point[0] * point[0] + point[1] * point[1];
-            CHECK(radius_squared <= 1.0);
+            CHECK_LE(radius_squared, 1.0);
         }
     }
 }
@@ -595,7 +595,7 @@ TEST_CASE("Disk::batch") {
     CHECK_EQ(batch.size(), 3);
     for (const auto& point : batch) {
         double radius_squared = point[0] * point[0] + point[1] * point[1];
-        CHECK(radius_squared <= 1.0);
+        CHECK_LE(radius_squared, 1.0);
     }
 }
 
@@ -604,7 +604,7 @@ TEST_CASE("Disk::skip") {
     dgen.skip(5);
     auto popped = dgen.pop();
     double radius_squared = popped[0] * popped[0] + popped[1] * popped[1];
-    CHECK(radius_squared <= 1.0);
+    CHECK_LE(radius_squared, 1.0);
 }
 
 TEST_CASE("Disk::iterator") {
@@ -612,7 +612,7 @@ TEST_CASE("Disk::iterator") {
     auto it = dgen.begin();
     auto val = *it;
     double radius_squared = val[0] * val[0] + val[1] * val[1];
-    CHECK(radius_squared <= 1.0);
+    CHECK_LE(radius_squared, 1.0);
 }
 
 TEST_CASE("Sphere::peek") {

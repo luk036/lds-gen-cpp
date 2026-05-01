@@ -66,8 +66,8 @@ TEST_CASE("Test Sphere3 basic functionality") {
 
     // Check values are in reasonable range
     for (double coord : point) {
-        CHECK(coord >= -1.0 - 1e-10);
-        CHECK(coord <= 1.0 + 1e-10);
+        CHECK_GE(coord, -1.0 - 1e-10);
+        CHECK_LE(coord, 1.0 + 1e-10);
     }
 }
 
