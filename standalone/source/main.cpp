@@ -35,8 +35,7 @@ auto main(int argc, char** argv) -> int {
         ldsgen::log_with_spdlog("Generating " + std::to_string(count) + " points");
     }
 
-    std::cout << "Generating " << count << " points using " << sequence_type << " sequence"
-              << '\n';
+    std::cout << "Generating " << count << " points using " << sequence_type << " sequence" << '\n';
 
     if (sequence_type == "vdc") {
         ldsgen::VdCorput vdc(base);
@@ -48,22 +47,19 @@ auto main(int argc, char** argv) -> int {
         ldsgen::Halton halton(2, 3);
         for (int i = 0; i < count; ++i) {
             auto point = halton.pop();
-            std::cout << "  Point " << i << ": (" << point[0] << ", " << point[1] << ")"
-                      << '\n';
+            std::cout << "  Point " << i << ": (" << point[0] << ", " << point[1] << ")" << '\n';
         }
     } else if (sequence_type == "circle") {
         ldsgen::Circle circle(base);
         for (int i = 0; i < count; ++i) {
             auto point = circle.pop();
-            std::cout << "  Point " << i << ": (" << point[0] << ", " << point[1] << ")"
-                      << '\n';
+            std::cout << "  Point " << i << ": (" << point[0] << ", " << point[1] << ")" << '\n';
         }
     } else if (sequence_type == "disk") {
         ldsgen::Disk disk(2, 3);
         for (int i = 0; i < count; ++i) {
             auto point = disk.pop();
-            std::cout << "  Point " << i << ": (" << point[0] << ", " << point[1] << ")"
-                      << '\n';
+            std::cout << "  Point " << i << ": (" << point[0] << ", " << point[1] << ")" << '\n';
         }
     } else if (sequence_type == "sphere") {
         ldsgen::Sphere sphere(2, 3);
