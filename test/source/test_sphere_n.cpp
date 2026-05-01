@@ -9,44 +9,44 @@
 TEST_CASE("Test linspace function") {
     auto result = ldsgen::linspace(0.0, 1.0, 5);
     REQUIRE(result.size() == 5);
-    CHECK(result[0] == doctest::Approx(0.0));
-    CHECK(result[1] == doctest::Approx(0.25));
-    CHECK(result[2] == doctest::Approx(0.5));
-    CHECK(result[3] == doctest::Approx(0.75));
-    CHECK(result[4] == doctest::Approx(1.0));
+    CHECK_EQ(result[0], doctest::Approx(0.0));
+    CHECK_EQ(result[1], doctest::Approx(0.25));
+    CHECK_EQ(result[2], doctest::Approx(0.5));
+    CHECK_EQ(result[3], doctest::Approx(0.75));
+    CHECK_EQ(result[4], doctest::Approx(1.0));
 
     result = ldsgen::linspace(0.0, 1.0, 1);
     REQUIRE(result.size() == 1);
-    CHECK(result[0] == doctest::Approx(0.0));
+    CHECK_EQ(result[0], doctest::Approx(0.0));
 
     result = ldsgen::linspace(-1.0, 1.0, 3);
     REQUIRE(result.size() == 3);
-    CHECK(result[0] == doctest::Approx(-1.0));
-    CHECK(result[1] == doctest::Approx(0.0));
-    CHECK(result[2] == doctest::Approx(1.0));
+    CHECK_EQ(result[0], doctest::Approx(-1.0));
+    CHECK_EQ(result[1], doctest::Approx(0.0));
+    CHECK_EQ(result[2], doctest::Approx(1.0));
 }
 
 TEST_CASE("Test simple_interp function") {
     std::vector<double> xp = {0.0, 1.0, 2.0, 3.0};
     std::vector<double> yp = {0.0, 2.0, 4.0, 6.0};  // Linear function y = 2x
 
-    CHECK(ldsgen::simple_interp(0.5, xp, yp) == doctest::Approx(1.0));
-    CHECK(ldsgen::simple_interp(1.5, xp, yp) == doctest::Approx(3.0));
-    CHECK(ldsgen::simple_interp(-0.5, xp, yp) == doctest::Approx(0.0));
-    CHECK(ldsgen::simple_interp(3.5, xp, yp) == doctest::Approx(6.0));
-    CHECK(ldsgen::simple_interp(2.0, xp, yp) == doctest::Approx(4.0));
+    CHECK_EQ(ldsgen::simple_interp(0.5, xp, yp), doctest::Approx(1.0));
+    CHECK_EQ(ldsgen::simple_interp(1.5, xp, yp), doctest::Approx(3.0));
+    CHECK_EQ(ldsgen::simple_interp(-0.5, xp, yp), doctest::Approx(0.0));
+    CHECK_EQ(ldsgen::simple_interp(3.5, xp, yp), doctest::Approx(6.0));
+    CHECK_EQ(ldsgen::simple_interp(2.0, xp, yp), doctest::Approx(4.0));
 }
 
 TEST_CASE("Test get_tp function") {
     auto tp0 = ldsgen::get_tp(0);
     REQUIRE(tp0.size() == 300);
-    CHECK(tp0[0] == doctest::Approx(0.0));
-    CHECK(tp0.back() == doctest::Approx(ldsgen::PI).epsilon(1e-10));
+    CHECK_EQ(tp0[0], doctest::Approx(0.0));
+    CHECK_EQ(tp0.back(), doctest::Approx(ldsgen::PI).epsilon(1e-10));
 
     auto tp1 = ldsgen::get_tp(1);
     REQUIRE(tp1.size() == 300);
-    CHECK(tp1[0] == doctest::Approx(-std::cos(0.0)));
-    CHECK(tp1.back() == doctest::Approx(-std::cos(ldsgen::PI)).epsilon(1e-10));
+    CHECK_EQ(tp1[0], doctest::Approx(-std::cos(0.0)));
+    CHECK_EQ(tp1.back(), doctest::Approx(-std::cos(ldsgen::PI)).epsilon(1e-10));
 
     auto tp2 = ldsgen::get_tp(2);
     REQUIRE(tp2.size() == 300);
@@ -62,7 +62,7 @@ TEST_CASE("Test Sphere3 basic functionality") {
 
     // Check if point is on unit 3-sphere (approximately)
     double radius_sq = std::inner_product(point.begin(), point.end(), point.begin(), 0.0);
-    CHECK(radius_sq == doctest::Approx(1.0).epsilon(1e-10));
+    CHECK_EQ(radius_sq, doctest::Approx(1.0).epsilon(1e-10));
 
     // Check values are in reasonable range
     for (double coord : point) {
@@ -87,7 +87,7 @@ TEST_CASE("Test Sphere3 consistency") {
         // Check all points are on unit 3-sphere
         for (const auto& point : points) {
             double radius_sq = std::inner_product(point.begin(), point.end(), point.begin(), 0.0);
-            CHECK(radius_sq == doctest::Approx(1.0).epsilon(1e-10));
+            CHECK_EQ(radius_sq, doctest::Approx(1.0).epsilon(1e-10));
         }
     }
 }
@@ -113,7 +113,7 @@ TEST_CASE("Test Sphere3 reseed functionality") {
     // Should be identical
     for (size_t i = 0; i < 3; ++i) {
         for (size_t j = 0; j < 4; ++j) {
-            CHECK(seq1[i][j] == doctest::Approx(seq2[i][j]).epsilon(1e-10));
+            CHECK_EQ(seq1[i][j], doctest::Approx(seq2[i][j]).epsilon(1e-10));
         }
     }
 
@@ -148,7 +148,7 @@ TEST_CASE("Test SphereN basic functionality") {
 
     // Check if point is on unit 4-sphere (approximately)
     double radius_sq = std::inner_product(point.begin(), point.end(), point.begin(), 0.0);
-    CHECK(radius_sq == doctest::Approx(1.0).epsilon(1e-10));
+    CHECK_EQ(radius_sq, doctest::Approx(1.0).epsilon(1e-10));
 }
 
 TEST_CASE("Test SphereN higher dimensions") {
@@ -162,7 +162,7 @@ TEST_CASE("Test SphereN higher dimensions") {
 
     // Check if point is on unit 5-sphere (approximately)
     double radius_sq = std::inner_product(point.begin(), point.end(), point.begin(), 0.0);
-    CHECK(radius_sq == doctest::Approx(1.0).epsilon(1e-10));
+    CHECK_EQ(radius_sq, doctest::Approx(1.0).epsilon(1e-10));
 }
 
 TEST_CASE("Test SphereN reseed functionality") {
@@ -186,7 +186,7 @@ TEST_CASE("Test SphereN reseed functionality") {
     // Should be identical
     for (size_t i = 0; i < 3; ++i) {
         for (size_t j = 0; j < 4; ++j) {
-            CHECK(seq1[i][j] == doctest::Approx(seq2[i][j]).epsilon(1e-10));
+            CHECK_EQ(seq1[i][j], doctest::Approx(seq2[i][j]).epsilon(1e-10));
         }
     }
 }
@@ -208,7 +208,7 @@ TEST_CASE("Test comparison with Python implementation") {
 
     REQUIRE(result3.size() == expected_sphere3.size());
     for (std::size_t i = 0; i < result3.size(); ++i) {
-        CHECK(result3[i] == doctest::Approx(expected_sphere3[i]).epsilon(1e-10));
+        CHECK_EQ(result3[i], doctest::Approx(expected_sphere3[i]).epsilon(1e-10));
     }
 
     // Test SphereN
@@ -219,7 +219,7 @@ TEST_CASE("Test comparison with Python implementation") {
 
     REQUIRE(resultN.size() == expected_spheren.size());
     for (std::size_t i = 0; i < resultN.size(); ++i) {
-        CHECK(resultN[i] == doctest::Approx(expected_spheren[i]).epsilon(1e-10));
+        CHECK_EQ(resultN[i], doctest::Approx(expected_spheren[i]).epsilon(1e-10));
     }
 }
 
@@ -260,7 +260,7 @@ TEST_CASE("Sphere3 thread safety") {
         for (const auto& point : thread_results) {
             REQUIRE(point.size() == 4);
             double radius_sq = std::inner_product(point.begin(), point.end(), point.begin(), 0.0);
-            CHECK(radius_sq == doctest::Approx(1.0).epsilon(1e-10));
+            CHECK_EQ(radius_sq, doctest::Approx(1.0).epsilon(1e-10));
         }
     }
     CHECK_EQ(total_points, num_threads * values_per_thread);
@@ -298,7 +298,7 @@ TEST_CASE("SphereN thread safety") {
         for (const auto& point : thread_results) {
             REQUIRE(point.size() == 6);  // 5 bases produce 6D point
             double radius_sq = std::inner_product(point.begin(), point.end(), point.begin(), 0.0);
-            CHECK(radius_sq == doctest::Approx(1.0).epsilon(1e-10));
+            CHECK_EQ(radius_sq, doctest::Approx(1.0).epsilon(1e-10));
         }
     }
     CHECK_EQ(total_points, num_threads * values_per_thread);
@@ -336,7 +336,7 @@ TEST_CASE("SphereWrapper thread safety") {
         for (const auto& point : thread_results) {
             REQUIRE(point.size() == 3);
             double radius_sq = std::inner_product(point.begin(), point.end(), point.begin(), 0.0);
-            CHECK(radius_sq == doctest::Approx(1.0).epsilon(1e-10));
+            CHECK_EQ(radius_sq, doctest::Approx(1.0).epsilon(1e-10));
         }
     }
     CHECK_EQ(total_points, num_threads * values_per_thread);
@@ -394,6 +394,6 @@ TEST_CASE("Concurrent reseed thread safety for sphere classes") {
     // Verify all generated points are valid
     for (const auto& point : results) {
         double radius_sq = std::inner_product(point.begin(), point.end(), point.begin(), 0.0);
-        CHECK(radius_sq == doctest::Approx(1.0).epsilon(1e-10));
+        CHECK_EQ(radius_sq, doctest::Approx(1.0).epsilon(1e-10));
     }
 }

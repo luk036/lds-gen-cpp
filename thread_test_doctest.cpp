@@ -38,7 +38,7 @@ TEST_CASE("VdCorput thread safety") {
 
     std::sort(all_values.begin(), all_values.end());
     for (size_t i = 1; i < all_values.size(); ++i) {
-        CHECK(all_values[i] != all_values[i - 1]);
+        CHECK_NE(all_values[i], all_values[i - 1]);
     }
 
     // Check that we got the expected number of values

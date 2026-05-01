@@ -152,7 +152,7 @@ TEST_CASE("ClassName::method_name") {
     // Act & Assert
     CHECK_EQ(obj.method(), expected_value);
     CHECK_GE(result, 0.0);
-    CHECK(obj.pop() == doctest::Approx(0.5));
+    CHECK_EQ(obj.pop(), doctest::Approx(0.5));
 }
 
 // Multiple assertions in one test

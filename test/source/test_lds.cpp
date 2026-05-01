@@ -230,7 +230,7 @@ TEST_CASE("VdCorput thread safety") {
 
     std::sort(all_values.begin(), all_values.end());
     for (size_t i = 1; i < all_values.size(); ++i) {
-        CHECK(all_values[i] != all_values[i - 1]);
+        CHECK_NE(all_values[i], all_values[i - 1]);
     }
 
     // Check that we got the expected number of values
@@ -302,7 +302,7 @@ TEST_CASE("Circle thread safety") {
     for (const auto& thread_results : results) {
         for (const auto& point : thread_results) {
             double radius_squared = point[0] * point[0] + point[1] * point[1];
-            CHECK(radius_squared == doctest::Approx(1.0));
+            CHECK_EQ(radius_squared, doctest::Approx(1.0));
         }
     }
 }
@@ -380,7 +380,7 @@ TEST_CASE("Sphere thread safety") {
     for (const auto& thread_results : results) {
         for (const auto& point : thread_results) {
             double radius_squared = point[0] * point[0] + point[1] * point[1] + point[2] * point[2];
-            CHECK(radius_squared == doctest::Approx(1.0));
+            CHECK_EQ(radius_squared, doctest::Approx(1.0));
         }
     }
 }
@@ -420,7 +420,7 @@ TEST_CASE("Sphere3Hopf thread safety") {
         for (const auto& point : thread_results) {
             double radius_squared = point[0] * point[0] + point[1] * point[1] + point[2] * point[2]
                                     + point[3] * point[3];
-            CHECK(radius_squared == doctest::Approx(1.0));
+            CHECK_EQ(radius_squared, doctest::Approx(1.0));
         }
     }
 }
@@ -562,7 +562,7 @@ TEST_CASE("Circle::batch") {
     auto batch = cgen.batch(3);
     CHECK_EQ(batch.size(), 3);
     double radius_squared = batch[0][0] * batch[0][0] + batch[0][1] * batch[0][1];
-    CHECK(radius_squared == doctest::Approx(1.0));
+    CHECK_EQ(radius_squared, doctest::Approx(1.0));
 }
 
 TEST_CASE("Circle::skip") {
@@ -570,7 +570,7 @@ TEST_CASE("Circle::skip") {
     cgen.skip(5);
     auto popped = cgen.pop();
     double radius_squared = popped[0] * popped[0] + popped[1] * popped[1];
-    CHECK(radius_squared == doctest::Approx(1.0));
+    CHECK_EQ(radius_squared, doctest::Approx(1.0));
 }
 
 TEST_CASE("Circle::iterator") {
@@ -578,7 +578,7 @@ TEST_CASE("Circle::iterator") {
     auto it = cgen.begin();
     auto val = *it;
     double radius_squared = val[0] * val[0] + val[1] * val[1];
-    CHECK(radius_squared == doctest::Approx(1.0));
+    CHECK_EQ(radius_squared, doctest::Approx(1.0));
 }
 
 TEST_CASE("Disk::peek") {
@@ -630,7 +630,7 @@ TEST_CASE("Sphere::batch") {
     CHECK_EQ(batch.size(), 3);
     for (const auto& point : batch) {
         double radius_squared = point[0] * point[0] + point[1] * point[1] + point[2] * point[2];
-        CHECK(radius_squared == doctest::Approx(1.0));
+        CHECK_EQ(radius_squared, doctest::Approx(1.0));
     }
 }
 
@@ -639,7 +639,7 @@ TEST_CASE("Sphere::skip") {
     sgen.skip(5);
     auto popped = sgen.pop();
     double radius_squared = popped[0] * popped[0] + popped[1] * popped[1] + popped[2] * popped[2];
-    CHECK(radius_squared == doctest::Approx(1.0));
+    CHECK_EQ(radius_squared, doctest::Approx(1.0));
 }
 
 TEST_CASE("Sphere::iterator") {
@@ -647,7 +647,7 @@ TEST_CASE("Sphere::iterator") {
     auto it = sgen.begin();
     auto val = *it;
     double radius_squared = val[0] * val[0] + val[1] * val[1] + val[2] * val[2];
-    CHECK(radius_squared == doctest::Approx(1.0));
+    CHECK_EQ(radius_squared, doctest::Approx(1.0));
 }
 
 TEST_CASE("Sphere3Hopf::peek") {
@@ -667,7 +667,7 @@ TEST_CASE("Sphere3Hopf::batch") {
     for (const auto& point : batch) {
         double radius_squared
             = point[0] * point[0] + point[1] * point[1] + point[2] * point[2] + point[3] * point[3];
-        CHECK(radius_squared == doctest::Approx(1.0));
+        CHECK_EQ(radius_squared, doctest::Approx(1.0));
     }
 }
 
@@ -677,7 +677,7 @@ TEST_CASE("Sphere3Hopf::skip") {
     auto popped = shfgen.pop();
     double radius_squared = popped[0] * popped[0] + popped[1] * popped[1] + popped[2] * popped[2]
                             + popped[3] * popped[3];
-    CHECK(radius_squared == doctest::Approx(1.0));
+    CHECK_EQ(radius_squared, doctest::Approx(1.0));
 }
 
 TEST_CASE("Sphere3Hopf::iterator") {
@@ -685,7 +685,7 @@ TEST_CASE("Sphere3Hopf::iterator") {
     auto it = shfgen.begin();
     auto val = *it;
     double radius_squared = val[0] * val[0] + val[1] * val[1] + val[2] * val[2] + val[3] * val[3];
-    CHECK(radius_squared == doctest::Approx(1.0));
+    CHECK_EQ(radius_squared, doctest::Approx(1.0));
 }
 
 TEST_CASE("get_index") {
