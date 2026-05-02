@@ -75,12 +75,12 @@ namespace ildsgen {
     /**
      * @brief Halton sequence generator
      *
-     * ```svgbob
+     * @verbatim
      *     Integer Halton([2,3], [2,2]):
      *     pop() -> [1, 4]   (VdC_i(2,2,2), VdC_i(2,3,2))
      *     pop() -> [2, 5]   (next in each sequence)
      *     ...
-     * ```
+     * @endverbatim
      */
     class Halton {
         VdCorput vdc0;

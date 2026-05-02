@@ -26,10 +26,10 @@ namespace ldsgen {
      * Provides STL-compatible iterator interface for all generators.
      * Allows use in range-based for loops and STL algorithms.
      *
-     * ```cpp
+     * @verbatim
      * VdCorput gen(2);
      * std::vector<double> points(gen.begin(), gen.begin() + 100);
-     * ```
+     * @endverbatim
      *
      * @tparam Generator The generator class
      * @tparam Value The value type (double or array)
@@ -104,13 +104,13 @@ namespace ldsgen {
      * The `vdc` function is calculating the Van der Corput sequence value for a
      * given index `count` and base `base`. It returns a `double` value.
      *
-     * ```svgbob
+     * @verbatim
      *     Base 2 Example:
      *     count=1 -> 0.5  (0.1 in base 2)
      *     count=2 -> 0.25 (0.01 in base 2)
      *     count=3 -> 0.75 (0.11 in base 2)
      *     count=4 -> 0.125(0.001 in base 2)
-     * ```
+     * @endverbatim
      *
      * @param[in] count index of the sequence
      * @param[in] base base of the sequence
@@ -139,14 +139,14 @@ namespace ldsgen {
      * `VdCorput` class keeps track of the current count and base, and provides a
      * `pop()` method that returns the next value in the sequence.
      *
-     * ```svgbob
+     * @verbatim
      *     VdCorput(2) sequence:
      *     pop() -> 0.5   (0.1 base 2)
      *     pop() -> 0.25  (0.01 base 2)
      *     pop() -> 0.75  (0.11 base 2)
      *     pop() -> 0.125 (0.001 base 2)
      *     ...
-     * ```
+     * @endverbatim
      */
     class VdCorput {
         std::atomic<size_t> count;
@@ -292,13 +292,13 @@ namespace ldsgen {
      * track of the current count and bases, and provides a `pop()` method that
      * returns the next point in the sequence as a `std::array<double, 2>`.
      *
-     * ```svgbob
+     * @verbatim
      *     Halton(2,3) sequence:
      *     pop() -> (0.5, 0.333)  (VdC(2) -> 0.5, VdC(3) -> 0.333)
      *     pop() -> (0.25, 0.666) (VdC(2) -> 0.25, VdC(3) -> 0.666)
      *     pop() -> (0.75, 0.111) (VdC(2) -> 0.75, VdC(3) -> 0.111)
      *     ...
-     * ```
+     * @endverbatim
      */
     class Halton {
         VdCorput vdc0;
@@ -412,7 +412,7 @@ namespace ldsgen {
      * `reseed()` method is used to reset the state of the sequence generator to a
      * specific seed value.
      *
-     * ```svgbob
+     * @verbatim
      *     Unit Circle:
      *         (0,1)
      *           *
@@ -422,7 +422,7 @@ namespace ldsgen {
      *
      *     Points distributed more evenly
      *     than random sampling
-     * ```
+     * @endverbatim
      */
     class Circle {
         VdCorput vdc;
@@ -529,7 +529,7 @@ namespace ldsgen {
      * track of the current count and bases, and provides a `pop()` method that
      * returns the next point in the sequence as a `std::array<double, 2>`.
      *
-     * ```svgbob
+     * @verbatim
      *     Unit Disk:
      *         *****
      *      ***     ***
@@ -540,7 +540,7 @@ namespace ldsgen {
      *    **         **   than random
      *      ***     ***
      *         *****
-     * ```
+     * @endverbatim
      */
     class Disk {
         VdCorput vdc0;
@@ -658,7 +658,7 @@ namespace ldsgen {
      * `reseed()` method is used to reset the state of the sequence generator to a
      * specific seed value.
      *
-     * ```svgbob
+     * @verbatim
      *     Unit Sphere:
      *          *****
      *       **       **
@@ -669,7 +669,7 @@ namespace ldsgen {
      *     **           **
      *       **       **
      *          *****
-     * ```
+     * @endverbatim
      */
     class Sphere {
         VdCorput vdcgen;
@@ -789,7 +789,7 @@ namespace ldsgen {
      * coordinate. The `reseed()` method is used to reset the state of the sequence
      * generator to a specific seed value.
      *
-     * ```svgbob
+     * @verbatim
      *     3-Sphere (S3) visualization:
      *     A 4D hypersphere where points (x,y,z,w)
      *     satisfy x²+y²+z²+w² = 1
@@ -803,7 +803,7 @@ namespace ldsgen {
      *      \               /
      *       '.           .'
      *         '-.....-'
-     * ```
+     * @endverbatim
      */
     class Sphere3Hopf {
         VdCorput vdc0;

@@ -23,13 +23,13 @@ namespace ldsgen {
      * track of the current count and bases, and provides a `pop()` method that
      * returns the next point in the sequence as a `std::vector<double>`.
      *
-     * ```svgbob
+     * @verbatim
      *     HaltonN([2,3,5]) sequence (3D):
      *     pop() -> [0.5, 0.333, 0.2]    (VdC bases [2,3,5])
      *     pop() -> [0.25, 0.666, 0.4]   (next in each sequence)
      *     pop() -> [0.75, 0.111, 0.6]   (etc...)
      *     ...
-     * ```
+     * @endverbatim
      */
     class HaltonN {
       private:
