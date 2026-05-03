@@ -5,7 +5,6 @@
 #include <cmath>
 #include <iterator>
 #include <limits>
-#include <vector>
 
 #ifndef M_PI
 #    define M_PI 3.14159265358979323846264338327950288
@@ -115,7 +114,7 @@ namespace ldsgen {
      * @param[in] base base of the sequence
      * @return double
      */
-    constexpr auto vdc(unsigned long count, const unsigned long base) -> double {
+    constexpr auto vdc(unsigned long count, unsigned long base) -> double {
         auto reslt = 0.0;
         auto denom = 1.0;
         while (count != 0) {
@@ -209,21 +208,6 @@ namespace ldsgen {
                 ++idx;
             }
             return res;
-        }
-
-        /**
-         * @brief Generate multiple values efficiently
-         *
-         * @param[in] n number of values to generate
-         * @return std::vector<double> vector of values
-         */
-        [[nodiscard]] auto batch(unsigned int n) -> std::vector<double> {
-            std::vector<double> result;
-            result.reserve(n);
-            for (unsigned int i = 0; i < n; ++i) {
-                result.emplace_back(this->pop());
-            }
-            return result;
         }
 
         /**
@@ -336,21 +320,6 @@ namespace ldsgen {
         }
 
         /**
-         * @brief Generate multiple values efficiently
-         *
-         * @param[in] n number of values to generate
-         * @return std::vector<std::array<double, 2>> vector of points
-         */
-        [[nodiscard]] auto batch(unsigned int n) -> std::vector<std::array<double, 2>> {
-            std::vector<std::array<double, 2>> result;
-            result.reserve(n);
-            for (unsigned int i = 0; i < n; ++i) {
-                result.emplace_back(this->pop());
-            }
-            return result;
-        }
-
-        /**
          * @brief Skip n values in the sequence
          *
          * @param[in] n number of values to skip
@@ -460,21 +429,6 @@ namespace ldsgen {
         }
 
         /**
-         * @brief Generate multiple values efficiently
-         *
-         * @param[in] n number of values to generate
-         * @return std::vector<std::array<double, 2>> vector of points
-         */
-        [[nodiscard]] auto batch(unsigned int n) -> std::vector<std::array<double, 2>> {
-            std::vector<std::array<double, 2>> result;
-            result.reserve(n);
-            for (unsigned int i = 0; i < n; ++i) {
-                result.emplace_back(this->pop());
-            }
-            return result;
-        }
-
-        /**
          * @brief Skip n values in the sequence
          *
          * @param[in] n number of values to skip
@@ -578,21 +532,6 @@ namespace ldsgen {
             auto theta = this->vdc0.peek() * TWO_PI;  // map to [0, 2*pi];
             auto radius = std::sqrt(this->vdc1.peek());
             return {radius * std::cos(theta), radius * std::sin(theta)};
-        }
-
-        /**
-         * @brief Generate multiple values efficiently
-         *
-         * @param[in] n number of values to generate
-         * @return std::vector<std::array<double, 2>> vector of points
-         */
-        [[nodiscard]] auto batch(unsigned int n) -> std::vector<std::array<double, 2>> {
-            std::vector<std::array<double, 2>> result;
-            result.reserve(n);
-            for (unsigned int i = 0; i < n; ++i) {
-                result.emplace_back(this->pop());
-            }
-            return result;
         }
 
         /**
@@ -710,21 +649,6 @@ namespace ldsgen {
             auto sinphi = std::sqrt(1.0 - (cosphi * cosphi));
             auto arr = this->cirgen.peek();
             return {sinphi * arr[0], sinphi * arr[1], cosphi};
-        }
-
-        /**
-         * @brief Generate multiple values efficiently
-         *
-         * @param[in] n number of values to generate
-         * @return std::vector<std::array<double, 3>> vector of points
-         */
-        [[nodiscard]] auto batch(unsigned int n) -> std::vector<std::array<double, 3>> {
-            std::vector<std::array<double, 3>> result;
-            result.reserve(n);
-            for (unsigned int i = 0; i < n; ++i) {
-                result.emplace_back(this->pop());
-            }
-            return result;
         }
 
         /**
@@ -862,21 +786,6 @@ namespace ldsgen {
                 sin_eta * std::cos(phi + psy),
                 sin_eta * std::sin(phi + psy),
             };
-        }
-
-        /**
-         * @brief Generate multiple values efficiently
-         *
-         * @param[in] n number of values to generate
-         * @return std::vector<std::array<double, 4>> vector of points
-         */
-        [[nodiscard]] auto batch(unsigned int n) -> std::vector<std::array<double, 4>> {
-            std::vector<std::array<double, 4>> result;
-            result.reserve(n);
-            for (unsigned int i = 0; i < n; ++i) {
-                result.emplace_back(this->pop());
-            }
-            return result;
         }
 
         /**

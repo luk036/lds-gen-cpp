@@ -3,7 +3,6 @@
 #include <ldsgen/lds.hpp>
 #include <ldsgen/logger.hpp>
 #include <string>
-#include <vector>
 
 auto main(int argc, char** argv) -> int {
     cxxopts::Options options("LdsGen", "Low Discrepancy Sequence Generator");

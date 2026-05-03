@@ -2,7 +2,6 @@
 
 #include <array>            // for array
 #include <ldsgen/ilds.hpp>  // for Halton
-#include <vector>           // for vector
 
 TEST_CASE("VdCorput_i") {
     auto vgen = ildsgen::VdCorput(2, 10);

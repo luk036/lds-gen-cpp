@@ -230,7 +230,7 @@ TEST_CASE("VdCorput thread safety") {
     }
 
     std::sort(all_values.begin(), all_values.end());
-    for (int i = 1; i < all_values.size(); ++i) {
+    for (unsigned int i = 1; i < all_values.size(); ++i) {
         CHECK_NE(all_values[i], all_values[i - 1]);
     }
 
@@ -473,17 +473,6 @@ TEST_CASE("VdCorput::peek") {
     CHECK_EQ(vgen.peek(), doctest::Approx(0.25));
 }
 
-TEST_CASE("VdCorput::batch") {
-    auto vgen = ldsgen::VdCorput(2);
-    auto batch = vgen.batch(5);
-    CHECK_EQ(batch.size(), 5);
-    CHECK_EQ(batch[0], doctest::Approx(0.5));
-    CHECK_EQ(batch[1], doctest::Approx(0.25));
-    CHECK_EQ(batch[2], doctest::Approx(0.75));
-    CHECK_EQ(batch[3], doctest::Approx(0.125));
-    CHECK_EQ(batch[4], doctest::Approx(0.625));
-}
-
 TEST_CASE("VdCorput::skip") {
     auto vgen = ldsgen::VdCorput(2);
     vgen.skip(3);
@@ -524,16 +513,6 @@ TEST_CASE("Halton::peek") {
     CHECK_EQ(popped[1], doctest::Approx(1.0 / 3.0));
 }
 
-TEST_CASE("Halton::batch") {
-    auto hgen = ldsgen::Halton(2, 3);
-    auto batch = hgen.batch(3);
-    CHECK_EQ(batch.size(), 3);
-    CHECK_EQ(batch[0][0], doctest::Approx(0.5));
-    CHECK_EQ(batch[0][1], doctest::Approx(1.0 / 3.0));
-    CHECK_EQ(batch[1][0], doctest::Approx(0.25));
-    CHECK_EQ(batch[1][1], doctest::Approx(2.0 / 3.0));
-}
-
 TEST_CASE("Halton::skip") {
     auto hgen = ldsgen::Halton(2, 3);
     hgen.skip(2);
@@ -558,14 +537,6 @@ TEST_CASE("Circle::peek") {
     CHECK_EQ(peeked[1], doctest::Approx(popped[1]));
 }
 
-TEST_CASE("Circle::batch") {
-    auto cgen = ldsgen::Circle(2);
-    auto batch = cgen.batch(3);
-    CHECK_EQ(batch.size(), 3);
-    double radius_squared = batch[0][0] * batch[0][0] + batch[0][1] * batch[0][1];
-    CHECK_EQ(radius_squared, doctest::Approx(1.0));
-}
-
 TEST_CASE("Circle::skip") {
     auto cgen = ldsgen::Circle(2);
     cgen.skip(5);
@@ -588,16 +559,6 @@ TEST_CASE("Disk::peek") {
     auto popped = dgen.pop();
     CHECK_EQ(peeked[0], doctest::Approx(popped[0]));
     CHECK_EQ(peeked[1], doctest::Approx(popped[1]));
-}
-
-TEST_CASE("Disk::batch") {
-    auto dgen = ldsgen::Disk(2, 3);
-    auto batch = dgen.batch(3);
-    CHECK_EQ(batch.size(), 3);
-    for (const auto& point : batch) {
-        double radius_squared = point[0] * point[0] + point[1] * point[1];
-        CHECK_LE(radius_squared, 1.0);
-    }
 }
 
 TEST_CASE("Disk::skip") {
@@ -625,16 +586,6 @@ TEST_CASE("Sphere::peek") {
     CHECK_EQ(peeked[2], doctest::Approx(popped[2]));
 }
 
-TEST_CASE("Sphere::batch") {
-    auto sgen = ldsgen::Sphere(2, 3);
-    auto batch = sgen.batch(3);
-    CHECK_EQ(batch.size(), 3);
-    for (const auto& point : batch) {
-        double radius_squared = point[0] * point[0] + point[1] * point[1] + point[2] * point[2];
-        CHECK_EQ(radius_squared, doctest::Approx(1.0));
-    }
-}
-
 TEST_CASE("Sphere::skip") {
     auto sgen = ldsgen::Sphere(2, 3);
     sgen.skip(5);
@@ -659,17 +610,6 @@ TEST_CASE("Sphere3Hopf::peek") {
     CHECK_EQ(peeked[1], doctest::Approx(popped[1]));
     CHECK_EQ(peeked[2], doctest::Approx(popped[2]));
     CHECK_EQ(peeked[3], doctest::Approx(popped[3]));
-}
-
-TEST_CASE("Sphere3Hopf::batch") {
-    auto shfgen = ldsgen::Sphere3Hopf(2, 3, 5);
-    auto batch = shfgen.batch(3);
-    CHECK_EQ(batch.size(), 3);
-    for (const auto& point : batch) {
-        double radius_squared
-            = point[0] * point[0] + point[1] * point[1] + point[2] * point[2] + point[3] * point[3];
-        CHECK_EQ(radius_squared, doctest::Approx(1.0));
-    }
 }
 
 TEST_CASE("Sphere3Hopf::skip") {
