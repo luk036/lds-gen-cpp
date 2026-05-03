@@ -108,10 +108,6 @@ namespace ldsgen {
     }
 
     std::vector<double> get_tp(unsigned int n) {
-        if (n < 0) {
-            throw std::invalid_argument("n must be non-negative");
-        }
-
         static std::unordered_map<int, std::vector<double>> tp_cache;
         static std::mutex tp_cache_mutex;
 
