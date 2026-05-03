@@ -1,11 +1,7 @@
 #pragma once
 
-#include <array>
-#include <cmath>
-#include <cstdint>
 #include <memory>
 #include <mutex>
-// #include <numbers>
 #include <span>
 #include <vector>
 
@@ -30,7 +26,7 @@ namespace ldsgen {
      * @param[in] num number of samples to generate
      * @return std::vector<double> vector of evenly spaced numbers
      */
-    std::vector<double> linspace(double start, double stop, std::size_t num);
+    std::vector<double> linspace(double start, double stop, unsigned int num);
 
     /**
      * @brief Perform one-dimensional linear interpolation
@@ -53,7 +49,7 @@ namespace ldsgen {
      * @param[in] n the dimension parameter
      * @return std::vector<double> the table-lookup values
      */
-    std::vector<double> get_tp(int n);
+    std::vector<double> get_tp(unsigned int n);
 
     /**
      * @brief Base class for sphere generators
@@ -80,7 +76,7 @@ namespace ldsgen {
          *
          * @param[in] seed the seed value to reset the sequence generator to
          */
-        virtual void reseed(std::uint64_t seed) = 0;
+        virtual void reseed(unsigned long seed) = 0;
     };
 
     /**
@@ -97,7 +93,7 @@ namespace ldsgen {
          *
          * @param[in] base span of uint64_t values representing the bases for the generators
          */
-        explicit Sphere3(std::span<const std::uint64_t> base);
+        explicit Sphere3(std::span<const unsigned long> base);
 
         /**
          * @brief Generate the next point on the 3-sphere
@@ -115,7 +111,7 @@ namespace ldsgen {
          *
          * @param[in] seed the seed value to reset the sequence generator to
          */
-        void reseed(std::uint64_t seed) override;
+        void reseed(unsigned long seed) override;
 
       private:
         VdCorput vdc_;
@@ -138,7 +134,7 @@ namespace ldsgen {
          *
          * @param[in] base span of uint64_t values representing the bases for the Sphere generator
          */
-        explicit SphereWrapper(std::span<const std::uint64_t> base);
+        explicit SphereWrapper(std::span<const unsigned long> base);
 
         /**
          * @brief Generate the next point on the sphere
@@ -156,7 +152,7 @@ namespace ldsgen {
          *
          * @param[in] seed the seed value to reset the sequence generator to
          */
-        void reseed(std::uint64_t seed) override;
+        void reseed(unsigned long seed) override;
 
       private:
         Sphere sphere_;
@@ -177,7 +173,7 @@ namespace ldsgen {
          *
          * @param[in] base span of uint64_t values representing the bases for the generators
          */
-        explicit SphereN(std::span<const std::uint64_t> base);
+        explicit SphereN(std::span<const unsigned long> base);
 
         /**
          * @brief Generate the next point on the N-dimensional sphere
@@ -195,12 +191,12 @@ namespace ldsgen {
          *
          * @param[in] seed the seed value to reset the sequence generator to
          */
-        void reseed(std::uint64_t seed) override;
+        void reseed(unsigned long seed) override;
 
       private:
         VdCorput vdc_;
         std::unique_ptr<SphereGen> s_gen_;
-        int n_;
+        unsigned int n_;
         double range_;
         mutable std::mutex mutex_;
     };

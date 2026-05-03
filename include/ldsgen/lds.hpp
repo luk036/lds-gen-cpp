@@ -3,7 +3,6 @@
 #include <array>
 #include <atomic>
 #include <cmath>
-#include <cstddef>
 #include <iterator>
 #include <limits>
 #include <vector>
@@ -17,7 +16,7 @@ namespace ldsgen {
     constexpr const auto TWO_PI = 2.0 * M_PI;
 
     // Constants for magic numbers
-    constexpr size_t MAX_REVERSE_BITS = 64;
+    constexpr unsigned int MAX_REVERSE_BITS = 64;
     constexpr double MAPPING_FACTOR = 2.0;
 
     /**
@@ -36,7 +35,7 @@ namespace ldsgen {
      */
     template <typename Generator, typename Value> class GeneratorIterator {
         Generator* gen;
-        size_t index;
+        unsigned long index;
 
       public:
         using iterator_category = std::input_iterator_tag;
@@ -45,7 +44,7 @@ namespace ldsgen {
         using pointer = const value_type*;
         using reference = value_type;
 
-        explicit GeneratorIterator(Generator* g = nullptr, size_t idx = 0) : gen{g}, index{idx} {}
+        explicit GeneratorIterator(Generator* g = nullptr, unsigned long idx = 0) : gen{g}, index{idx} {}
 
         /**
          * @brief Dereference operator
@@ -95,7 +94,7 @@ namespace ldsgen {
         /**
          * @brief Get current index
          */
-        [[nodiscard]] auto get_index() const -> size_t { return index; }
+        [[nodiscard]] auto get_index() const -> unsigned long { return index; }
     };
 
     /**
@@ -116,13 +115,12 @@ namespace ldsgen {
      * @param[in] base base of the sequence
      * @return double
      */
-    constexpr auto vdc(size_t count, const size_t base) -> double {
+    constexpr auto vdc(unsigned long count, const unsigned long base) -> double {
         auto reslt = 0.0;
         auto denom = 1.0;
-        auto temp_count = count;
-        while (temp_count != 0) {
-            const auto remainder = temp_count % base;
-            temp_count /= base;
+        while (count != 0) {
+            const auto remainder = count % base;
+            count /= base;
             denom *= double(base);
             reslt += double(remainder) / denom;
         }
@@ -149,23 +147,24 @@ namespace ldsgen {
      * @endverbatim
      */
     class VdCorput {
-        std::atomic<size_t> count;
-        size_t base;
+        std::atomic<unsigned long> count;
+        unsigned long base;
         std::array<double, MAX_REVERSE_BITS> rev_lst;
+        static_assert(MAX_REVERSE_BITS >= sizeof(unsigned long) * 8, "MAX_REVERSE_BITS must be at least the number of bits in unsigned long");
 
       public:
         /**
          * @brief Construct a new VdCorput object
          *
-         * The `VdCorput(size_t base)` constructor is initializing a `VdCorput`
+         * The `VdCorput(unsigned long base)` constructor is initializing a `VdCorput`
          * object with a given base. The base is used to generate the Van der Corput
          * sequence.
          *
          * @param[in] base the base of the Van der Corput sequence
          */
-        explicit VdCorput(const size_t base) : count{0}, base{base}, rev_lst{} {
+        explicit VdCorput(const unsigned long base) : count{0}, base{base}, rev_lst{} {
             double reverse = 1.0;
-            for (size_t i = 0; i < MAX_REVERSE_BITS; ++i) {
+            for (unsigned int i = 0; i < MAX_REVERSE_BITS; ++i) {
                 reverse /= double(base);
                 this->rev_lst[i] = reverse;
             }
@@ -181,9 +180,9 @@ namespace ldsgen {
          * @return double the next value in the sequence
          */
         auto pop() -> double {
-            size_t count_value
+            unsigned long count_value
                 = this->count.fetch_add(1, std::memory_order_relaxed) + 1;  // ignore 0
-            size_t idx = 0;
+            unsigned long idx = 0;
             double res = 0.0;
             while (count_value != 0) {
                 const auto remainder = count_value % this->base;
@@ -200,8 +199,8 @@ namespace ldsgen {
          * @return double the next value in the sequence
          */
         [[nodiscard]] auto peek() -> double {
-            size_t count_value = this->count.load(std::memory_order_relaxed) + 1;
-            size_t idx = 0;
+            unsigned long count_value = this->count.load(std::memory_order_relaxed) + 1;
+            unsigned long idx = 0;
             double res = 0.0;
             while (count_value != 0) {
                 const auto remainder = count_value % this->base;
@@ -218,10 +217,10 @@ namespace ldsgen {
          * @param[in] n number of values to generate
          * @return std::vector<double> vector of values
          */
-        [[nodiscard]] auto batch(size_t n) -> std::vector<double> {
+        [[nodiscard]] auto batch(unsigned int n) -> std::vector<double> {
             std::vector<double> result;
             result.reserve(n);
-            for (size_t i = 0; i < n; ++i) {
+            for (unsigned int i = 0; i < n; ++i) {
                 result.emplace_back(this->pop());
             }
             return result;
@@ -232,28 +231,28 @@ namespace ldsgen {
          *
          * @param[in] n number of values to skip
          */
-        auto skip(size_t n) -> void { this->count.fetch_add(n, std::memory_order_relaxed); }
+        auto skip(unsigned int n) -> void { this->count.fetch_add(n, std::memory_order_relaxed); }
 
         /**
          * @brief reseed
          *
-         * The `reseed(size_t seed)` function is used to reset the state of the
+         * The `reseed(unsigned long seed)` function is used to reset the state of the
          * sequence generator to a specific seed value. This allows the sequence
          * generator to start generating the sequence from the beginning, or from a
          * specific point in the sequence, depending on the value of the seed.
          *
          * @param[in] seed the seed value to reset the sequence generator to
          */
-        auto reseed(const size_t seed) -> void {
+        auto reseed(const unsigned long& seed) -> void {
             this->count.store(seed, std::memory_order_relaxed);
         }
 
         /**
          * @brief Get current index
          *
-         * @return size_t current index in the sequence
+         * @return unsigned long current index in the sequence
          */
-        [[nodiscard]] auto get_index() const -> size_t {
+        [[nodiscard]] auto get_index() const -> unsigned long {
             return this->count.load(std::memory_order_relaxed);
         }
 
@@ -274,7 +273,7 @@ namespace ldsgen {
          * @return GeneratorIterator<VdCorput, double>
          */
         [[nodiscard]] auto end() const -> GeneratorIterator<VdCorput, double> {
-            return GeneratorIterator<VdCorput, double>(nullptr, std::numeric_limits<size_t>::max());
+            return GeneratorIterator<VdCorput, double>(nullptr, std::numeric_limits<unsigned long>::max());
         }
 
         VdCorput(VdCorput&&) noexcept = delete;
@@ -314,7 +313,7 @@ namespace ldsgen {
          * @param[in] base0 the base for the first dimension
          * @param[in] base1 the base for the second dimension
          */
-        Halton(const size_t base0, const size_t base1) : vdc0(base0), vdc1(base1) {}
+        Halton(const unsigned long base0, const unsigned long base1) : vdc0(base0), vdc1(base1) {}
 
         /**
          * @brief Generate the next point in the Halton sequence
@@ -342,10 +341,10 @@ namespace ldsgen {
          * @param[in] n number of values to generate
          * @return std::vector<std::array<double, 2>> vector of points
          */
-        [[nodiscard]] auto batch(size_t n) -> std::vector<std::array<double, 2>> {
+        [[nodiscard]] auto batch(unsigned int n) -> std::vector<std::array<double, 2>> {
             std::vector<std::array<double, 2>> result;
             result.reserve(n);
-            for (size_t i = 0; i < n; ++i) {
+            for (unsigned int i = 0; i < n; ++i) {
                 result.emplace_back(this->pop());
             }
             return result;
@@ -356,7 +355,7 @@ namespace ldsgen {
          *
          * @param[in] n number of values to skip
          */
-        auto skip(size_t n) -> void {
+        auto skip(unsigned int n) -> void {
             this->vdc0.skip(n);
             this->vdc1.skip(n);
         }
@@ -368,7 +367,7 @@ namespace ldsgen {
          *
          * @param[in] seed the seed value to reset the sequence generator to
          */
-        auto reseed(const size_t seed) -> void {
+        auto reseed(const unsigned long& seed) -> void {
             this->vdc0.reseed(seed);
             this->vdc1.reseed(seed);
         }
@@ -376,9 +375,9 @@ namespace ldsgen {
         /**
          * @brief Get current index
          *
-         * @return size_t current index in the sequence
+         * @return unsigned long current index in the sequence
          */
-        [[nodiscard]] auto get_index() const -> size_t { return this->vdc0.get_index(); }
+        [[nodiscard]] auto get_index() const -> unsigned long { return this->vdc0.get_index(); }
 
         /**
          * @brief Get iterator to beginning
@@ -396,7 +395,7 @@ namespace ldsgen {
          */
         [[nodiscard]] auto end() const -> GeneratorIterator<Halton, std::array<double, 2>> {
             return GeneratorIterator<Halton, std::array<double, 2>>(
-                nullptr, std::numeric_limits<size_t>::max());
+                nullptr, std::numeric_limits<unsigned long>::max());
         }
     };
 
@@ -436,7 +435,7 @@ namespace ldsgen {
          *
          * @param[in] base the base for the Van der Corput sequence generator
          */
-        explicit Circle(const size_t base) : vdc(base) {}
+        explicit Circle(const unsigned long base) : vdc(base) {}
 
         /**
          * @brief Generate the next point on the unit circle
@@ -466,10 +465,10 @@ namespace ldsgen {
          * @param[in] n number of values to generate
          * @return std::vector<std::array<double, 2>> vector of points
          */
-        [[nodiscard]] auto batch(size_t n) -> std::vector<std::array<double, 2>> {
+        [[nodiscard]] auto batch(unsigned int n) -> std::vector<std::array<double, 2>> {
             std::vector<std::array<double, 2>> result;
             result.reserve(n);
-            for (size_t i = 0; i < n; ++i) {
+            for (unsigned int i = 0; i < n; ++i) {
                 result.emplace_back(this->pop());
             }
             return result;
@@ -480,7 +479,7 @@ namespace ldsgen {
          *
          * @param[in] n number of values to skip
          */
-        auto skip(size_t n) -> void { this->vdc.skip(n); }
+        auto skip(unsigned int n) -> void { this->vdc.skip(n); }
 
         /**
          * @brief Reset the state of the Circle sequence generator
@@ -489,14 +488,14 @@ namespace ldsgen {
          *
          * @param[in] seed the seed value to reset the sequence generator to
          */
-        auto reseed(const size_t seed) -> void { this->vdc.reseed(seed); }
+        auto reseed(const unsigned long& seed) -> void { this->vdc.reseed(seed); }
 
         /**
          * @brief Get current index
          *
-         * @return size_t current index in sequence
+         * @return unsigned long current index in sequence
          */
-        [[nodiscard]] auto get_index() const -> size_t { return this->vdc.get_index(); }
+        [[nodiscard]] auto get_index() const -> unsigned long { return this->vdc.get_index(); }
 
         /**
          * @brief Get iterator to beginning
@@ -514,7 +513,7 @@ namespace ldsgen {
          */
         [[nodiscard]] auto end() const -> GeneratorIterator<Circle, std::array<double, 2>> {
             return GeneratorIterator<Circle, std::array<double, 2>>(
-                nullptr, std::numeric_limits<size_t>::max());
+                nullptr, std::numeric_limits<unsigned long>::max());
         }
     };
 
@@ -555,7 +554,7 @@ namespace ldsgen {
          * @param[in] base0 the base for the first dimension (angle)
          * @param[in] base1 the base for the second dimension (radius)
          */
-        Disk(const size_t base0, const size_t base1) : vdc0(base0), vdc1(base1) {}
+        Disk(const unsigned long base0, const unsigned long base1) : vdc0(base0), vdc1(base1) {}
 
         /**
          * @brief Generate the next point in the unit disk
@@ -587,10 +586,10 @@ namespace ldsgen {
          * @param[in] n number of values to generate
          * @return std::vector<std::array<double, 2>> vector of points
          */
-        [[nodiscard]] auto batch(size_t n) -> std::vector<std::array<double, 2>> {
+        [[nodiscard]] auto batch(unsigned int n) -> std::vector<std::array<double, 2>> {
             std::vector<std::array<double, 2>> result;
             result.reserve(n);
-            for (size_t i = 0; i < n; ++i) {
+            for (unsigned int i = 0; i < n; ++i) {
                 result.emplace_back(this->pop());
             }
             return result;
@@ -601,7 +600,7 @@ namespace ldsgen {
          *
          * @param[in] n number of values to skip
          */
-        auto skip(size_t n) -> void {
+        auto skip(unsigned int n) -> void {
             this->vdc0.skip(n);
             this->vdc1.skip(n);
         }
@@ -613,7 +612,7 @@ namespace ldsgen {
          *
          * @param[in] seed the seed value to reset the sequence generator to
          */
-        auto reseed(const size_t seed) -> void {
+        auto reseed(const unsigned long& seed) -> void {
             this->vdc0.reseed(seed);
             this->vdc1.reseed(seed);
         }
@@ -621,9 +620,9 @@ namespace ldsgen {
         /**
          * @brief Get current index
          *
-         * @return size_t current index in sequence
+         * @return unsigned long current index in sequence
          */
-        [[nodiscard]] auto get_index() const -> size_t { return this->vdc0.get_index(); }
+        [[nodiscard]] auto get_index() const -> unsigned long { return this->vdc0.get_index(); }
 
         /**
          * @brief Get iterator to beginning
@@ -641,7 +640,7 @@ namespace ldsgen {
          */
         [[nodiscard]] auto end() const -> GeneratorIterator<Disk, std::array<double, 2>> {
             return GeneratorIterator<Disk, std::array<double, 2>>(
-                nullptr, std::numeric_limits<size_t>::max());
+                nullptr, std::numeric_limits<unsigned long>::max());
         }
     };
 
@@ -685,7 +684,7 @@ namespace ldsgen {
          * @param[in] base0 the base for the Van der Corput generator (phi coordinate)
          * @param[in] base1 the base for the Circle generator (theta coordinate)
          */
-        Sphere(const size_t base0, const size_t base1) : vdcgen(base0), cirgen(base1) {}
+        Sphere(const unsigned long base0, const unsigned long base1) : vdcgen(base0), cirgen(base1) {}
 
         /**
          * @brief Generate the next point on the unit sphere
@@ -719,10 +718,10 @@ namespace ldsgen {
          * @param[in] n number of values to generate
          * @return std::vector<std::array<double, 3>> vector of points
          */
-        [[nodiscard]] auto batch(size_t n) -> std::vector<std::array<double, 3>> {
+        [[nodiscard]] auto batch(unsigned int n) -> std::vector<std::array<double, 3>> {
             std::vector<std::array<double, 3>> result;
             result.reserve(n);
-            for (size_t i = 0; i < n; ++i) {
+            for (unsigned int i = 0; i < n; ++i) {
                 result.emplace_back(this->pop());
             }
             return result;
@@ -733,7 +732,7 @@ namespace ldsgen {
          *
          * @param[in] n number of values to skip
          */
-        auto skip(size_t n) -> void {
+        auto skip(unsigned int n) -> void {
             this->vdcgen.skip(n);
             this->cirgen.skip(n);
         }
@@ -745,7 +744,7 @@ namespace ldsgen {
          *
          * @param[in] seed the seed value to reset the sequence generator to
          */
-        auto reseed(const size_t seed) -> void {
+        auto reseed(const unsigned long& seed) -> void {
             this->cirgen.reseed(seed);
             this->vdcgen.reseed(seed);
         }
@@ -753,9 +752,9 @@ namespace ldsgen {
         /**
          * @brief Get current index
          *
-         * @return size_t current index in sequence
+         * @return unsigned long current index in sequence
          */
-        [[nodiscard]] auto get_index() const -> size_t { return this->vdcgen.get_index(); }
+        [[nodiscard]] auto get_index() const -> unsigned long { return this->vdcgen.get_index(); }
 
         /**
          * @brief Get iterator to beginning
@@ -773,7 +772,7 @@ namespace ldsgen {
          */
         [[nodiscard]] auto end() const -> GeneratorIterator<Sphere, std::array<double, 3>> {
             return GeneratorIterator<Sphere, std::array<double, 3>>(
-                nullptr, std::numeric_limits<size_t>::max());
+                nullptr, std::numeric_limits<unsigned long>::max());
         }
     };
 
@@ -821,7 +820,7 @@ namespace ldsgen {
          * @param[in] base1 the base for the second Van der Corput generator (psi coordinate)
          * @param[in] base2 the base for the third Van der Corput generator (eta coordinate)
          */
-        Sphere3Hopf(const size_t base0, const size_t base1, const size_t base2)
+        Sphere3Hopf(const unsigned long base0, const unsigned long base1, const unsigned long base2)
             : vdc0(base0), vdc1(base1), vdc2(base2) {}
 
         /**
@@ -871,10 +870,10 @@ namespace ldsgen {
          * @param[in] n number of values to generate
          * @return std::vector<std::array<double, 4>> vector of points
          */
-        [[nodiscard]] auto batch(size_t n) -> std::vector<std::array<double, 4>> {
+        [[nodiscard]] auto batch(unsigned int n) -> std::vector<std::array<double, 4>> {
             std::vector<std::array<double, 4>> result;
             result.reserve(n);
-            for (size_t i = 0; i < n; ++i) {
+            for (unsigned int i = 0; i < n; ++i) {
                 result.emplace_back(this->pop());
             }
             return result;
@@ -885,7 +884,7 @@ namespace ldsgen {
          *
          * @param[in] n number of values to skip
          */
-        auto skip(size_t n) -> void {
+        auto skip(unsigned int n) -> void {
             this->vdc0.skip(n);
             this->vdc1.skip(n);
             this->vdc2.skip(n);
@@ -898,7 +897,7 @@ namespace ldsgen {
          *
          * @param[in] seed the seed value to reset the sequence generator to
          */
-        auto reseed(size_t seed) -> void {
+        auto reseed(unsigned long seed) -> void {
             this->vdc0.reseed(seed);
             this->vdc1.reseed(seed);
             this->vdc2.reseed(seed);
@@ -907,9 +906,9 @@ namespace ldsgen {
         /**
          * @brief Get current index
          *
-         * @return size_t current index in sequence
+         * @return unsigned long current index in sequence
          */
-        [[nodiscard]] auto get_index() const -> size_t { return this->vdc0.get_index(); }
+        [[nodiscard]] auto get_index() const -> unsigned long { return this->vdc0.get_index(); }
 
         /**
          * @brief Get iterator to beginning
@@ -927,9 +926,9 @@ namespace ldsgen {
          */
         [[nodiscard]] auto end() const -> GeneratorIterator<Sphere3Hopf, std::array<double, 4>> {
             return GeneratorIterator<Sphere3Hopf, std::array<double, 4>>(
-                nullptr, std::numeric_limits<size_t>::max());
+                nullptr, std::numeric_limits<unsigned long>::max());
         }
     };
 
-    extern size_t dummy(size_t index);
+    extern unsigned long dummy(unsigned int index);
 }  // namespace ldsgen

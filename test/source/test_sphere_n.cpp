@@ -1,7 +1,7 @@
 #include <doctest/doctest.h>  // for Approx, ResultBuilder, TestCase, CHECK
 
-#include <array>
 #include <cmath>
+#include <cstddef>  // for std::size_t
 #include <ldsgen/sphere_n.hpp>
 #include <numeric>
 #include <vector>
@@ -53,7 +53,7 @@ TEST_CASE("Test get_tp function") {
 }
 
 TEST_CASE("Test Sphere3 basic functionality") {
-    std::vector<std::uint64_t> base = {2, 3, 5};
+    std::vector<unsigned long> base = {2, 3, 5};
     ldsgen::Sphere3 sgen(base);
     sgen.reseed(0);
 
@@ -72,7 +72,7 @@ TEST_CASE("Test Sphere3 basic functionality") {
 }
 
 TEST_CASE("Test Sphere3 consistency") {
-    std::vector<std::vector<std::uint64_t>> bases = {{2, 3, 5}, {2, 5, 3}, {3, 2, 7}};
+    std::vector<std::vector<unsigned long>> bases = {{2, 3, 5}, {2, 5, 3}, {3, 2, 7}};
 
     for (const auto& base : bases) {
         ldsgen::Sphere3 sgen(base);
@@ -93,7 +93,7 @@ TEST_CASE("Test Sphere3 consistency") {
 }
 
 TEST_CASE("Test Sphere3 reseed functionality") {
-    std::vector<std::uint64_t> base = {2, 3, 5};
+    std::vector<unsigned long> base = {2, 3, 5};
     ldsgen::Sphere3 sgen(base);
 
     // Generate sequence with seed 0
@@ -111,8 +111,8 @@ TEST_CASE("Test Sphere3 reseed functionality") {
     }
 
     // Should be identical
-    for (size_t i = 0; i < 3; ++i) {
-        for (size_t j = 0; j < 4; ++j) {
+    for (int i = 0; i < 3; ++i) {
+        for (unsigned long j = 0; j < 4; ++j) {
             CHECK_EQ(seq1[i][j], doctest::Approx(seq2[i][j]).epsilon(1e-10));
         }
     }
@@ -126,8 +126,8 @@ TEST_CASE("Test Sphere3 reseed functionality") {
 
     // Should be different from seed 0
     bool different = false;
-    for (size_t i = 0; i < 3 && !different; ++i) {
-        for (size_t j = 0; j < 4; ++j) {
+    for (int i = 0; i < 3 && !different; ++i) {
+        for (unsigned long j = 0; j < 4; ++j) {
             if (std::abs(seq1[i][j] - seq3[i][j]) > 1e-10) {
                 different = true;
                 break;
@@ -139,7 +139,7 @@ TEST_CASE("Test Sphere3 reseed functionality") {
 
 TEST_CASE("Test SphereN basic functionality") {
     // Test 4-sphere (5D)
-    std::vector<std::uint64_t> base = {2, 3, 5, 7};
+    std::vector<unsigned long> base = {2, 3, 5, 7};
     ldsgen::SphereN sgen(base);
     sgen.reseed(0);
 
@@ -153,7 +153,7 @@ TEST_CASE("Test SphereN basic functionality") {
 
 TEST_CASE("Test SphereN higher dimensions") {
     // Test 5-sphere (6D)
-    std::vector<std::uint64_t> base = {2, 3, 5, 7, 11};
+    std::vector<unsigned long> base = {2, 3, 5, 7, 11};
     ldsgen::SphereN sgen(base);
     sgen.reseed(0);
 
@@ -166,7 +166,7 @@ TEST_CASE("Test SphereN higher dimensions") {
 }
 
 TEST_CASE("Test SphereN reseed functionality") {
-    std::vector<std::uint64_t> base = {2, 3, 5, 7};
+    std::vector<unsigned long> base = {2, 3, 5, 7};
     ldsgen::SphereN sgen(base);
 
     // Generate sequence with seed 0
@@ -184,8 +184,8 @@ TEST_CASE("Test SphereN reseed functionality") {
     }
 
     // Should be identical
-    for (size_t i = 0; i < 3; ++i) {
-        for (size_t j = 0; j < 4; ++j) {
+    for (int i = 0; i < 3; ++i) {
+        for (unsigned long j = 0; j < 4; ++j) {
             CHECK_EQ(seq1[i][j], doctest::Approx(seq2[i][j]).epsilon(1e-10));
         }
     }
@@ -201,24 +201,24 @@ TEST_CASE("Test comparison with Python implementation") {
            6.123233995736766e-17};
 
     // Test Sphere3
-    std::vector<std::uint64_t> base3 = {2, 3, 5};
+    std::vector<unsigned long> base3 = {2, 3, 5};
     ldsgen::Sphere3 sgen3(base3);
     sgen3.reseed(0);
     auto result3 = sgen3.pop();
 
     REQUIRE(result3.size() == expected_sphere3.size());
-    for (std::size_t i = 0; i < result3.size(); ++i) {
+    for (int i = 0; i < result3.size(); ++i) {
         CHECK_EQ(result3[i], doctest::Approx(expected_sphere3[i]).epsilon(1e-10));
     }
 
     // Test SphereN
-    std::vector<std::uint64_t> baseN = {2, 3, 5, 7};
+    std::vector<unsigned long> baseN = {2, 3, 5, 7};
     ldsgen::SphereN sgenN(baseN);
     sgenN.reseed(0);
     auto resultN = sgenN.pop();
 
     REQUIRE(resultN.size() == expected_spheren.size());
-    for (std::size_t i = 0; i < resultN.size(); ++i) {
+    for (int i = 0; i < resultN.size(); ++i) {
         CHECK_EQ(resultN[i], doctest::Approx(expected_spheren[i]).epsilon(1e-10));
     }
 }
@@ -231,7 +231,7 @@ TEST_CASE("Test comparison with Python implementation") {
 TEST_CASE("Sphere3 thread safety") {
     const int num_threads = 8;
     const int values_per_thread = 50;
-    std::vector<std::uint64_t> base = {2, 3, 5};
+    std::vector<unsigned long> base = {2, 3, 5};
     ldsgen::Sphere3 sgen(base);
     std::vector<std::thread> threads;
     std::vector<std::vector<std::vector<double>>> results(num_threads);
@@ -244,7 +244,7 @@ TEST_CASE("Sphere3 thread safety") {
                 local_results.emplace_back(sgen.pop());
             }
             std::lock_guard<std::mutex> lock(mtx);
-            results[static_cast<size_t>(i)] = std::move(local_results);
+            results[i] = std::move(local_results);
         });
     }
 
@@ -269,7 +269,7 @@ TEST_CASE("Sphere3 thread safety") {
 TEST_CASE("SphereN thread safety") {
     const int num_threads = 8;
     const int values_per_thread = 50;
-    std::vector<std::uint64_t> base = {2, 3, 5, 7, 11};
+    std::vector<unsigned long> base = {2, 3, 5, 7, 11};
     ldsgen::SphereN sgen(base);
     std::vector<std::thread> threads;
     std::vector<std::vector<std::vector<double>>> results(num_threads);
@@ -282,7 +282,7 @@ TEST_CASE("SphereN thread safety") {
                 local_results.emplace_back(sgen.pop());
             }
             std::lock_guard<std::mutex> lock(mtx);
-            results[static_cast<size_t>(i)] = std::move(local_results);
+            results[i] = std::move(local_results);
         });
     }
 
@@ -307,7 +307,7 @@ TEST_CASE("SphereN thread safety") {
 TEST_CASE("SphereWrapper thread safety") {
     const int num_threads = 8;
     const int values_per_thread = 50;
-    std::vector<std::uint64_t> base = {2, 3};
+    std::vector<unsigned long> base = {2, 3};
     ldsgen::SphereWrapper sgen(base);
     std::vector<std::thread> threads;
     std::vector<std::vector<std::vector<double>>> results(num_threads);
@@ -320,7 +320,7 @@ TEST_CASE("SphereWrapper thread safety") {
                 local_results.emplace_back(sgen.pop());
             }
             std::lock_guard<std::mutex> lock(mtx);
-            results[static_cast<size_t>(i)] = std::move(local_results);
+            results[i] = std::move(local_results);
         });
     }
 
@@ -345,8 +345,8 @@ TEST_CASE("SphereWrapper thread safety") {
 TEST_CASE("Concurrent reseed thread safety for sphere classes") {
     const int num_threads = 8;
     const int operations_per_thread = 25;
-    std::vector<std::uint64_t> base3 = {2, 3, 5};
-    std::vector<std::uint64_t> baseN = {2, 3, 5, 7};
+    std::vector<unsigned long> base3 = {2, 3, 5};
+    std::vector<unsigned long> baseN = {2, 3, 5, 7};
     ldsgen::Sphere3 sgen3(base3);
     ldsgen::SphereN sgenN(baseN);
     std::vector<std::thread> threads;
@@ -361,9 +361,9 @@ TEST_CASE("Concurrent reseed thread safety for sphere classes") {
                 if (j % 5 == 0) {
                     // Occasionally reseed
                     if (i % 2 == 0) {
-                        sgen3.reseed(static_cast<size_t>(i * 10 + j));
+                        sgen3.reseed(static_cast<unsigned long>(i * 10 + j));
                     } else {
-                        sgenN.reseed(static_cast<size_t>(i * 10 + j));
+                        sgenN.reseed(static_cast<unsigned long>(i * 10 + j));
                     }
                     reseed_count++;
                 } else {

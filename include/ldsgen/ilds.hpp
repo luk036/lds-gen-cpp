@@ -16,6 +16,7 @@ namespace ildsgen {
      * Default is 10 digits.
      */
     constexpr unsigned int DEFAULT_SCALE = 10;
+    constexpr unsigned int MAX_REVERSE_BITS = 64;
 
     /**
      * @brief Van der Corput sequence generator
@@ -24,9 +25,11 @@ namespace ildsgen {
      *
      */
     class VdCorput {
-        size_t _base;                ///< Base of the number system
-        std::atomic<size_t> _count;  ///< Current count in the sequence
-        size_t _factor;              ///< Precomputed scale factor (base^scale)
+        unsigned long _base;                ///< Base of the number system
+        std::atomic<unsigned long> _count;  ///< Current count in the sequence
+        // unsigned long _factor;              ///< Precomputed scale factor (base^scale)
+        std::array<unsigned long, MAX_REVERSE_BITS> factor_lst;  ///< Precomputed scale factors for each digit
+        static_assert(MAX_REVERSE_BITS >= sizeof(unsigned long) * 8, "MAX_REVERSE_BITS must be at least the number of bits in unsigned long");
 
       public:
         /**
@@ -35,26 +38,31 @@ namespace ildsgen {
          * @param[in] base The base of the number system (default: 2)
          * @param[in] scale The number of digits (default: 10)
          */
-        explicit VdCorput(size_t base = 2, unsigned int scale = DEFAULT_SCALE)
-            : _base{base}, _count{0}, _factor{static_cast<size_t>(std::pow(base, scale))} {}
+        explicit VdCorput(unsigned long base = 2, unsigned int scale = DEFAULT_SCALE)
+            : _base{std::move(base)}, _count{0}, factor_lst{} {
+            unsigned long factor = static_cast<unsigned long>(std::pow(_base, scale));
+            for (unsigned int i = 0; i < MAX_REVERSE_BITS; ++i) {
+                factor /= _base;
+                this->factor_lst[i] = factor;
+            }
+        }
 
         /**
          * @brief Increments count and calculates the next value in the sequence.
          *
-         * @return size_t
+         * @return unsigned long
          */
-        [[nodiscard]] auto pop() -> size_t {
+        [[nodiscard]] auto pop() -> unsigned long {
             this->_count.fetch_add(1, std::memory_order_relaxed);
 
-            size_t count = this->_count.load(std::memory_order_relaxed);
-            size_t reslt = 0;
-            size_t factor = this->_factor;
-
+            unsigned long count = this->_count.load(std::memory_order_relaxed);
+            unsigned long reslt = 0;
+            unsigned int idx = 0;
             while (count != 0) {
-                const size_t remainder = count % this->_base;
-                factor /= this->_base;
+                const unsigned long remainder = count % this->_base;
                 count /= this->_base;
-                reslt += remainder * factor;
+                reslt += remainder * this->factor_lst[idx];
+                ++idx;
             }
             return reslt;
         }
@@ -64,7 +72,7 @@ namespace ildsgen {
          *
          * @param[in] seed
          */
-        auto reseed(const size_t seed) -> void {
+        auto reseed(const unsigned long& seed) -> void {
             this->_count.store(seed, std::memory_order_relaxed);
         }
 
@@ -92,22 +100,22 @@ namespace ildsgen {
          *
          * Constructs a Halton sequence generator with the specified bases and scale values.
          *
-         * @param[in] base array of two size_t values representing the bases for the two Van der
+         * @param[in] base array of two unsigned long values representing the bases for the two Van der
          * Corput generators
          * @param[in] scale array of two unsigned int values representing the number of digits for
          * each generator
          */
-        explicit Halton(const std::array<size_t, 2>& base, const std::array<unsigned int, 2>& scale)
+        explicit Halton(const std::array<unsigned long, 2>& base, const std::array<unsigned int, 2>& scale)
             : vdc0(base[0], scale[0]), vdc1(base[1], scale[1]) {}
 
         /**
          * @brief Generate the next point in the Halton sequence
          *
-         * Returns the next point in the Halton sequence as an array of two size_t values.
+         * Returns the next point in the Halton sequence as an array of two unsigned long values.
          *
-         * @return array<size_t, 2> the next point in the sequence
+         * @return array<unsigned long, 2> the next point in the sequence
          */
-        inline auto pop() -> array<size_t, 2> {  //
+        inline auto pop() -> array<unsigned long, 2> {  //
             return {this->vdc0.pop(), this->vdc1.pop()};
         }
 
@@ -118,7 +126,7 @@ namespace ildsgen {
          *
          * @param[in] seed the seed value to reset the sequence generator to
          */
-        auto reseed(const size_t seed) -> void {
+        auto reseed(const unsigned long& seed) -> void {
             this->vdc0.reseed(seed);
             this->vdc1.reseed(seed);
         }

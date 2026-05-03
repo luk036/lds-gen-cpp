@@ -1,17 +1,15 @@
 #include "ldsgen/sphere_n.hpp"
 
 #include <cmath>
-#include <cstdint>
 #include <memory>
 #include <mutex>
-// #include <numbers>
 #include <stdexcept>
 #include <unordered_map>
 #include <vector>
 
 namespace ldsgen {
 
-    std::vector<double> linspace(double start, double stop, std::size_t num) {
+    std::vector<double> linspace(double start, double stop, unsigned int num) {
         if (num == 1) {
             return {start};
         }
@@ -20,7 +18,7 @@ namespace ldsgen {
         result.reserve(num);
 
         double step = (stop - start) / static_cast<double>(num - 1);
-        for (std::size_t i = 0; i < num; ++i) {
+        for (unsigned int i = 0; i < num; ++i) {
             result.emplace_back(start + (static_cast<double>(i) * step));
         }
 
@@ -40,7 +38,7 @@ namespace ldsgen {
             return y_points.back();
         }
 
-        for (std::size_t i = 0; i < x_points.size() - 1; ++i) {
+        for (unsigned int i = 0; i < x_points.size() - 1; ++i) {
             if (x_points[i] <= x_value && x_value <= x_points[i + 1]) {
                 // Linear interpolation
                 double t = (x_value - x_points[i]) / (x_points[i + 1] - x_points[i]);
@@ -77,7 +75,7 @@ namespace ldsgen {
                                        const std::vector<double>& sine) {
             std::vector<double> result;
             result.reserve(X.size());
-            for (std::size_t i = 0; i < X.size(); ++i) {
+            for (unsigned int i = 0; i < X.size(); ++i) {
                 result.emplace_back((X[i] + neg_cosine[i] * sine[i]) / 2.0);
             }
             return result;
@@ -89,7 +87,7 @@ namespace ldsgen {
     }  // namespace
 
     // Recursive helper function for get_tp
-    static std::vector<double> get_tp_recursive(int n) {
+    static std::vector<double> get_tp_recursive(unsigned int n) {
         if (n == 0) {
             return X;
         }
@@ -101,7 +99,7 @@ namespace ldsgen {
         std::vector<double> result;
         result.reserve(tp_minus2.size());
 
-        for (std::size_t i = 0; i < tp_minus2.size(); ++i) {
+        for (unsigned int i = 0; i < tp_minus2.size(); ++i) {
             double value = ((n - 1) * tp_minus2[i] + NEG_COSINE[i] * std::pow(SINE[i], n - 1)) / n;
             result.emplace_back(value);
         }
@@ -109,7 +107,7 @@ namespace ldsgen {
         return result;
     }
 
-    std::vector<double> get_tp(int n) {
+    std::vector<double> get_tp(unsigned int n) {
         if (n < 0) {
             throw std::invalid_argument("n must be non-negative");
         }
@@ -129,7 +127,7 @@ namespace ldsgen {
         return result;
     }
 
-    Sphere3::Sphere3(std::span<const std::uint64_t> base)
+    Sphere3::Sphere3(std::span<const unsigned long> base)
         : vdc_(base[0]), sphere2_(base[1], base[2]) {
         if (base.size() < 3) {
             throw std::invalid_argument("Sphere3 requires at least 3 bases");
@@ -154,14 +152,14 @@ namespace ldsgen {
         return result;
     }
 
-    void Sphere3::reseed(std::uint64_t seed) {
+    void Sphere3::reseed(unsigned long seed) {
         std::lock_guard<std::mutex> lock(mutex_);
         vdc_.reseed(seed);
         sphere2_.reseed(seed);
     }
 
     // SphereWrapper implementation
-    SphereWrapper::SphereWrapper(std::span<const std::uint64_t> base) : sphere_(base[0], base[1]) {}
+    SphereWrapper::SphereWrapper(std::span<const unsigned long> base) : sphere_(base[0], base[1]) {}
 
     std::vector<double> SphereWrapper::pop() {
         std::lock_guard<std::mutex> lock(mutex_);
@@ -170,23 +168,23 @@ namespace ldsgen {
         return result;
     }
 
-    void SphereWrapper::reseed(std::uint64_t seed) {
+    void SphereWrapper::reseed(unsigned long seed) {
         std::lock_guard<std::mutex> lock(mutex_);
         sphere_.reseed(seed);
     }
 
-    SphereN::SphereN(std::span<const std::uint64_t> base)
-        : vdc_(base[0]), n_(static_cast<int>(base.size()) - 1) {
+    SphereN::SphereN(std::span<const unsigned long> base)
+        : vdc_(base[0]), n_(static_cast<unsigned int>(base.size() - 1)) {
         if (n_ < 2) {
             throw std::invalid_argument("SphereN requires at least 3 bases (n >= 2)");
         }
 
         if (n_ == 2) {
             // Create a SphereWrapper object
-            std::vector<std::uint64_t> sphere_base = {base[1], base[2]};
+            std::vector<unsigned long> sphere_base = {base[1], base[2]};
             s_gen_ = std::make_unique<SphereWrapper>(sphere_base);
         } else {
-            std::vector<std::uint64_t> sub_base(base.begin() + 1, base.end());
+            std::vector<unsigned long> sub_base(base.begin() + 1, base.end());
             s_gen_ = std::make_unique<SphereN>(sub_base);
         }
 
@@ -231,7 +229,7 @@ namespace ldsgen {
         return result;
     }
 
-    void SphereN::reseed(std::uint64_t seed) {
+    void SphereN::reseed(unsigned long seed) {
         std::lock_guard<std::mutex> lock(mutex_);
         vdc_.reseed(seed);
         s_gen_->reseed(seed);
