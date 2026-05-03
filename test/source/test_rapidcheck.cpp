@@ -129,14 +129,14 @@ TEST_CASE("Property-based test: peek does not advance state") {
 TEST_CASE("Property-based test: skip advances state correctly") {
     rc::check("skip(n) advances state by n positions", []() {
         auto base = static_cast<unsigned long>(*rc::gen::inRange(2, 51));
-        auto skip_count = static_cast<unsigned long>(*rc::gen::inRange(0, 100));
+        auto skip_count = static_cast<unsigned int>(*rc::gen::inRange(0, 100));
 
         ldsgen::VdCorput gen1(base);
         ldsgen::VdCorput gen2(base);
 
         gen2.skip(skip_count);
 
-        for (int i = 0; i < skip_count; ++i) {
+        for (unsigned int i = 0; i < skip_count; ++i) {
             gen1.pop();
         }
 
@@ -147,14 +147,14 @@ TEST_CASE("Property-based test: skip advances state correctly") {
 TEST_CASE("Property-based test: batch returns correct number of values") {
     rc::check("batch(n) returns exactly n values", []() {
         auto base = static_cast<unsigned long>(*rc::gen::inRange(2, 51));
-        auto batch_size = static_cast<unsigned long>(*rc::gen::inRange(1, 100));
+        auto batch_size = static_cast<unsigned int>(*rc::gen::inRange(1, 100));
 
         ldsgen::VdCorput gen(base);
         auto batch = gen.batch(batch_size);
 
         RC_ASSERT(batch.size() == batch_size);
 
-        for (int i = 0; i < batch_size; ++i) {
+        for (unsigned int i = 0; i < batch_size; ++i) {
             RC_ASSERT(batch[i] >= 0.0 && batch[i] < 1.0);
         }
     });
@@ -171,7 +171,7 @@ TEST_CASE("Property-based test: reseed resets generator state") {
         gen1.reseed(seed);
         gen2.reseed(seed);
 
-        for (int i = 0; i < 10; ++i) {
+        for (unsigned int i = 0; i < 10; ++i) {
             RC_ASSERT(gen1.pop() == gen2.pop());
         }
     });
@@ -185,7 +185,7 @@ TEST_CASE("Property-based test: iterator produces same values as pop") {
         ldsgen::VdCorput gen2(base);
 
         auto it = gen1.begin();
-        for (int i = 0; i < 50; ++i, ++it) {
+        for (unsigned int i = 0; i < 50; ++i, ++it) {
             RC_ASSERT(*it == gen2.pop());
         }
     });
@@ -198,7 +198,7 @@ TEST_CASE("Property-based test: Circle iterator produces points on unit circle")
         ldsgen::Circle gen(base);
         auto it = gen.begin();
 
-        for (int i = 0; i < 50; ++i, ++it) {
+        for (unsigned int i = 0; i < 50; ++i, ++it) {
             auto point = *it;
             double radius_squared = point[0] * point[0] + point[1] * point[1];
             RC_ASSERT(radius_squared == doctest::Approx(1.0));
