@@ -82,8 +82,9 @@
             </li>
           </ul>
         </nav>
-<p>Provides STL-compatible iterator interface for all generators. Allows use in range-based for loops and STL algorithms.</p><pre class="m-code"><span class="n">VdCorput</span><span class="w"> </span><span class="nf">gen</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">points</span><span class="p">(</span><span class="n">gen</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">gen</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">100</span><span class="p">);</span></pre>
+<p>Provides STL-compatible iterator interface for all generators. Allows use in range-based for loops and STL algorithms.</p><pre>* VdCorput gen(2);
+* std::vector&lt;double&gt; points(gen.begin(), gen.begin() + 100);
+* </pre>
         <section id="pub-types">
           <h2><a href="#pub-types">Public types</a></h2>
           <dl class="m-doc">
@@ -112,9 +113,9 @@
         <section id="typeless-methods">
           <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
           <dl class="m-doc">
-            <dt id="a375c5fcfa986d3943e375b950c4c8f8e">
-              <span class="m-doc-wrap-bumper"><a href="#a375c5fcfa986d3943e375b950c4c8f8e" class="m-doc-self">GeneratorIterator</a>(</span><span class="m-doc-wrap">Generator* g = nullptr,
-              size_t idx = 0) <span class="m-label m-flat m-info">explicit</span> </span>
+            <dt id="a98d3f9d89c8da0d0583e420b59de8640">
+              <span class="m-doc-wrap-bumper"><a href="#a98d3f9d89c8da0d0583e420b59de8640" class="m-doc-self">GeneratorIterator</a>(</span><span class="m-doc-wrap">Generator* g = nullptr,
+              unsigned long idx = 0) <span class="m-label m-flat m-info">explicit</span> </span>
             </dt>
             <dd><span></span></dd>
           </dl>
@@ -142,8 +143,8 @@
               <span class="m-doc-wrap-bumper">auto <a href="#a3285adf36cc83ec441d147b243cae786" class="m-doc-self">operator!=</a>(</span><span class="m-doc-wrap">const <a href="classldsgen_1_1GeneratorIterator.html" class="m-doc">GeneratorIterator</a>&amp; other) const -&gt; bool -&gt; auto</span>
             </dt>
             <dd>Inequality comparison.</dd>
-            <dt id="a8461138d4e06acbc6a62a3b2f3cd350f">
-              <span class="m-doc-wrap-bumper">auto <a href="#a8461138d4e06acbc6a62a3b2f3cd350f" class="m-doc-self">get_index</a>(</span><span class="m-doc-wrap">) const -&gt; size_t -&gt; auto</span>
+            <dt id="a186699386fbe3d26e2726bb90cf08529">
+              <span class="m-doc-wrap-bumper">auto <a href="#a186699386fbe3d26e2726bb90cf08529" class="m-doc-self">get_index</a>(</span><span class="m-doc-wrap">) const -&gt; unsigned long -&gt; auto</span>
             </dt>
             <dd>Get current index.</dd>
           </dl>
