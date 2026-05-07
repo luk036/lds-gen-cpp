@@ -1,6 +1,6 @@
 #pragma once
 
-#include <memory>   // for unique_ptr
+#include <memory>  // for unique_ptr
 
 // #include <algorithm>  // for std::transform
 // #include <iterator>

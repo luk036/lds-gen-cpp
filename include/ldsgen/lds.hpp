@@ -43,7 +43,8 @@ namespace ldsgen {
         using pointer = const value_type*;
         using reference = value_type;
 
-        explicit GeneratorIterator(Generator* g = nullptr, unsigned long idx = 0) : gen{g}, index{idx} {}
+        explicit GeneratorIterator(Generator* g = nullptr, unsigned long idx = 0)
+            : gen{g}, index{idx} {}
 
         /**
          * @brief Dereference operator
@@ -149,7 +150,8 @@ namespace ldsgen {
         std::atomic<unsigned long> count;
         unsigned long base;
         std::array<double, MAX_REVERSE_BITS> rev_lst;
-        static_assert(MAX_REVERSE_BITS >= sizeof(unsigned long) * 8, "MAX_REVERSE_BITS must be at least the number of bits in unsigned long");
+        static_assert(MAX_REVERSE_BITS >= sizeof(unsigned long) * 8,
+                      "MAX_REVERSE_BITS must be at least the number of bits in unsigned long");
 
       public:
         /**
@@ -257,7 +259,8 @@ namespace ldsgen {
          * @return GeneratorIterator<VdCorput, double>
          */
         [[nodiscard]] auto end() const -> GeneratorIterator<VdCorput, double> {
-            return GeneratorIterator<VdCorput, double>(nullptr, std::numeric_limits<unsigned long>::max());
+            return GeneratorIterator<VdCorput, double>(nullptr,
+                                                       std::numeric_limits<unsigned long>::max());
         }
 
         VdCorput(VdCorput&&) noexcept = delete;
@@ -623,7 +626,8 @@ namespace ldsgen {
          * @param[in] base0 the base for the Van der Corput generator (phi coordinate)
          * @param[in] base1 the base for the Circle generator (theta coordinate)
          */
-        Sphere(const unsigned long base0, const unsigned long base1) : vdcgen(base0), cirgen(base1) {}
+        Sphere(const unsigned long base0, const unsigned long base1)
+            : vdcgen(base0), cirgen(base1) {}
 
         /**
          * @brief Generate the next point on the unit sphere

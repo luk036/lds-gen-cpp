@@ -207,7 +207,7 @@ TEST_CASE("Test comparison with Python implementation") {
     auto result3 = sgen3.pop();
 
     REQUIRE(result3.size() == expected_sphere3.size());
-    for (int i = 0; i < result3.size(); ++i) {
+    for (std::size_t i = 0; i < result3.size(); ++i) {
         CHECK_EQ(result3[i], doctest::Approx(expected_sphere3[i]).epsilon(1e-10));
     }
 
@@ -218,7 +218,7 @@ TEST_CASE("Test comparison with Python implementation") {
     auto resultN = sgenN.pop();
 
     REQUIRE(resultN.size() == expected_spheren.size());
-    for (int i = 0; i < resultN.size(); ++i) {
+    for (std::size_t i = 0; i < resultN.size(); ++i) {
         CHECK_EQ(resultN[i], doctest::Approx(expected_spheren[i]).epsilon(1e-10));
     }
 }

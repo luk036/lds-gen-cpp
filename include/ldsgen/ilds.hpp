@@ -28,8 +28,10 @@ namespace ildsgen {
         unsigned long _base;                ///< Base of the number system
         std::atomic<unsigned long> _count;  ///< Current count in the sequence
         // unsigned long _factor;              ///< Precomputed scale factor (base^scale)
-        std::array<unsigned long, MAX_REVERSE_BITS> factor_lst;  ///< Precomputed scale factors for each digit
-        static_assert(MAX_REVERSE_BITS >= sizeof(unsigned long) * 8, "MAX_REVERSE_BITS must be at least the number of bits in unsigned long");
+        std::array<unsigned long, MAX_REVERSE_BITS>
+            factor_lst;  ///< Precomputed scale factors for each digit
+        static_assert(MAX_REVERSE_BITS >= sizeof(unsigned long) * 8,
+                      "MAX_REVERSE_BITS must be at least the number of bits in unsigned long");
 
       public:
         /**
@@ -100,12 +102,13 @@ namespace ildsgen {
          *
          * Constructs a Halton sequence generator with the specified bases and scale values.
          *
-         * @param[in] base array of two unsigned long values representing the bases for the two Van der
-         * Corput generators
+         * @param[in] base array of two unsigned long values representing the bases for the two Van
+         * der Corput generators
          * @param[in] scale array of two unsigned int values representing the number of digits for
          * each generator
          */
-        explicit Halton(const std::array<unsigned long, 2>& base, const std::array<unsigned int, 2>& scale)
+        explicit Halton(const std::array<unsigned long, 2>& base,
+                        const std::array<unsigned int, 2>& scale)
             : vdc0(base[0], scale[0]), vdc1(base[1], scale[1]) {}
 
         /**
