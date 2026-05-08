@@ -80,6 +80,7 @@ TEST_CASE("Test Sphere3 consistency") {
 
         // Generate multiple points
         std::vector<std::vector<double>> points;
+        points.reserve(5);
         for (int i = 0; i < 5; ++i) {
             points.emplace_back(sgen.pop());
         }
@@ -99,6 +100,7 @@ TEST_CASE("Test Sphere3 reseed functionality") {
     // Generate sequence with seed 0
     sgen.reseed(0);
     std::vector<std::vector<double>> seq1;
+    seq1.reserve(3);
     for (int i = 0; i < 3; ++i) {
         seq1.emplace_back(sgen.pop());
     }
@@ -106,6 +108,7 @@ TEST_CASE("Test Sphere3 reseed functionality") {
     // Generate sequence with seed 0 again
     sgen.reseed(0);
     std::vector<std::vector<double>> seq2;
+    seq2.reserve(3);
     for (int i = 0; i < 3; ++i) {
         seq2.emplace_back(sgen.pop());
     }
@@ -120,7 +123,8 @@ TEST_CASE("Test Sphere3 reseed functionality") {
     // Different seed should give different sequence
     sgen.reseed(1);
     std::vector<std::vector<double>> seq3;
-    for (int i = 0; i < 3; ++i) {
+    seq3.reserve(3);
+for (int i = 0; i < 3; ++i) {
         seq3.emplace_back(sgen.pop());
     }
 
@@ -172,6 +176,7 @@ TEST_CASE("Test SphereN reseed functionality") {
     // Generate sequence with seed 0
     sgen.reseed(0);
     std::vector<std::vector<double>> seq1;
+    seq1.reserve(3);
     for (int i = 0; i < 3; ++i) {
         seq1.emplace_back(sgen.pop());
     }
@@ -179,6 +184,7 @@ TEST_CASE("Test SphereN reseed functionality") {
     // Generate sequence with seed 0 again
     sgen.reseed(0);
     std::vector<std::vector<double>> seq2;
+    seq2.reserve(3);
     for (int i = 0; i < 3; ++i) {
         seq2.emplace_back(sgen.pop());
     }
@@ -226,7 +232,6 @@ TEST_CASE("Test comparison with Python implementation") {
 #include <atomic>
 #include <mutex>
 #include <thread>
-#include <vector>
 
 TEST_CASE("Sphere3 thread safety") {
     const int num_threads = 8;
@@ -237,9 +242,11 @@ TEST_CASE("Sphere3 thread safety") {
     std::vector<std::vector<std::vector<double>>> results(num_threads);
     std::mutex mtx;
 
+    threads.reserve(num_threads);
     for (int i = 0; i < num_threads; ++i) {
         threads.emplace_back([&sgen, &results, &mtx, i]() {
             std::vector<std::vector<double>> local_results;
+            local_results.reserve(values_per_thread);
             for (int j = 0; j < values_per_thread; ++j) {
                 local_results.emplace_back(sgen.pop());
             }
@@ -275,9 +282,11 @@ TEST_CASE("SphereN thread safety") {
     std::vector<std::vector<std::vector<double>>> results(num_threads);
     std::mutex mtx;
 
+    threads.reserve(num_threads);
     for (int i = 0; i < num_threads; ++i) {
         threads.emplace_back([&sgen, &results, &mtx, i]() {
             std::vector<std::vector<double>> local_results;
+            local_results.reserve(values_per_thread);
             for (int j = 0; j < values_per_thread; ++j) {
                 local_results.emplace_back(sgen.pop());
             }
@@ -313,9 +322,11 @@ TEST_CASE("SphereWrapper thread safety") {
     std::vector<std::vector<std::vector<double>>> results(num_threads);
     std::mutex mtx;
 
+    threads.reserve(num_threads);
     for (int i = 0; i < num_threads; ++i) {
         threads.emplace_back([&sgen, &results, &mtx, i]() {
             std::vector<std::vector<double>> local_results;
+            local_results.reserve(values_per_thread);
             for (int j = 0; j < values_per_thread; ++j) {
                 local_results.emplace_back(sgen.pop());
             }
@@ -355,15 +366,16 @@ TEST_CASE("Concurrent reseed thread safety for sphere classes") {
     std::mutex mtx;
     std::vector<std::vector<double>> results;
 
+    threads.reserve(num_threads);
     for (int i = 0; i < num_threads; ++i) {
         threads.emplace_back([&sgen3, &sgenN, &pop_count, &reseed_count, &mtx, &results, i]() {
             for (int j = 0; j < operations_per_thread; ++j) {
                 if (j % 5 == 0) {
                     // Occasionally reseed
                     if (i % 2 == 0) {
-                        sgen3.reseed(static_cast<unsigned long>(i * 10 + j));
+                        sgen3.reseed(static_cast<unsigned long>(i) * 10UL + static_cast<unsigned long>(j));
                     } else {
-                        sgenN.reseed(static_cast<unsigned long>(i * 10 + j));
+                        sgenN.reseed(static_cast<unsigned long>(i) * 10UL + static_cast<unsigned long>(j));
                     }
                     reseed_count++;
                 } else {
