@@ -250,7 +250,7 @@ TEST_CASE("Sphere3 thread safety") {
             for (int j = 0; j < values_per_thread; ++j) {
                 local_results.emplace_back(sgen.pop());
             }
-            std::lock_guard<std::mutex> lock(mtx);
+            std::scoped_lock lock(mtx);
             results[i] = std::move(local_results);
         });
     }
@@ -290,7 +290,7 @@ TEST_CASE("SphereN thread safety") {
             for (int j = 0; j < values_per_thread; ++j) {
                 local_results.emplace_back(sgen.pop());
             }
-            std::lock_guard<std::mutex> lock(mtx);
+            std::scoped_lock lock(mtx);
             results[i] = std::move(local_results);
         });
     }
@@ -330,7 +330,7 @@ TEST_CASE("SphereWrapper thread safety") {
             for (int j = 0; j < values_per_thread; ++j) {
                 local_results.emplace_back(sgen.pop());
             }
-            std::lock_guard<std::mutex> lock(mtx);
+            std::scoped_lock lock(mtx);
             results[i] = std::move(local_results);
         });
     }
@@ -386,7 +386,7 @@ TEST_CASE("Concurrent reseed thread safety for sphere classes") {
                     } else {
                         point = sgenN.pop();
                     }
-                    std::lock_guard<std::mutex> lock(mtx);
+                    std::scoped_lock lock(mtx);
                     results.emplace_back(point);
                     pop_count++;
                 }

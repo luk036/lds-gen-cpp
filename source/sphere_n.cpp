@@ -111,7 +111,7 @@ namespace ldsgen {
         static std::unordered_map<int, std::vector<double>> tp_cache;
         static std::mutex tp_cache_mutex;
 
-        std::lock_guard<std::mutex> lock(tp_cache_mutex);
+        std::scoped_lock lock(tp_cache_mutex);
 
         auto it = tp_cache.find(n);
         if (it != tp_cache.end()) {
@@ -131,7 +131,7 @@ namespace ldsgen {
     }
 
     std::vector<double> Sphere3::pop() {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::scoped_lock lock(mutex_);
         double ti = HALF_PI * vdc_.pop();  // map to [t0, tm-1]
         double xi = simple_interp(ti, F2, X);
         double cosxi = std::cos(xi);
@@ -149,7 +149,7 @@ namespace ldsgen {
     }
 
     void Sphere3::reseed(unsigned long seed) {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::scoped_lock lock(mutex_);
         vdc_.reseed(seed);
         sphere2_.reseed(seed);
     }
@@ -158,14 +158,14 @@ namespace ldsgen {
     SphereWrapper::SphereWrapper(std::span<const unsigned long> base) : sphere_(base[0], base[1]) {}
 
     std::vector<double> SphereWrapper::pop() {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::scoped_lock lock(mutex_);
         auto arr = sphere_.pop();
         std::vector<double> result(arr.begin(), arr.end());
         return result;
     }
 
     void SphereWrapper::reseed(unsigned long seed) {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::scoped_lock lock(mutex_);
         sphere_.reseed(seed);
     }
 
@@ -188,7 +188,7 @@ namespace ldsgen {
         range_ = tp.back() - tp.front();
     }
     std::vector<double> SphereN::pop() {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::scoped_lock lock(mutex_);
         if (n_ == 2) {
             double ti = HALF_PI * vdc_.pop();  // map to [t0, tm-1]
             double xi = simple_interp(ti, F2, X);
@@ -226,7 +226,7 @@ namespace ldsgen {
     }
 
     void SphereN::reseed(unsigned long seed) {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::scoped_lock lock(mutex_);
         vdc_.reseed(seed);
         s_gen_->reseed(seed);
     }
