@@ -124,7 +124,7 @@ TEST_CASE("Test Sphere3 reseed functionality") {
     sgen.reseed(1);
     std::vector<std::vector<double>> seq3;
     seq3.reserve(3);
-for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 3; ++i) {
         seq3.emplace_back(sgen.pop());
     }
 
@@ -373,9 +373,11 @@ TEST_CASE("Concurrent reseed thread safety for sphere classes") {
                 if (j % 5 == 0) {
                     // Occasionally reseed
                     if (i % 2 == 0) {
-                        sgen3.reseed(static_cast<unsigned long>(i) * 10UL + static_cast<unsigned long>(j));
+                        sgen3.reseed(static_cast<unsigned long>(i) * 10UL
+                                     + static_cast<unsigned long>(j));
                     } else {
-                        sgenN.reseed(static_cast<unsigned long>(i) * 10UL + static_cast<unsigned long>(j));
+                        sgenN.reseed(static_cast<unsigned long>(i) * 10UL
+                                     + static_cast<unsigned long>(j));
                     }
                     reseed_count++;
                 } else {

@@ -81,10 +81,9 @@ int main() {
             }
             std::cout << "  Contains " << line_count << " line(s)\n";
             return true;
-        } 
-            std::cout << "✗ " << description << " NOT found\n";
-            return false;
-       
+        }
+        std::cout << "✗ " << description << " NOT found\n";
+        return false;
     };
 
     bool ldsgen_log_ok = verify_log("ldsgen.log", "ldsgen.log (wrapper)");
