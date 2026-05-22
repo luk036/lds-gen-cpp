@@ -2,7 +2,6 @@
 
 #include <array>
 #include <atomic>
-#include <cmath>
 
 namespace ildsgen {
 
@@ -41,8 +40,11 @@ namespace ildsgen {
          * @param[in] scale The number of digits (default: 10)
          */
         explicit VdCorput(unsigned long base = 2, unsigned int scale = DEFAULT_SCALE)
-            : _base{std::move(base)}, _count{0}, factor_lst{} {
-            unsigned long factor = static_cast<unsigned long>(std::pow(_base, scale));
+            : _base{base}, _count{0}, factor_lst{} {
+            unsigned long factor = 1;
+            for (unsigned int i = 0; i < scale; ++i) {
+                factor *= _base;
+            }
             for (unsigned int i = 0; i < MAX_REVERSE_BITS; ++i) {
                 factor /= _base;
                 this->factor_lst[i] = factor;

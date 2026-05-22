@@ -7,6 +7,17 @@ if is_mode("coverage") then
     add_cxflags("-ftest-coverage", "-fprofile-arcs", {force = true})
 end
 
+-- Enable LTO for release builds
+if is_mode("release") then
+    if is_plat("windows") then
+        add_cxflags("/GL", {force = true})
+        add_ldflags("/LTCG", {force = true})
+    else
+        add_cxflags("-flto", {force = true})
+        add_ldflags("-flto", {force = true})
+    end
+end
+
 if is_plat("linux") then
     add_cxflags("-Wconversion", {force = true})
     add_cxflags("-Wno-unused-command-line-argument", {force = true})

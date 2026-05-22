@@ -5,25 +5,16 @@
 
 namespace ldsgen {
 
-    void log_with_spdlog(const std::string& message) {
-        // Always create a fresh logger to ensure proper file handling
-        std::shared_ptr<spdlog::logger> logger;
-        try {
-            // Try to drop the existing logger first
-            spdlog::drop("file_logger");
-        } catch (...) {
-            // Ignore if logger doesn't exist
-        }
-
-        // Create a new logger
-        logger = spdlog::basic_logger_mt("file_logger", "ldsgen.log");
-        if (logger) {
-            logger->set_level(spdlog::level::info);
-            logger->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%n] [%^%l%$] %v");
-            logger->flush_on(spdlog::level::info);
-            logger->info("LdsGen message: {}", message);
-            logger->flush();
-        }
-    }
+void log_with_spdlog(const std::string& message) {
+    static auto logger = []() -> std::shared_ptr<spdlog::logger> {
+        auto log = spdlog::basic_logger_mt("file_logger", "ldsgen.log");
+        log->set_level(spdlog::level::info);
+        log->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%n] [%^%l%$] %v");
+        log->flush_on(spdlog::level::info);
+        return log;
+    }();
+    logger->info("LdsGen message: {}", message);
+    logger->flush();
+}
 
 }  // namespace ldsgen
