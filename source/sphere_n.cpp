@@ -95,8 +95,8 @@ namespace ldsgen {
         }
 
         // Bottom-up iteration: compute tp[2..n] using tp[i-2] and tp[i-1]
-        std::vector<double> prev2 = X;          // tp[0]
-        std::vector<double> prev1 = NEG_COSINE; // tp[1]
+        std::vector<double> prev2 = X;           // tp[0]
+        std::vector<double> prev1 = NEG_COSINE;  // tp[1]
         std::vector<double> current;
         current.reserve(X.size());
 
@@ -104,8 +104,8 @@ namespace ldsgen {
             current.clear();
             for (std::size_t j = 0; j < X.size(); ++j) {
                 double value = (static_cast<double>(i - 1) * prev2[j]
-                              + NEG_COSINE[j] * std::pow(SINE[j], i - 1))
-                              / static_cast<double>(i);
+                                + NEG_COSINE[j] * std::pow(SINE[j], i - 1))
+                               / static_cast<double>(i);
                 current.emplace_back(value);
             }
             if (i < n) {
