@@ -40,7 +40,7 @@ namespace ldsgen {
         }
 
         // Binary search for the interval (O(log n) instead of O(n) linear scan)
-        auto it = std::upper_bound(x_points.begin(), x_points.end(), x_value);
+        auto it = std::ranges::upper_bound(x_points, x_value);
         auto i = static_cast<std::size_t>(std::distance(x_points.begin(), it) - 1);
 
         // Linear interpolation
