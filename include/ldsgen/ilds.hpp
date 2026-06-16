@@ -1,5 +1,9 @@
 #pragma once
 
+/** @file ilds.hpp
+ *  @brief Integer low-discrepancy sequence generators with thread-safe runtime (ildsgen).
+ */
+
 #include <array>
 #include <atomic>
 

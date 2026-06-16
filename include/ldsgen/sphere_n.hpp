@@ -1,5 +1,9 @@
 #pragma once
 
+/** @file sphere_n.hpp
+ *  @brief N-dimensional sphere sequence generators (Sphere3, SphereN, SphereWrapper).
+ */
+
 #include <memory>
 #include <mutex>
 #include <span>

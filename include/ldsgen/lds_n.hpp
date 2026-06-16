@@ -1,5 +1,9 @@
 #pragma once
 
+/** @file lds_n.hpp
+ *  @brief N-dimensional Halton sequence generator with runtime polymorphism.
+ */
+
 #include <memory>  // for unique_ptr
 
 // #include <algorithm>  // for std::transform

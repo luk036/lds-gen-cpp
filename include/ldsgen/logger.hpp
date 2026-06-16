@@ -1,5 +1,9 @@
 #pragma once
 
+/** @file logger.hpp
+ *  @brief Logging utilities for the ldsgen library using spdlog.
+ */
+
 #include <string>
 
 namespace ldsgen {
