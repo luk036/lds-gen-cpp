@@ -1,0 +1,13 @@
+<map id="ldsgen/lds.hpp" name="ldsgen/lds.hpp">
+<area shape="rect" id="Node000001" title="Low&#45;discrepancy sequence generators with thread&#45;safe runtime polymorphism (ldsgen)." alt="" coords="150,5,266,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,61,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="181,33,76,76,74,71,179,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="85,79,152,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="195,33,146,72,142,68,192,29"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="177,79,239,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="211,31,211,65,205,65,205,31"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="263,79,334,104"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="224,29,275,68,271,72,221,33"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="359,79,417,104"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="238,28,347,71,345,76,236,33"/>
+</map>

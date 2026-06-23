@@ -1,0 +1,9 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classldsgen_1_1SphereGen.html" title="Base class for sphere generators." alt="" coords="5,55,149,80"/>
+<area shape="rect" id="Node000001" href="$classldsgen_1_1Sphere3.html" title="3&#45;Sphere sequence generator" alt="" coords="221,5,347,31"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="144,49,229,28,231,33,145,54"/>
+<area shape="rect" id="Node000002" href="$classldsgen_1_1SphereN.html" title="N&#45;dimensional sphere sequence generator." alt="" coords="220,55,348,80"/>
+<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="163,65,220,65,220,70,163,70"/>
+<area shape="rect" id="Node000003" href="$classldsgen_1_1SphereWrapper.html" title="Wrapper class to make Sphere compatible with SphereGen interface." alt="" coords="197,104,371,129"/>
+<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="145,81,231,101,229,107,144,86"/>
+</map>
