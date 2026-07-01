@@ -234,8 +234,8 @@ TEST_CASE("Test comparison with Python implementation") {
 #include <thread>
 
 TEST_CASE("Sphere3 thread safety") {
-    const int num_threads = 8;
-    const int values_per_thread = 50;
+    const size_t num_threads = 8;
+    const size_t values_per_thread = 50;
     std::vector<unsigned long> base = {2, 3, 5};
     ldsgen::Sphere3 sgen(base);
     std::vector<std::thread> threads;
@@ -243,11 +243,11 @@ TEST_CASE("Sphere3 thread safety") {
     std::mutex mtx;
 
     threads.reserve(num_threads);
-    for (int i = 0; i < num_threads; ++i) {
+    for (size_t i = 0; i < num_threads; ++i) {
         threads.emplace_back([&sgen, &results, &mtx, i]() {
             std::vector<std::vector<double>> local_results;
             local_results.reserve(values_per_thread);
-            for (int j = 0; j < values_per_thread; ++j) {
+            for (size_t j = 0; j < values_per_thread; ++j) {
                 local_results.emplace_back(sgen.pop());
             }
             std::scoped_lock lock(mtx);
@@ -274,8 +274,8 @@ TEST_CASE("Sphere3 thread safety") {
 }
 
 TEST_CASE("SphereN thread safety") {
-    const int num_threads = 8;
-    const int values_per_thread = 50;
+    const size_t num_threads = 8;
+    const size_t values_per_thread = 50;
     std::vector<unsigned long> base = {2, 3, 5, 7, 11};
     ldsgen::SphereN sgen(base);
     std::vector<std::thread> threads;
@@ -283,11 +283,11 @@ TEST_CASE("SphereN thread safety") {
     std::mutex mtx;
 
     threads.reserve(num_threads);
-    for (int i = 0; i < num_threads; ++i) {
+    for (size_t i = 0; i < num_threads; ++i) {
         threads.emplace_back([&sgen, &results, &mtx, i]() {
             std::vector<std::vector<double>> local_results;
             local_results.reserve(values_per_thread);
-            for (int j = 0; j < values_per_thread; ++j) {
+            for (size_t j = 0; j < values_per_thread; ++j) {
                 local_results.emplace_back(sgen.pop());
             }
             std::scoped_lock lock(mtx);
@@ -314,8 +314,8 @@ TEST_CASE("SphereN thread safety") {
 }
 
 TEST_CASE("SphereWrapper thread safety") {
-    const int num_threads = 8;
-    const int values_per_thread = 50;
+    const size_t num_threads = 8;
+    const size_t values_per_thread = 50;
     std::vector<unsigned long> base = {2, 3};
     ldsgen::SphereWrapper sgen(base);
     std::vector<std::thread> threads;
@@ -323,11 +323,11 @@ TEST_CASE("SphereWrapper thread safety") {
     std::mutex mtx;
 
     threads.reserve(num_threads);
-    for (int i = 0; i < num_threads; ++i) {
+    for (size_t i = 0; i < num_threads; ++i) {
         threads.emplace_back([&sgen, &results, &mtx, i]() {
             std::vector<std::vector<double>> local_results;
             local_results.reserve(values_per_thread);
-            for (int j = 0; j < values_per_thread; ++j) {
+            for (size_t j = 0; j < values_per_thread; ++j) {
                 local_results.emplace_back(sgen.pop());
             }
             std::scoped_lock lock(mtx);
@@ -367,7 +367,7 @@ TEST_CASE("Concurrent reseed thread safety for sphere classes") {
     std::vector<std::vector<double>> results;
 
     threads.reserve(num_threads);
-    for (int i = 0; i < num_threads; ++i) {
+    for (size_t i = 0; i < num_threads; ++i) {
         threads.emplace_back([&sgen3, &sgenN, &pop_count, &reseed_count, &mtx, &results, i]() {
             for (int j = 0; j < operations_per_thread; ++j) {
                 if (j % 5 == 0) {
