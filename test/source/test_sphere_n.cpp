@@ -114,7 +114,7 @@ TEST_CASE("Test Sphere3 reseed functionality") {
     }
 
     // Should be identical
-    for (int i = 0; i < 3; ++i) {
+    for (size_t i = 0; i < 3; ++i) {
         for (unsigned long j = 0; j < 4; ++j) {
             CHECK_EQ(seq1[i][j], doctest::Approx(seq2[i][j]).epsilon(1e-10));
         }
@@ -124,13 +124,13 @@ TEST_CASE("Test Sphere3 reseed functionality") {
     sgen.reseed(1);
     std::vector<std::vector<double>> seq3;
     seq3.reserve(3);
-    for (int i = 0; i < 3; ++i) {
+    for (size_t i = 0; i < 3; ++i) {
         seq3.emplace_back(sgen.pop());
     }
 
     // Should be different from seed 0
     bool different = false;
-    for (int i = 0; i < 3 && !different; ++i) {
+    for (size_t i = 0; i < 3 && !different; ++i) {
         for (unsigned long j = 0; j < 4; ++j) {
             if (std::abs(seq1[i][j] - seq3[i][j]) > 1e-10) {
                 different = true;
@@ -185,12 +185,12 @@ TEST_CASE("Test SphereN reseed functionality") {
     sgen.reseed(0);
     std::vector<std::vector<double>> seq2;
     seq2.reserve(3);
-    for (int i = 0; i < 3; ++i) {
+    for (size_t i = 0; i < 3; ++i) {
         seq2.emplace_back(sgen.pop());
     }
 
     // Should be identical
-    for (int i = 0; i < 3; ++i) {
+    for (size_t i = 0; i < 3; ++i) {
         for (unsigned long j = 0; j < 4; ++j) {
             CHECK_EQ(seq1[i][j], doctest::Approx(seq2[i][j]).epsilon(1e-10));
         }

@@ -201,19 +201,19 @@ TEST_CASE("dummy") { CHECK_EQ(ldsgen::dummy(15), 53); }
 #include <vector>
 
 TEST_CASE("VdCorput thread safety") {
-    const int num_threads = 8;
-    const int values_per_thread = 100;
+    const size_t num_threads = 8;
+    const size_t values_per_thread = 100;
     ldsgen::VdCorput vgen(2);
     std::vector<std::thread> threads;
     std::vector<std::vector<double>> results(num_threads);
     std::mutex mtx;
 
     threads.reserve(num_threads);
-    for (int i = 0; i < num_threads; ++i) {
+    for (size_t i = 0; i < num_threads; ++i) {
         threads.emplace_back([&vgen, &results, &mtx, i]() {
             std::vector<double> local_results;
             local_results.reserve(values_per_thread);
-            for (int j = 0; j < values_per_thread; ++j) {
+            for (size_t j = 0; j < values_per_thread; ++j) {
                 local_results.emplace_back(vgen.pop());
             }
             std::scoped_lock lock(mtx);
@@ -232,7 +232,7 @@ TEST_CASE("VdCorput thread safety") {
     }
 
     std::ranges::sort(all_values);
-    for (unsigned int i = 1; i < all_values.size(); ++i) {
+    for (size_t i = 1; i < all_values.size(); ++i) {
         CHECK_NE(all_values[i], all_values[i - 1]);
     }
 
@@ -241,19 +241,19 @@ TEST_CASE("VdCorput thread safety") {
 }
 
 TEST_CASE("Halton thread safety") {
-    const int num_threads = 8;
-    const int values_per_thread = 100;
+    const size_t num_threads = 8;
+    const size_t values_per_thread = 100;
     ldsgen::Halton hgen(2, 3);
     std::vector<std::thread> threads;
     std::vector<std::vector<std::array<double, 2>>> results(num_threads);
     std::mutex mtx;
 
     threads.reserve(num_threads);
-    for (int i = 0; i < num_threads; ++i) {
+    for (size_t i = 0; i < num_threads; ++i) {
         threads.emplace_back([&hgen, &results, &mtx, i]() {
             std::vector<std::array<double, 2>> local_results;
             local_results.reserve(values_per_thread);
-            for (int j = 0; j < values_per_thread; ++j) {
+            for (size_t j = 0; j < values_per_thread; ++j) {
                 local_results.emplace_back(hgen.pop());
             }
             std::scoped_lock lock(mtx);
@@ -274,19 +274,19 @@ TEST_CASE("Halton thread safety") {
 }
 
 TEST_CASE("Circle thread safety") {
-    const int num_threads = 8;
-    const int values_per_thread = 100;
+    const size_t num_threads = 8;
+    const size_t values_per_thread = 100;
     ldsgen::Circle cgen(2);
     std::vector<std::thread> threads;
     std::vector<std::vector<std::array<double, 2>>> results(num_threads);
     std::mutex mtx;
 
     threads.reserve(num_threads);
-    for (int i = 0; i < num_threads; ++i) {
+    for (size_t i = 0; i < num_threads; ++i) {
         threads.emplace_back([&cgen, &results, &mtx, i]() {
             std::vector<std::array<double, 2>> local_results;
             local_results.reserve(values_per_thread);
-            for (int j = 0; j < values_per_thread; ++j) {
+            for (size_t j = 0; j < values_per_thread; ++j) {
                 local_results.emplace_back(cgen.pop());
             }
             std::scoped_lock lock(mtx);
@@ -315,19 +315,19 @@ TEST_CASE("Circle thread safety") {
 }
 
 TEST_CASE("Disk thread safety") {
-    const int num_threads = 8;
-    const int values_per_thread = 100;
+    const size_t num_threads = 8;
+    const size_t values_per_thread = 100;
     ldsgen::Disk dgen(2, 3);
     std::vector<std::thread> threads;
     std::vector<std::vector<std::array<double, 2>>> results(num_threads);
     std::mutex mtx;
 
     threads.reserve(num_threads);
-    for (int i = 0; i < num_threads; ++i) {
+    for (size_t i = 0; i < num_threads; ++i) {
         threads.emplace_back([&dgen, &results, &mtx, i]() {
             std::vector<std::array<double, 2>> local_results;
             local_results.reserve(values_per_thread);
-            for (int j = 0; j < values_per_thread; ++j) {
+            for (size_t j = 0; j < values_per_thread; ++j) {
                 local_results.emplace_back(dgen.pop());
             }
             std::scoped_lock lock(mtx);
@@ -356,19 +356,19 @@ TEST_CASE("Disk thread safety") {
 }
 
 TEST_CASE("Sphere thread safety") {
-    const int num_threads = 8;
-    const int values_per_thread = 100;
+    const size_t num_threads = 8;
+    const size_t values_per_thread = 100;
     ldsgen::Sphere sgen(2, 3);
     std::vector<std::thread> threads;
     std::vector<std::vector<std::array<double, 3>>> results(num_threads);
     std::mutex mtx;
 
     threads.reserve(num_threads);
-    for (int i = 0; i < num_threads; ++i) {
+    for (size_t i = 0; i < num_threads; ++i) {
         threads.emplace_back([&sgen, &results, &mtx, i]() {
             std::vector<std::array<double, 3>> local_results;
             local_results.reserve(values_per_thread);
-            for (int j = 0; j < values_per_thread; ++j) {
+            for (size_t j = 0; j < values_per_thread; ++j) {
                 local_results.emplace_back(sgen.pop());
             }
             std::scoped_lock lock(mtx);
@@ -397,19 +397,19 @@ TEST_CASE("Sphere thread safety") {
 }
 
 TEST_CASE("Sphere3Hopf thread safety") {
-    const int num_threads = 8;
-    const int values_per_thread = 100;
+    const size_t num_threads = 8;
+    const size_t values_per_thread = 100;
     ldsgen::Sphere3Hopf shfgen(2, 3, 5);
     std::vector<std::thread> threads;
     std::vector<std::vector<std::array<double, 4>>> results(num_threads);
     std::mutex mtx;
 
     threads.reserve(num_threads);
-    for (int i = 0; i < num_threads; ++i) {
+    for (size_t i = 0; i < num_threads; ++i) {
         threads.emplace_back([&shfgen, &results, &mtx, i]() {
             std::vector<std::array<double, 4>> local_results;
             local_results.reserve(values_per_thread);
-            for (int j = 0; j < values_per_thread; ++j) {
+            for (size_t j = 0; j < values_per_thread; ++j) {
                 local_results.emplace_back(shfgen.pop());
             }
             std::scoped_lock lock(mtx);
@@ -439,8 +439,8 @@ TEST_CASE("Sphere3Hopf thread safety") {
 }
 
 TEST_CASE("Concurrent reseed thread safety") {
-    const int num_threads = 8;
-    const int operations_per_thread = 50;
+    const size_t num_threads = 8;
+    const size_t operations_per_thread = 50;
     ldsgen::VdCorput vgen(2);
     std::vector<std::thread> threads;
     std::atomic<int> pop_count{0};
@@ -449,9 +449,9 @@ TEST_CASE("Concurrent reseed thread safety") {
     std::vector<double> results;
 
     threads.reserve(num_threads);
-    for (int i = 0; i < num_threads; ++i) {
+    for (size_t i = 0; i < num_threads; ++i) {
         threads.emplace_back([&vgen, &pop_count, &reseed_count, &mtx, &results, i]() {
-            for (int j = 0; j < operations_per_thread; ++j) {
+            for (size_t j = 0; j < operations_per_thread; ++j) {
                 if (j % 10 == 0) {
                     // Occasionally reseed
                     vgen.reseed(static_cast<unsigned long>(i * 10 + j));

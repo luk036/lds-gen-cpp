@@ -118,7 +118,7 @@ namespace ldsgen {
     }
 
     std::vector<double> get_tp(unsigned int n) {
-        static std::unordered_map<int, std::vector<double>> tp_cache;
+        static std::unordered_map<unsigned int, std::vector<double>> tp_cache;
         static std::mutex tp_cache_mutex;
 
         std::scoped_lock lock(tp_cache_mutex);
