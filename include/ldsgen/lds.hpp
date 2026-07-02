@@ -158,6 +158,20 @@ namespace ldsgen {
      *     pop() -> 0.125 (0.001 base 2)
      *     ...
      * @endverbatim
+     *
+     * @dot
+     *   digraph vdc_flow {
+     *     rankdir=LR; bgcolor="transparent";
+     *     node [shape=box, style=filled, fillcolor="#d4e6f1"];
+     *     n [label="Input n\n(index)", fillcolor="#a9cce3"];
+     *     base [label="Base b", fillcolor="#a9cce3"];
+     *     digits [label="Extract base-b\ndigits a_k"];
+     *     ratio [label="Compute\nratio a_k / b^{k+1}"];
+     *     sum [label="Sum\nphi_b(n)", fillcolor="#7fb3d8"];
+     *     n -> digits; base -> digits;
+     *     digits -> ratio -> sum;
+     *   }
+     * @enddot
      */
     class VdCorput {
         std::atomic<unsigned long> count;
@@ -190,6 +204,9 @@ namespace ldsgen {
          * Generates the next value in the Van der Corput sequence by incrementing
          * the count and calculating the Van der Corput sequence value for that count
          * and base.
+         *
+         * @f$ \phi_b(n) = \sum_{k=0}^{\infty} a_k(n) \, b^{-k-1} @f$
+         * where @f$ a_k(n) @f$ are the base-@f$ b @f$ digits of @f$ n @f$.
          *
          * @return double the next value in the sequence
          */
@@ -298,6 +315,19 @@ namespace ldsgen {
      *     pop() -> (0.75, 0.111) (VdC(2) -> 0.75, VdC(3) -> 0.111)
      *     ...
      * @endverbatim
+     *
+     * @dot
+     *   digraph halton_flow {
+     *     rankdir=LR; bgcolor="transparent";
+     *     node [shape=box, style=filled, fillcolor="#d4e6f1"];
+     *     vdc0 [label="VdC(b0)", fillcolor="#a9cce3"];
+     *     vdc1 [label="VdC(b1)", fillcolor="#a9cce3"];
+     *     combine [label="Combine:\n(phi_b0(n), phi_b1(n))", fillcolor="#f9e79f"];
+     *     point [label="Halton point\n(x, y)", fillcolor="#7fb3d8"];
+     *     vdc0 -> combine; vdc1 -> combine;
+     *     combine -> point;
+     *   }
+     * @enddot
      */
     class Halton {
         VdCorput vdc0;
@@ -319,6 +349,8 @@ namespace ldsgen {
          * @brief Generate the next point in the Halton sequence
          *
          * Returns the next point in the Halton sequence as an array of two double values.
+         *
+         * @f$ H(n) = \bigl(\phi_{b_0}(n),\; \phi_{b_1}(n)\bigr) @f$
          *
          * @return std::array<double, 2> the next point in the sequence
          */
@@ -407,6 +439,17 @@ namespace ldsgen {
      *     Points distributed more evenly
      *     than random sampling
      * @endverbatim
+     *
+     * @dot
+     *   digraph circle_flow {
+     *     rankdir=LR; bgcolor="transparent";
+     *     node [shape=box, style=filled, fillcolor="#d4e6f1"];
+     *     vdc [label="VdC(n)\nin base b", fillcolor="#a9cce3"];
+     *     angle [label="theta =\n2pi * VdC", fillcolor="#a9dfbf"];
+     *     point [label="(cos(theta),\nsin(theta))", fillcolor="#7fb3d8"];
+     *     vdc -> angle -> point;
+     *   }
+     * @enddot
      */
     class Circle {
         VdCorput vdc;
@@ -426,6 +469,8 @@ namespace ldsgen {
          * @brief Generate the next point on the unit circle
          *
          * Returns the next point on the unit circle as an array of two double values.
+         *
+         * @f$ \theta = 2\pi \cdot \phi_b(n), \quad P(n) = (\cos\theta,\; \sin\theta) @f$
          *
          * @return std::array<double, 2> the next point on the unit circle
          */
@@ -510,6 +555,19 @@ namespace ldsgen {
      *      ***     ***
      *         *****
      * @endverbatim
+     *
+     * @dot
+     *   digraph disk_flow {
+     *     rankdir=LR; bgcolor="transparent";
+     *     node [shape=box, style=filled, fillcolor="#d4e6f1"];
+     *     vdc0 [label="VdC(b0)", fillcolor="#a9cce3"];
+     *     vdc1 [label="VdC(b1)", fillcolor="#a9cce3"];
+     *     polar [label="theta = 2pi*VdC(b0)\nr = sqrt(VdC(b1))", fillcolor="#f9e79f"];
+     *     point [label="(r cos(theta),\nr sin(theta))", fillcolor="#7fb3d8"];
+     *     vdc0 -> polar; vdc1 -> polar;
+     *     polar -> point;
+     *   }
+     * @enddot
      */
     class Disk {
         VdCorput vdc0;
@@ -530,6 +588,9 @@ namespace ldsgen {
          * @brief Generate the next point in the unit disk
          *
          * Returns the next point in the unit disk as an array of two double values.
+         *
+         * @f$ \theta = 2\pi \cdot \phi_{b_0}(n), \; r = \sqrt{\phi_{b_1}(n)} @f$
+         * @f$ P(n) = \bigl(r\cos\theta,\; r\sin\theta\bigr) @f$
          *
          * @return std::array<double, 2> the next point in the unit disk
          */
@@ -624,6 +685,20 @@ namespace ldsgen {
      *       **       **
      *          *****
      * @endverbatim
+     *
+     * @dot
+     *   digraph sphere_flow {
+     *     rankdir=LR; bgcolor="transparent";
+     *     node [shape=box, style=filled, fillcolor="#d4e6f1"];
+     *     vdc [label="VdC(b0)\nz = 2*VdC - 1", fillcolor="#a9cce3"];
+     *     circle [label="Circle(b1)\n(cos, sin)", fillcolor="#a9cce3"];
+     *     combine [label="P = (sin(theta)*cos(phi),\nsin(theta)*sin(phi),\ncos(theta))", fillcolor="#f9e79f"];
+     *     point [label="Sphere point\n(x, y, z)", fillcolor="#7fb3d8"];
+     *     vdc -> combine;
+     *     circle -> combine;
+     *     combine -> point;
+     *   }
+     * @enddot
      */
     class Sphere {
         VdCorput vdcgen;
@@ -646,6 +721,9 @@ namespace ldsgen {
          * @brief Generate the next point on the unit sphere
          *
          * Returns the next point on the unit sphere as an array of three double values.
+         *
+         * @f$ \phi = 2\pi \cdot \phi_{b_1}(n), \quad \cos\theta = 2\phi_{b_0}(n) - 1 @f$
+         * @f$ P(n) = \bigl(\sin\theta\cos\phi,\; \sin\theta\sin\phi,\; \cos\theta\bigr) @f$
          *
          * @return std::array<double, 3> the next point on the unit sphere
          */
@@ -769,6 +847,17 @@ namespace ldsgen {
          *
          * Returns the next point on the 3-sphere using the Hopf fibration as an array of four
          * double values.
+         *
+         * @f[
+         *     \begin{aligned}
+         *     x &= \cos\eta\cos\psi \\
+         *     y &= \cos\eta\sin\psi \\
+         *     z &= \sin\eta\cos(\phi + \psi) \\
+         *     w &= \sin\eta\sin(\phi + \psi)
+         *     \end{aligned}
+         * @f]
+         * where @f$ \phi = 2\pi\phi_{b_0}(n) @f$, @f$ \psi = 2\pi\phi_{b_1}(n) @f$,
+         * and @f$ \eta = \arccos\sqrt{\phi_{b_2}(n)} @f$.
          *
          * @return std::array<double, 4> the next point on the 3-sphere
          */
