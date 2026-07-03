@@ -692,11 +692,9 @@ namespace ldsgen {
      *     node [shape=box, style=filled, fillcolor="#d4e6f1"];
      *     vdc [label="VdC(b0)\nz = 2*VdC - 1", fillcolor="#a9cce3"];
      *     circle [label="Circle(b1)\n(cos, sin)", fillcolor="#a9cce3"];
-     *     combine [label="P = (sin(theta)*cos(phi),\nsin(theta)*sin(phi),\ncos(theta))", fillcolor="#f9e79f"];
-     *     point [label="Sphere point\n(x, y, z)", fillcolor="#7fb3d8"];
-     *     vdc -> combine;
-     *     circle -> combine;
-     *     combine -> point;
+     *     combine [label="P = (sin(theta)*cos(phi),\nsin(theta)*sin(phi),\ncos(theta))",
+     * fillcolor="#f9e79f"]; point [label="Sphere point\n(x, y, z)", fillcolor="#7fb3d8"]; vdc ->
+     * combine; circle -> combine; combine -> point;
      *   }
      * @enddot
      */
