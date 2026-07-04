@@ -5,7 +5,6 @@
 #include <memory>
 #include <mutex>
 #include <stdexcept>
-#include <unordered_map>
 #include <vector>
 
 namespace ldsgen {
@@ -118,17 +117,20 @@ namespace ldsgen {
     }
 
     std::vector<double> get_tp(unsigned int n) {
-        static std::unordered_map<unsigned int, std::vector<double>> tp_cache;
+        // n decreases from max by 1, so contiguous range → vector is sufficient
+        static std::vector<std::vector<double>> tp_cache;
         static std::mutex tp_cache_mutex;
 
         std::scoped_lock lock(tp_cache_mutex);
 
-        auto it = tp_cache.find(n);
-        if (it != tp_cache.end()) {
-            return it->second;
+        if (n < tp_cache.size() && !tp_cache[n].empty()) {
+            return tp_cache[n];
         }
 
         auto result = get_tp_recursive(n);
+        if (n >= tp_cache.size()) {
+            tp_cache.resize(n + 1);
+        }
         tp_cache[n] = result;
         return result;
     }

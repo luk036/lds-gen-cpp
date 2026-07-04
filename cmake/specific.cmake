@@ -8,5 +8,4 @@ CPMAddPackage(
   OPTIONS "SPDLOG_INSTALL YES" # create an installable target
 )
 
-# Define specific libs to be linked to library and targets
 set(SPECIFIC_LIBS fmt::fmt spdlog::spdlog)
