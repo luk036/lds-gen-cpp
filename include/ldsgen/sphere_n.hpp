@@ -4,6 +4,7 @@
  *  @brief N-dimensional sphere sequence generators (Sphere3, SphereN, SphereWrapper).
  */
 
+#include <array>
 #include <memory>
 #include <mutex>
 #include <span>
@@ -20,38 +21,30 @@ namespace ldsgen {
     constexpr double PI = M_PI;
     constexpr double HALF_PI = M_PI / 2.0;
 
+    /// @brief Number of interpolation points for sphere mapping tables
+    constexpr std::size_t TABLE_SIZE = 300;
+
+    /// @brief Precomputed interpolation tables (static storage, no heap)
+    extern const std::array<double, TABLE_SIZE> X;
+    extern const std::array<double, TABLE_SIZE> NEG_COSINE;
+    extern const std::array<double, TABLE_SIZE> SINE;
+    extern const std::array<double, TABLE_SIZE> F2;
+
     /**
      * @brief Generate evenly spaced numbers over a specified interval
-     *
-     * Simple implementation of numpy.linspace.
-     *
-     * @param[in] start the starting value of the sequence
-     * @param[in] stop the end value of the sequence
-     * @param[in] num number of samples to generate
-     * @return std::vector<double> vector of evenly spaced numbers
      */
     std::vector<double> linspace(double start, double stop, unsigned int num);
 
     /**
      * @brief Perform one-dimensional linear interpolation
-     *
-     * Simple implementation of numpy.interp for 1D interpolation.
-     *
-     * @param[in] x_value the x-coordinate at which to evaluate the interpolated value
-     * @param[in] x_points the x-coordinates of the data points
-     * @param[in] y_points the y-coordinates of the data points
-     * @return double the interpolated value at x_value
      */
     double simple_interp(double x_value, std::span<const double> x_points,
                          std::span<const double> y_points);
 
     /**
-     * @brief Calculate the table-lookup of the mapping function for n
-     *
-     * Calculates the table-lookup of the mapping function for n.
-     *
-     * @param[in] n the dimension parameter
-     * @return std::vector<double> the table-lookup values
+     * @brief Compute Tp(n) recurrence for sphere mapping.
+     * @param n The recurrence index.
+     * @return Vector of TABLE_SIZE interpolated values.
      */
     std::vector<double> get_tp(unsigned int n);
 
@@ -63,59 +56,21 @@ namespace ldsgen {
     class SphereGen {
       public:
         virtual ~SphereGen() = default;
-
-        /**
-         * @brief Generate the next point on the sphere
-         *
-         * Returns the next point on the sphere as a vector of double values.
-         *
-         * @return std::vector<double> the next point on the sphere
-         */
         virtual std::vector<double> pop() = 0;
-
-        /**
-         * @brief Reset the state of the sphere generator
-         *
-         * Resets the state of the sequence generator to a specific seed value.
-         *
-         * @param[in] seed the seed value to reset the sequence generator to
-         */
         virtual void reseed(unsigned long seed) = 0;
     };
 
     /**
-     * @brief 3-Sphere sequence generator
+     * @brief 3-Sphere sequence generator (standalone, returns std::array).
      *
      * Generates points on a 3-sphere using a combination of Van der Corput and Sphere generators.
+     * Thread-safe (internal mutex). Returns std::array<double, 4> to avoid heap allocation per pop().
      */
-    class Sphere3 : public SphereGen {
+    class Sphere3 {
       public:
-        /**
-         * @brief Construct a new Sphere3 object
-         *
-         * Constructs a 3-sphere sequence generator with the specified bases.
-         *
-         * @param[in] base span of uint64_t values representing the bases for the generators
-         */
         explicit Sphere3(std::span<const unsigned long> base);
-
-        /**
-         * @brief Generate the next point on the 3-sphere
-         *
-         * Returns the next point on the 3-sphere as a vector of double values.
-         *
-         * @return std::vector<double> the next point on the 3-sphere
-         */
-        std::vector<double> pop() override;
-
-        /**
-         * @brief Reset the state of the Sphere3 generator
-         *
-         * Resets the state of the sequence generator to a specific seed value.
-         *
-         * @param[in] seed the seed value to reset the sequence generator to
-         */
-        void reseed(unsigned long seed) override;
+        std::array<double, 4> pop();
+        void reseed(unsigned long seed);
 
       private:
         VdCorput vdc_;
@@ -124,38 +79,12 @@ namespace ldsgen {
     };
 
     /**
-     * @brief Wrapper class to make Sphere compatible with SphereGen interface
-     *
-     * Provides a wrapper around the Sphere class to make it compatible with the SphereGen
-     * interface.
+     * @brief Wrapper class to make Sphere compatible with SphereGen interface.
      */
     class SphereWrapper : public SphereGen {
       public:
-        /**
-         * @brief Construct a new SphereWrapper object
-         *
-         * Constructs a Sphere wrapper with the specified bases.
-         *
-         * @param[in] base span of uint64_t values representing the bases for the Sphere generator
-         */
         explicit SphereWrapper(std::span<const unsigned long> base);
-
-        /**
-         * @brief Generate the next point on the sphere
-         *
-         * Returns the next point on the sphere as a vector of double values.
-         *
-         * @return std::vector<double> the next point on the sphere
-         */
         std::vector<double> pop() override;
-
-        /**
-         * @brief Reset the state of the SphereWrapper generator
-         *
-         * Resets the state of the sequence generator to a specific seed value.
-         *
-         * @param[in] seed the seed value to reset the sequence generator to
-         */
         void reseed(unsigned long seed) override;
 
       private:
@@ -164,43 +93,21 @@ namespace ldsgen {
     };
 
     /**
-     * @brief N-dimensional sphere sequence generator
+     * @brief N-dimensional sphere sequence generator.
      *
-     * Generates points on an N-dimensional sphere using a recursive approach.
+     * Precomputes tp_ in the constructor to avoid calling get_tp on every pop().
      */
     class SphereN : public SphereGen {
       public:
-        /**
-         * @brief Construct a new SphereN object
-         *
-         * Constructs an N-dimensional sphere sequence generator with the specified bases.
-         *
-         * @param[in] base span of uint64_t values representing the bases for the generators
-         */
         explicit SphereN(std::span<const unsigned long> base);
-
-        /**
-         * @brief Generate the next point on the N-dimensional sphere
-         *
-         * Returns the next point on the N-dimensional sphere as a vector of double values.
-         *
-         * @return std::vector<double> the next point on the N-dimensional sphere
-         */
         std::vector<double> pop() override;
-
-        /**
-         * @brief Reset the state of the SphereN generator
-         *
-         * Resets the state of the sequence generator to a specific seed value.
-         *
-         * @param[in] seed the seed value to reset the sequence generator to
-         */
         void reseed(unsigned long seed) override;
 
       private:
         VdCorput vdc_;
         std::unique_ptr<SphereGen> s_gen_;
         unsigned int n_;
+        std::vector<double> tp_;
         double range_;
         mutable std::mutex mutex_;
     };

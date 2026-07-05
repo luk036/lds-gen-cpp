@@ -652,3 +652,32 @@ TEST_CASE("get_index") {
     vgen.reseed(5);
     CHECK_EQ(vgen.get_index(), 5);
 }
+
+// --- Memory regression tests: class sizes ---
+
+TEST_CASE("sizeof VdCorput") {
+    // atomic<ul> count(4) + ul base(4) + double[64] rev_lst(512) = 520
+    CHECK_EQ(sizeof(ldsgen::VdCorput), 520);
+}
+
+TEST_CASE("sizeof Circle") {
+    CHECK_EQ(sizeof(ldsgen::Circle), sizeof(ldsgen::VdCorput));
+}
+
+TEST_CASE("sizeof Halton") {
+    CHECK_EQ(sizeof(ldsgen::Halton), 2 * sizeof(ldsgen::VdCorput));
+}
+
+TEST_CASE("sizeof Disk") {
+    CHECK_EQ(sizeof(ldsgen::Disk), 2 * sizeof(ldsgen::VdCorput));
+}
+
+TEST_CASE("sizeof Sphere") {
+    CHECK_EQ(sizeof(ldsgen::Sphere), sizeof(ldsgen::VdCorput) + sizeof(ldsgen::Circle));
+}
+
+TEST_CASE("sizeof Sphere3Hopf") {
+    CHECK_EQ(sizeof(ldsgen::Sphere3Hopf), 3 * sizeof(ldsgen::VdCorput));
+}
+
+

@@ -1,5 +1,6 @@
 #include <doctest/doctest.h>  // for Approx, ResultBuilder, TestCase, CHECK
 
+#include <array>
 #include <cmath>
 #include <cstddef>  // for std::size_t
 #include <ldsgen/sphere_n.hpp>
@@ -79,15 +80,16 @@ TEST_CASE("Test Sphere3 consistency") {
         sgen.reseed(0);
 
         // Generate multiple points
-        std::vector<std::vector<double>> points;
+        std::vector<std::array<double, 4>> points;
         points.reserve(5);
         for (int i = 0; i < 5; ++i) {
-            points.emplace_back(sgen.pop());
+            points.push_back(sgen.pop());
         }
 
         // Check all points are on unit 3-sphere
         for (const auto& point : points) {
-            double radius_sq = std::inner_product(point.begin(), point.end(), point.begin(), 0.0);
+            double radius_sq = 0.0;
+            for (auto c : point) radius_sq += c * c;
             CHECK_EQ(radius_sq, doctest::Approx(1.0).epsilon(1e-10));
         }
     }
@@ -99,18 +101,18 @@ TEST_CASE("Test Sphere3 reseed functionality") {
 
     // Generate sequence with seed 0
     sgen.reseed(0);
-    std::vector<std::vector<double>> seq1;
+    std::vector<std::array<double, 4>> seq1;
     seq1.reserve(3);
     for (int i = 0; i < 3; ++i) {
-        seq1.emplace_back(sgen.pop());
+        seq1.push_back(sgen.pop());
     }
 
     // Generate sequence with seed 0 again
     sgen.reseed(0);
-    std::vector<std::vector<double>> seq2;
+    std::vector<std::array<double, 4>> seq2;
     seq2.reserve(3);
-    for (int i = 0; i < 3; ++i) {
-        seq2.emplace_back(sgen.pop());
+    for (size_t i = 0; i < 3; ++i) {
+        seq2.push_back(sgen.pop());
     }
 
     // Should be identical
@@ -122,10 +124,10 @@ TEST_CASE("Test Sphere3 reseed functionality") {
 
     // Different seed should give different sequence
     sgen.reseed(1);
-    std::vector<std::vector<double>> seq3;
+    std::vector<std::array<double, 4>> seq3;
     seq3.reserve(3);
     for (size_t i = 0; i < 3; ++i) {
-        seq3.emplace_back(sgen.pop());
+        seq3.push_back(sgen.pop());
     }
 
     // Should be different from seed 0
@@ -230,6 +232,7 @@ TEST_CASE("Test comparison with Python implementation") {
 }
 
 #include <atomic>
+#include <chrono>
 #include <mutex>
 #include <thread>
 
@@ -239,16 +242,16 @@ TEST_CASE("Sphere3 thread safety") {
     std::vector<unsigned long> base = {2, 3, 5};
     ldsgen::Sphere3 sgen(base);
     std::vector<std::thread> threads;
-    std::vector<std::vector<std::vector<double>>> results(num_threads);
+    std::vector<std::vector<std::array<double, 4>>> results(num_threads);
     std::mutex mtx;
 
     threads.reserve(num_threads);
     for (size_t i = 0; i < num_threads; ++i) {
         threads.emplace_back([&sgen, &results, &mtx, i]() {
-            std::vector<std::vector<double>> local_results;
+            std::vector<std::array<double, 4>> local_results;
             local_results.reserve(values_per_thread);
             for (size_t j = 0; j < values_per_thread; ++j) {
-                local_results.emplace_back(sgen.pop());
+                local_results.push_back(sgen.pop());
             }
             std::scoped_lock lock(mtx);
             results[i] = std::move(local_results);
@@ -265,8 +268,8 @@ TEST_CASE("Sphere3 thread safety") {
         total_points += thread_results.size();
         // Verify all points are on unit 3-sphere
         for (const auto& point : thread_results) {
-            REQUIRE(point.size() == 4);
-            double radius_sq = std::inner_product(point.begin(), point.end(), point.begin(), 0.0);
+            double radius_sq = 0.0;
+            for (auto c : point) radius_sq += c * c;
             CHECK_EQ(radius_sq, doctest::Approx(1.0).epsilon(1e-10));
         }
     }
@@ -384,7 +387,8 @@ TEST_CASE("Concurrent reseed thread safety for sphere classes") {
                     // Mostly pop
                     std::vector<double> point;
                     if (i % 2 == 0) {
-                        point = sgen3.pop();
+                        auto arr = sgen3.pop();
+                        point.assign(arr.begin(), arr.end());
                     } else {
                         point = sgenN.pop();
                     }
@@ -410,4 +414,49 @@ TEST_CASE("Concurrent reseed thread safety for sphere classes") {
         double radius_sq = std::inner_product(point.begin(), point.end(), point.begin(), 0.0);
         CHECK_EQ(radius_sq, doctest::Approx(1.0).epsilon(1e-10));
     }
+}
+
+// --- Memory regression tests: class sizes ---
+
+TEST_CASE("sizeof Sphere3") {
+    // VdCorput + Sphere + std::mutex
+    constexpr auto expected = sizeof(ldsgen::VdCorput) + sizeof(ldsgen::Sphere)
+                            + sizeof(std::mutex);
+    CHECK_EQ(sizeof(ldsgen::Sphere3), expected);
+}
+
+// --- Performance benchmark: Sphere3::pop() returns array (no heap alloc) ---
+// SphereN::pop() uses stored tp_ (no mutex cache lookup per call)
+
+TEST_CASE("Sphere3 pop throughput") {
+    std::vector<unsigned long> base = {2, 3, 5};
+    ldsgen::Sphere3 sgen(base);
+    sgen.reseed(0);
+    auto start = std::chrono::steady_clock::now();
+    volatile double sink = 0.0;
+    for (int i = 0; i < 100000; ++i) {
+        auto p = sgen.pop();
+        sink = p[0];
+    }
+    auto end = std::chrono::steady_clock::now();
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    // Just verify it completes in reasonable time (< 5 seconds)
+    CHECK_LT(ms, 5000);
+    MESSAGE("Sphere3 100k pops: ", ms, " ms");
+}
+
+TEST_CASE("SphereN pop throughput") {
+    std::vector<unsigned long> base = {2, 3, 5, 7, 11};
+    ldsgen::SphereN sgen(base);
+    sgen.reseed(0);
+    auto start = std::chrono::steady_clock::now();
+    volatile double sink = 0.0;
+    for (int i = 0; i < 50000; ++i) {
+        auto p = sgen.pop();
+        sink = p[0];
+    }
+    auto end = std::chrono::steady_clock::now();
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    CHECK_LT(ms, 5000);
+    MESSAGE("SphereN 50k pops: ", ms, " ms");
 }
