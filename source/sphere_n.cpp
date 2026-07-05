@@ -67,7 +67,9 @@ namespace ldsgen {
         return arr;
     }();
 
-    // Iterative helper for get_tp — avoids deep recursion and vector copies
+    // Iterative helper for get_tp — avoids deep recursion and vector copies.
+    // Tp(n) depends only on Tp(n-2), so we iterate by step 2 from the
+    // appropriate parity base case (Tp(0)=X for even n, Tp(1)=neg_cosine for odd).
     std::vector<double> get_tp(unsigned int n) {
         if (n == 0) {
             return std::vector<double>(X.begin(), X.end());
@@ -76,23 +78,24 @@ namespace ldsgen {
             return std::vector<double>(NEG_COSINE.begin(), NEG_COSINE.end());
         }
 
-        std::vector<double> prev2(X.begin(), X.end());
-        std::vector<double> prev1(NEG_COSINE.begin(), NEG_COSINE.end());
+        const bool even = n % 2 == 0;
+        const auto prev_init = even ? X : NEG_COSINE;
+        const auto start = even ? 2U : 3U;
+
+        std::vector<double> prev(prev_init.begin(), prev_init.end());
         std::vector<double> current;
         current.reserve(TABLE_SIZE);
 
-        for (unsigned int i = 2; i <= n; ++i) {
+        for (auto i = start; i <= n; i += 2) {
             current.clear();
             for (std::size_t j = 0; j < TABLE_SIZE; ++j) {
-                double value = (static_cast<double>(i - 1) * prev2[j]
+                double value = (static_cast<double>(i - 1) * prev[j]
                                 + NEG_COSINE[j] * std::pow(SINE[j], i - 1))
                                / static_cast<double>(i);
                 current.emplace_back(value);
             }
             if (i < n) {
-                prev2 = std::move(prev1);
-                prev1 = std::move(current);
-                current.reserve(TABLE_SIZE);
+                prev.swap(current);  // prev = Tp(i), reuse current's old buffer
             }
         }
         return current;
