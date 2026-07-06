@@ -420,8 +420,8 @@ TEST_CASE("Concurrent reseed thread safety for sphere classes") {
 
 TEST_CASE("sizeof Sphere3") {
     // VdCorput + Sphere + std::mutex
-    constexpr auto expected = sizeof(ldsgen::VdCorput) + sizeof(ldsgen::Sphere)
-                            + sizeof(std::mutex);
+    constexpr auto expected
+        = sizeof(ldsgen::VdCorput) + sizeof(ldsgen::Sphere) + sizeof(std::mutex);
     CHECK_EQ(sizeof(ldsgen::Sphere3), expected);
 }
 
@@ -433,7 +433,7 @@ TEST_CASE("Sphere3 pop throughput") {
     ldsgen::Sphere3 sgen(base);
     sgen.reseed(0);
     auto start = std::chrono::steady_clock::now();
-    volatile double sink = 0.0;
+    [[maybe_unused]] volatile double sink = 0.0;
     for (int i = 0; i < 100000; ++i) {
         auto p = sgen.pop();
         sink = p[0];
@@ -450,7 +450,7 @@ TEST_CASE("SphereN pop throughput") {
     ldsgen::SphereN sgen(base);
     sgen.reseed(0);
     auto start = std::chrono::steady_clock::now();
-    volatile double sink = 0.0;
+    [[maybe_unused]] volatile double sink = 0.0;
     for (int i = 0; i < 50000; ++i) {
         auto p = sgen.pop();
         sink = p[0];

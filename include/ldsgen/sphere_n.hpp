@@ -64,7 +64,8 @@ namespace ldsgen {
      * @brief 3-Sphere sequence generator (standalone, returns std::array).
      *
      * Generates points on a 3-sphere using a combination of Van der Corput and Sphere generators.
-     * Thread-safe (internal mutex). Returns std::array<double, 4> to avoid heap allocation per pop().
+     * Thread-safe (internal mutex). Returns std::array<double, 4> to avoid heap allocation per
+     * pop().
      */
     class Sphere3 {
       public:
