@@ -656,8 +656,13 @@ TEST_CASE("get_index") {
 // --- Memory regression tests: class sizes ---
 
 TEST_CASE("sizeof VdCorput") {
-    // atomic<ul> count(4) + ul base(4) + double[64] rev_lst(512) = 520
-    CHECK_EQ(sizeof(ldsgen::VdCorput), 520);
+    // atomic<ul> count + ul base + double[N] rev_lst
+    // Size varies by platform: 520 on MSVC (ul=4), 528 on GCC (ul=8)
+    constexpr auto kCountSize = sizeof(std::atomic<unsigned long>);
+    constexpr auto kBaseSize = sizeof(unsigned long);
+    constexpr auto kRevListSize
+        = sizeof(std::array<double, ldsgen::MAX_REVERSE_BITS>);
+    CHECK_EQ(sizeof(ldsgen::VdCorput), kCountSize + kBaseSize + kRevListSize);
 }
 
 TEST_CASE("sizeof Circle") { CHECK_EQ(sizeof(ldsgen::Circle), sizeof(ldsgen::VdCorput)); }
