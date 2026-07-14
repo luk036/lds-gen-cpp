@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.3;  VERSION ${PROJECT_VERSION}</span>
+   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.4;  VERSION ${PROJECT_VERSION}</span>
    </div>
   </td>
  </tr>
@@ -105,7 +105,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classldsgen_1_1Sphere.html" title="Sphere sequence generator.">Sphere</a> sequence generator.  <a href="classldsgen_1_1Sphere.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1Sphere3.html">Sphere3</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">3-<a class="el" href="classldsgen_1_1Sphere.html" title="Sphere sequence generator.">Sphere</a> sequence generator  <a href="classldsgen_1_1Sphere3.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">3-<a class="el" href="classldsgen_1_1Sphere.html" title="Sphere sequence generator.">Sphere</a> sequence generator (standalone, returns std::array).  <a href="classldsgen_1_1Sphere3.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1Sphere3Hopf.html">Sphere3Hopf</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">S(3) sequence generator by Hopf fibration.  <a href="classldsgen_1_1Sphere3Hopf.html#details">More...</a><br /></td></tr>
@@ -141,7 +141,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:ab6c435ee1c8fd5d1e79fd0463b50f779"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform one-dimensional linear interpolation.  <br /></td></tr>
 <tr class="separator:ab6c435ee1c8fd5d1e79fd0463b50f779"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae50f22cf2d0c68ccb47d895e78a016b2" id="r_ae50f22cf2d0c68ccb47d895e78a016b2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceldsgen.html#ae50f22cf2d0c68ccb47d895e78a016b2">get_tp</a> (unsigned int n)</td></tr>
-<tr class="memdesc:ae50f22cf2d0c68ccb47d895e78a016b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the table-lookup of the mapping function for n.  <br /></td></tr>
+<tr class="memdesc:ae50f22cf2d0c68ccb47d895e78a016b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute Tp(n) recurrence for sphere mapping.  <br /></td></tr>
 <tr class="separator:ae50f22cf2d0c68ccb47d895e78a016b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
@@ -156,6 +156,18 @@ Variables</h2></td></tr>
 <tr class="separator:a25f216e0743de1c3bf3d524647c6fdd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b4e5305e15fa0d5ac05ced56701c0b2" id="r_a2b4e5305e15fa0d5ac05ced56701c0b2"><td class="memItemLeft" align="right" valign="top">constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceldsgen.html#a2b4e5305e15fa0d5ac05ced56701c0b2">HALF_PI</a> = <a class="el" href="lds_8hpp.html#ae71449b1cc6e6250b91f539153a7a0d3">M_PI</a> / 2.0</td></tr>
 <tr class="separator:a2b4e5305e15fa0d5ac05ced56701c0b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fbf0556101334172e7e5a750bd56d9b" id="r_a3fbf0556101334172e7e5a750bd56d9b"><td class="memItemLeft" align="right" valign="top">constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceldsgen.html#a3fbf0556101334172e7e5a750bd56d9b">TABLE_SIZE</a> = 300</td></tr>
+<tr class="memdesc:a3fbf0556101334172e7e5a750bd56d9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of interpolation points for sphere mapping tables.  <br /></td></tr>
+<tr class="separator:a3fbf0556101334172e7e5a750bd56d9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a805e0a618767566e9730cd2ed33dabb2" id="r_a805e0a618767566e9730cd2ed33dabb2"><td class="memItemLeft" align="right" valign="top">const std::array&lt; double, <a class="el" href="namespaceldsgen.html#a3fbf0556101334172e7e5a750bd56d9b">TABLE_SIZE</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceldsgen.html#a805e0a618767566e9730cd2ed33dabb2">X</a></td></tr>
+<tr class="memdesc:a805e0a618767566e9730cd2ed33dabb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precomputed interpolation tables (static storage, no heap)  <br /></td></tr>
+<tr class="separator:a805e0a618767566e9730cd2ed33dabb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f0c1a61326d9b663256f6ec8ddb843c" id="r_a8f0c1a61326d9b663256f6ec8ddb843c"><td class="memItemLeft" align="right" valign="top">const std::array&lt; double, <a class="el" href="namespaceldsgen.html#a3fbf0556101334172e7e5a750bd56d9b">TABLE_SIZE</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceldsgen.html#a8f0c1a61326d9b663256f6ec8ddb843c">NEG_COSINE</a></td></tr>
+<tr class="separator:a8f0c1a61326d9b663256f6ec8ddb843c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5310ffaf51b239bc5c188a283d6f567a" id="r_a5310ffaf51b239bc5c188a283d6f567a"><td class="memItemLeft" align="right" valign="top">const std::array&lt; double, <a class="el" href="namespaceldsgen.html#a3fbf0556101334172e7e5a750bd56d9b">TABLE_SIZE</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceldsgen.html#a5310ffaf51b239bc5c188a283d6f567a">SINE</a></td></tr>
+<tr class="separator:a5310ffaf51b239bc5c188a283d6f567a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73ca8c92190518a98c5275962fc8bf54" id="r_a73ca8c92190518a98c5275962fc8bf54"><td class="memItemLeft" align="right" valign="top">const std::array&lt; double, <a class="el" href="namespaceldsgen.html#a3fbf0556101334172e7e5a750bd56d9b">TABLE_SIZE</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceldsgen.html#a73ca8c92190518a98c5275962fc8bf54">F2</a></td></tr>
+<tr class="separator:a73ca8c92190518a98c5275962fc8bf54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="aab2e96b28f416f0c8b88859fb334668e" name="aab2e96b28f416f0c8b88859fb334668e"></a>
@@ -209,15 +221,14 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Calculate the table-lookup of the mapping function for n. </p>
-<p>Calculates the table-lookup of the mapping function for n.</p>
+<p>Compute Tp(n) recurrence for sphere mapping. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">n</td><td>the dimension parameter </td></tr>
+    <tr><td class="paramname">n</td><td>The recurrence index. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>std::vector&lt;double&gt; the table-lookup values </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Vector of TABLE_SIZE interpolated values. </dd></dl>
 
 </div>
 </div>
@@ -254,16 +265,6 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Generate evenly spaced numbers over a specified interval. </p>
-<p>Simple implementation of numpy.linspace.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">start</td><td>the starting value of the sequence </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">stop</td><td>the end value of the sequence </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num</td><td>number of samples to generate </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>std::vector&lt;double&gt; vector of evenly spaced numbers </dd></dl>
 
 </div>
 </div>
@@ -327,16 +328,6 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Perform one-dimensional linear interpolation. </p>
-<p>Simple implementation of numpy.interp for 1D interpolation.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">x_value</td><td>the x-coordinate at which to evaluate the interpolated value </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">x_points</td><td>the x-coordinates of the data points </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">y_points</td><td>the y-coordinates of the data points </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>double the interpolated value at x_value </dd></dl>
 
 </div>
 </div>
@@ -393,6 +384,28 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="a73ca8c92190518a98c5275962fc8bf54" name="a73ca8c92190518a98c5275962fc8bf54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73ca8c92190518a98c5275962fc8bf54">&#9670;&#160;</a></span>F2</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::array&lt;double, <a class="el" href="namespaceldsgen.html#a3fbf0556101334172e7e5a750bd56d9b">TABLE_SIZE</a>&gt; ldsgen::F2</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a2b4e5305e15fa0d5ac05ced56701c0b2" name="a2b4e5305e15fa0d5ac05ced56701c0b2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2b4e5305e15fa0d5ac05ced56701c0b2">&#9670;&#160;</a></span>HALF_PI</h2>
 
@@ -459,6 +472,28 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a8f0c1a61326d9b663256f6ec8ddb843c" name="a8f0c1a61326d9b663256f6ec8ddb843c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f0c1a61326d9b663256f6ec8ddb843c">&#9670;&#160;</a></span>NEG_COSINE</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::array&lt;double, <a class="el" href="namespaceldsgen.html#a3fbf0556101334172e7e5a750bd56d9b">TABLE_SIZE</a>&gt; ldsgen::NEG_COSINE</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a25f216e0743de1c3bf3d524647c6fdd6" name="a25f216e0743de1c3bf3d524647c6fdd6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a25f216e0743de1c3bf3d524647c6fdd6">&#9670;&#160;</a></span>PI</h2>
 
@@ -481,6 +516,52 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a5310ffaf51b239bc5c188a283d6f567a" name="a5310ffaf51b239bc5c188a283d6f567a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5310ffaf51b239bc5c188a283d6f567a">&#9670;&#160;</a></span>SINE</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::array&lt;double, <a class="el" href="namespaceldsgen.html#a3fbf0556101334172e7e5a750bd56d9b">TABLE_SIZE</a>&gt; ldsgen::SINE</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3fbf0556101334172e7e5a750bd56d9b" name="a3fbf0556101334172e7e5a750bd56d9b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3fbf0556101334172e7e5a750bd56d9b">&#9670;&#160;</a></span>TABLE_SIZE</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr std::size_t ldsgen::TABLE_SIZE = 300</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Number of interpolation points for sphere mapping tables. </p>
+
+</div>
+</div>
 <a id="a4ee3065056614b55639ee8fa2083957d" name="a4ee3065056614b55639ee8fa2083957d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4ee3065056614b55639ee8fa2083957d">&#9670;&#160;</a></span>TWO_PI</h2>
 
@@ -500,6 +581,30 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a805e0a618767566e9730cd2ed33dabb2" name="a805e0a618767566e9730cd2ed33dabb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a805e0a618767566e9730cd2ed33dabb2">&#9670;&#160;</a></span>X</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::array&lt;double, <a class="el" href="namespaceldsgen.html#a3fbf0556101334172e7e5a750bd56d9b">TABLE_SIZE</a>&gt; ldsgen::X</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Precomputed interpolation tables (static storage, no heap) </p>
 
 </div>
 </div>

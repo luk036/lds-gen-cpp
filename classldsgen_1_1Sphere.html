@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.3;  VERSION ${PROJECT_VERSION}</span>
+   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.4;  VERSION ${PROJECT_VERSION}</span>
    </div>
   </td>
  </tr>
@@ -132,7 +132,9 @@ Public Member Functions</h2></td></tr>
 *     **           **
 *       **       **
 *          *****
-* </pre> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+* </pre><div class="dotgraph">
+<iframe scrolling="no" frameborder="0" src="dot_inline_dotgraph_4.svg" width="655" height="136"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+ </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a77bcb159a7ad1c5da45cf494dfbd92fc" name="a77bcb159a7ad1c5da45cf494dfbd92fc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a77bcb159a7ad1c5da45cf494dfbd92fc">&#9670;&#160;</a></span>Sphere()</h2>
 
@@ -317,6 +319,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Generate the next point on the unit sphere. </p>
 <p>Returns the next point on the unit sphere as an array of three double values.</p>
+<p>\( \phi = 2\pi \cdot \phi_{b_1}(n), \quad \cos\theta = 2\phi_{b_0}(n) - 1 \) \( P(n) = \bigl(\sin\theta\cos\phi,\; \sin\theta\sin\phi,\; \cos\theta\bigr) \)</p>
 <dl class="section return"><dt>Returns</dt><dd>std::array&lt;double, 3&gt; the next point on the unit sphere </dd></dl>
 
 </div>

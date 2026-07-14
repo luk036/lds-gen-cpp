@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['two_5fpi_0',['TWO_PI',['../namespaceldsgen.html#a4ee3065056614b55639ee8fa2083957d',1,'ldsgen']]]
+  ['neg_5fcosine_0',['NEG_COSINE',['../namespaceldsgen.html#a8f0c1a61326d9b663256f6ec8ddb843c',1,'ldsgen']]]
 ];

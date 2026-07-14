@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.3;  VERSION ${PROJECT_VERSION}</span>
+   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.4;  VERSION ${PROJECT_VERSION}</span>
    </div>
   </td>
  </tr>
@@ -132,7 +132,9 @@ Public Member Functions</h2></td></tr>
 *     pop() -&gt; 0.75  (0.11 base 2)
 *     pop() -&gt; 0.125 (0.001 base 2)
 *     ...
-* </pre> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+* </pre><div class="dotgraph">
+<iframe scrolling="no" frameborder="0" src="dot_inline_dotgraph_5.svg" width="719" height="134"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+ </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="add0abdf64fc1d71da7b83b1dd2c58ce3" name="add0abdf64fc1d71da7b83b1dd2c58ce3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#add0abdf64fc1d71da7b83b1dd2c58ce3">&#9670;&#160;</a></span>VdCorput() <span class="overload">[1/2]</span></h2>
 
@@ -359,6 +361,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Generate the next value in the Van der Corput sequence. </p>
 <p>Generates the next value in the Van der Corput sequence by incrementing the count and calculating the Van der Corput sequence value for that count and base.</p>
+<p>\( \phi_b(n) = \sum_{k=0}^{\infty} a_k(n) \, b^{-k-1} \) where \( a_k(n) \) are the base- \( b \) digits of \( n \).</p>
 <dl class="section return"><dt>Returns</dt><dd>double the next value in the sequence </dd></dl>
 
 </div>

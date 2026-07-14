@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.3;  VERSION ${PROJECT_VERSION}</span>
+   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.4;  VERSION ${PROJECT_VERSION}</span>
    </div>
   </td>
  </tr>
@@ -327,6 +327,17 @@ Public Member Functions</h2></td></tr>
 
 <p>Generate the next point on the 3-sphere using Hopf fibration. </p>
 <p>Returns the next point on the 3-sphere using the Hopf fibration as an array of four double values.</p>
+<p class="formulaDsp">
+\[
+    \begin{aligned}
+    x &amp;= \cos\eta\cos\psi \\
+    y &amp;= \cos\eta\sin\psi \\
+    z &amp;= \sin\eta\cos(\phi + \psi) \\
+    w &amp;= \sin\eta\sin(\phi + \psi)
+    \end{aligned}
+\]
+</p>
+<p> where \( \phi = 2\pi\phi_{b_0}(n) \), \( \psi = 2\pi\phi_{b_1}(n) \), and \( \eta = \arccos\sqrt{\phi_{b_2}(n)} \).</p>
 <dl class="section return"><dt>Returns</dt><dd>std::array&lt;double, 4&gt; the next point on the 3-sphere </dd></dl>
 
 </div>

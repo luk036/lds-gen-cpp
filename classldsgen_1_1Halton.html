@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.3;  VERSION ${PROJECT_VERSION}</span>
+   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.4;  VERSION ${PROJECT_VERSION}</span>
    </div>
   </td>
  </tr>
@@ -127,7 +127,9 @@ Public Member Functions</h2></td></tr>
 *     pop() -&gt; (0.25, 0.666) (VdC(2) -&gt; 0.25, VdC(3) -&gt; 0.666)
 *     pop() -&gt; (0.75, 0.111) (VdC(2) -&gt; 0.75, VdC(3) -&gt; 0.111)
 *     ...
-* </pre> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+* </pre><div class="dotgraph">
+<iframe scrolling="no" frameborder="0" src="dot_inline_dotgraph_3.svg" width="574" height="131"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+ </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a39f9d094056693065cd2a7d67e8d5440" name="a39f9d094056693065cd2a7d67e8d5440"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a39f9d094056693065cd2a7d67e8d5440">&#9670;&#160;</a></span>Halton()</h2>
 
@@ -312,6 +314,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Generate the next point in the <a class="el" href="classldsgen_1_1Halton.html" title="Halton sequence generator.">Halton</a> sequence. </p>
 <p>Returns the next point in the <a class="el" href="classldsgen_1_1Halton.html" title="Halton sequence generator.">Halton</a> sequence as an array of two double values.</p>
+<p>\( H(n) = \bigl(\phi_{b_0}(n),\; \phi_{b_1}(n)\bigr) \)</p>
 <dl class="section return"><dt>Returns</dt><dd>std::array&lt;double, 2&gt; the next point in the sequence </dd></dl>
 
 </div>
