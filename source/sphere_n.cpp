@@ -1,11 +1,11 @@
 #include "ldsgen/sphere_n.hpp"
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <memory>
 #include <mutex>
 #include <stdexcept>
-#include <unordered_map>
 #include <vector>
 
 namespace ldsgen {
@@ -14,15 +14,12 @@ namespace ldsgen {
         if (num == 1) {
             return {start};
         }
-
         std::vector<double> result;
         result.reserve(num);
-
         double step = (stop - start) / static_cast<double>(num - 1);
         for (unsigned int i = 0; i < num; ++i) {
             result.emplace_back(start + (static_cast<double>(i) * step));
         }
-
         return result;
     }
 
@@ -31,107 +28,80 @@ namespace ldsgen {
         if (x_points.empty() || y_points.empty() || x_points.size() != y_points.size()) {
             throw std::invalid_argument("x_points and y_points must be non-empty and same size");
         }
+        if (x_value <= x_points[0]) return y_points[0];
+        if (x_value >= x_points.back()) return y_points.back();
 
-        if (x_value <= x_points[0]) {
-            return y_points[0];
-        }
-        if (x_value >= x_points.back()) {
-            return y_points.back();
-        }
-
-        // Binary search for the interval (O(log n) instead of O(n) linear scan)
         auto it = std::ranges::upper_bound(x_points, x_value);
         auto i = static_cast<std::size_t>(std::distance(x_points.begin(), it) - 1);
-
-        // Linear interpolation
         double t = (x_value - x_points[i]) / (x_points[i + 1] - x_points[i]);
         return y_points[i] + t * (y_points[i + 1] - y_points[i]);
     }
 
-    // Precomputed tables (similar to Python version)
-    namespace {
-        const std::vector<double> X = linspace(0.0, PI, 300);
-
-        std::vector<double> compute_neg_cosine() {
-            std::vector<double> result;
-            result.reserve(X.size());
-            for (double x : X) {
-                result.emplace_back(-std::cos(x));
-            }
-            return result;
+    // Precomputed tables using std::array for static allocation (no heap)
+    const std::array<double, TABLE_SIZE> X = []() {
+        std::array<double, TABLE_SIZE> arr{};
+        double step = PI / static_cast<double>(TABLE_SIZE - 1);
+        for (std::size_t i = 0; i < TABLE_SIZE; ++i) {
+            arr[i] = static_cast<double>(i) * step;
         }
+        return arr;
+    }();
 
-        std::vector<double> compute_sine() {
-            std::vector<double> result;
-            result.reserve(X.size());
-            for (double x : X) {
-                result.emplace_back(std::sin(x));
-            }
-            return result;
+    const std::array<double, TABLE_SIZE> NEG_COSINE = []() {
+        std::array<double, TABLE_SIZE> arr{};
+        for (std::size_t i = 0; i < TABLE_SIZE; ++i) arr[i] = -std::cos(X[i]);
+        return arr;
+    }();
+
+    const std::array<double, TABLE_SIZE> SINE = []() {
+        std::array<double, TABLE_SIZE> arr{};
+        for (std::size_t i = 0; i < TABLE_SIZE; ++i) arr[i] = std::sin(X[i]);
+        return arr;
+    }();
+
+    const std::array<double, TABLE_SIZE> F2 = []() {
+        std::array<double, TABLE_SIZE> arr{};
+        for (std::size_t i = 0; i < TABLE_SIZE; ++i) {
+            arr[i] = (X[i] + NEG_COSINE[i] * SINE[i]) / 2.0;
         }
+        return arr;
+    }();
 
-        std::vector<double> compute_f2(const std::vector<double>& neg_cosine,
-                                       const std::vector<double>& sine) {
-            std::vector<double> result;
-            result.reserve(X.size());
-            for (unsigned int i = 0; i < X.size(); ++i) {
-                result.emplace_back((X[i] + neg_cosine[i] * sine[i]) / 2.0);
-            }
-            return result;
-        }
-
-        const std::vector<double> NEG_COSINE = compute_neg_cosine();
-        const std::vector<double> SINE = compute_sine();
-        const std::vector<double> F2 = compute_f2(NEG_COSINE, SINE);
-    }  // namespace
-
-    // Iterative helper for get_tp — avoids deep recursion and vector copies
-    static std::vector<double> get_tp_recursive(unsigned int n) {
+    // Iterative helper for get_tp — avoids deep recursion and vector copies.
+    // Tp(n) depends only on Tp(n-2), so we iterate by step 2 from the
+    // appropriate parity base case (Tp(0)=X for even n, Tp(1)=neg_cosine for odd).
+    std::vector<double> get_tp(unsigned int n) {
         if (n == 0) {
-            return X;
+            return std::vector<double>(X.begin(), X.end());
         }
         if (n == 1) {
-            return NEG_COSINE;
+            return std::vector<double>(NEG_COSINE.begin(), NEG_COSINE.end());
         }
 
-        // Bottom-up iteration: compute tp[2..n] using tp[i-2] and tp[i-1]
-        std::vector<double> prev2 = X;           // tp[0]
-        std::vector<double> prev1 = NEG_COSINE;  // tp[1]
-        std::vector<double> current;
-        current.reserve(X.size());
+        const bool even = n % 2 == 0;
+        const auto prev_init = even ? X : NEG_COSINE;
+        const auto start = even ? 2U : 3U;
 
-        for (unsigned int i = 2; i <= n; ++i) {
+        std::vector<double> prev(prev_init.begin(), prev_init.end());
+        std::vector<double> current;
+        current.reserve(TABLE_SIZE);
+
+        for (auto i = start; i <= n; i += 2) {
             current.clear();
-            for (std::size_t j = 0; j < X.size(); ++j) {
-                double value = (static_cast<double>(i - 1) * prev2[j]
+            for (std::size_t j = 0; j < TABLE_SIZE; ++j) {
+                double value = (static_cast<double>(i - 1) * prev[j]
                                 + NEG_COSINE[j] * std::pow(SINE[j], i - 1))
                                / static_cast<double>(i);
                 current.emplace_back(value);
             }
             if (i < n) {
-                prev2 = std::move(prev1);
-                prev1 = std::move(current);
-                current.reserve(X.size());
+                prev.swap(current);  // prev = Tp(i), reuse current's old buffer
             }
         }
         return current;
     }
 
-    std::vector<double> get_tp(unsigned int n) {
-        static std::unordered_map<int, std::vector<double>> tp_cache;
-        static std::mutex tp_cache_mutex;
-
-        std::scoped_lock lock(tp_cache_mutex);
-
-        auto it = tp_cache.find(n);
-        if (it != tp_cache.end()) {
-            return it->second;
-        }
-
-        auto result = get_tp_recursive(n);
-        tp_cache[n] = result;
-        return result;
-    }
+    // --- Sphere3 ---
 
     Sphere3::Sphere3(std::span<const unsigned long> base)
         : vdc_(base[0]), sphere2_(base[1], base[2]) {
@@ -140,22 +110,15 @@ namespace ldsgen {
         }
     }
 
-    std::vector<double> Sphere3::pop() {
+    std::array<double, 4> Sphere3::pop() {
         std::scoped_lock lock(mutex_);
-        double ti = HALF_PI * vdc_.pop();  // map to [t0, tm-1]
+        double ti = HALF_PI * vdc_.pop();
         double xi = simple_interp(ti, F2, X);
         double cosxi = std::cos(xi);
         double sinxi = std::sin(xi);
 
-        auto sphere2_point = sphere2_.pop();
-        std::vector<double> result;
-        result.reserve(4);
-        result.emplace_back(sinxi * sphere2_point[0]);
-        result.emplace_back(sinxi * sphere2_point[1]);
-        result.emplace_back(sinxi * sphere2_point[2]);
-        result.emplace_back(cosxi);
-
-        return result;
+        auto pt = sphere2_.pop();
+        return {sinxi * pt[0], sinxi * pt[1], sinxi * pt[2], cosxi};
     }
 
     void Sphere3::reseed(unsigned long seed) {
@@ -164,20 +127,22 @@ namespace ldsgen {
         sphere2_.reseed(seed);
     }
 
-    // SphereWrapper implementation
+    // --- SphereWrapper ---
+
     SphereWrapper::SphereWrapper(std::span<const unsigned long> base) : sphere_(base[0], base[1]) {}
 
     std::vector<double> SphereWrapper::pop() {
         std::scoped_lock lock(mutex_);
         auto arr = sphere_.pop();
-        std::vector<double> result(arr.begin(), arr.end());
-        return result;
+        return {arr.begin(), arr.end()};
     }
 
     void SphereWrapper::reseed(unsigned long seed) {
         std::scoped_lock lock(mutex_);
         sphere_.reseed(seed);
     }
+
+    // --- SphereN ---
 
     SphereN::SphereN(std::span<const unsigned long> base)
         : vdc_(base[0]), n_(static_cast<unsigned int>(base.size() - 1)) {
@@ -186,7 +151,6 @@ namespace ldsgen {
         }
 
         if (n_ == 2) {
-            // Create a SphereWrapper object
             std::vector<unsigned long> sphere_base = {base[1], base[2]};
             s_gen_ = std::make_unique<SphereWrapper>(sphere_base);
         } else {
@@ -194,13 +158,15 @@ namespace ldsgen {
             s_gen_ = std::make_unique<SphereN>(sub_base);
         }
 
-        auto tp = get_tp(n_);
-        range_ = tp.back() - tp.front();
+        // Precompute tp_ once in constructor — avoids get_tp(n_) call on every pop()
+        tp_ = get_tp(n_);
+        range_ = tp_.back() - tp_.front();
     }
+
     std::vector<double> SphereN::pop() {
         std::scoped_lock lock(mutex_);
         if (n_ == 2) {
-            double ti = HALF_PI * vdc_.pop();  // map to [t0, tm-1]
+            double ti = HALF_PI * vdc_.pop();
             double xi = simple_interp(ti, F2, X);
             double cosxi = std::cos(xi);
             double sinxi = std::sin(xi);
@@ -208,30 +174,21 @@ namespace ldsgen {
             auto sub_point = s_gen_->pop();
             std::vector<double> result;
             result.reserve(sub_point.size() + 1);
-
-            for (double s : sub_point) {
-                result.emplace_back(sinxi * s);
-            }
+            for (double s : sub_point) result.emplace_back(sinxi * s);
             result.emplace_back(cosxi);
-
             return result;
         }
 
         double vd = vdc_.pop();
-        auto tp = get_tp(n_);
-        double ti = tp.front() + range_ * vd;  // map to [t0, tm-1]
-        double xi = simple_interp(ti, tp, X);
+        double ti = tp_.front() + range_ * vd;
+        double xi = simple_interp(ti, tp_, X);
         double sinphi = std::sin(xi);
 
         auto sub_point = s_gen_->pop();
         std::vector<double> result;
         result.reserve(sub_point.size() + 1);
-
-        for (double s : sub_point) {
-            result.emplace_back(s * sinphi);
-        }
+        for (double s : sub_point) result.emplace_back(s * sinphi);
         result.emplace_back(std::cos(xi));
-
         return result;
     }
 

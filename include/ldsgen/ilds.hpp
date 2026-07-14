@@ -46,12 +46,10 @@ namespace ildsgen {
         explicit VdCorput(unsigned long base = 2, unsigned int scale = DEFAULT_SCALE)
             : _base{base}, _count{0}, factor_lst{} {
             unsigned long factor = 1;
-            for (unsigned int i = 0; i < scale; ++i) {
+            unsigned int n = scale < MAX_REVERSE_BITS ? scale : MAX_REVERSE_BITS;
+            for (unsigned int i = 0; i < n; ++i) {
+                factor_lst[n - 1 - i] = factor;
                 factor *= _base;
-            }
-            for (unsigned int i = 0; i < MAX_REVERSE_BITS; ++i) {
-                factor /= _base;
-                this->factor_lst[i] = factor;
             }
         }
 
