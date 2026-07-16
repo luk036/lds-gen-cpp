@@ -2,8 +2,7 @@
 #include <cstdio>
 #include <ldsgen/sphere_n.hpp>
 
-template <typename F>
-void bench(const char* name, F&& f, int iterations = 50000) {
+template <typename F> void bench(const char* name, F&& f, int iterations = 50000) {
     for (int i = 0; i < 1000; ++i) f();
     auto start = std::chrono::steady_clock::now();
     for (int i = 0; i < iterations; ++i) f();
