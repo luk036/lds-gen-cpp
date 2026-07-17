@@ -55,6 +55,11 @@ namespace ldsgen {
      */
     class SphereGen {
       public:
+        SphereGen() = default;
+        SphereGen(const SphereGen&) = default;
+        SphereGen(SphereGen&&) noexcept = default;
+        SphereGen& operator=(const SphereGen&) = default;
+        SphereGen& operator=(SphereGen&&) noexcept = default;
         virtual ~SphereGen() = default;
         virtual std::vector<double> pop() = 0;
         virtual void reseed(unsigned long seed) = 0;

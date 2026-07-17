@@ -187,7 +187,6 @@ The project uses:
 - **doctest** for testing
 - **fmt** for string formatting
 - **spdlog** for logging (optional)
-- **rapidcheck** for property-based testing (optional, see test/CMakeLists.txt)
 
 ---
 

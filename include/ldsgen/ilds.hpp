@@ -32,7 +32,7 @@ namespace ildsgen {
         std::atomic<unsigned long> _count;  ///< Current count in the sequence
         // unsigned long _factor;              ///< Precomputed scale factor (base^scale)
         std::array<unsigned long, MAX_REVERSE_BITS>
-            factor_lst;  ///< Precomputed scale factors for each digit
+            factor_lst{};  ///< Precomputed scale factors for each digit
         static_assert(MAX_REVERSE_BITS >= sizeof(unsigned long) * 8,
                       "MAX_REVERSE_BITS must be at least the number of bits in unsigned long");
 
@@ -44,7 +44,7 @@ namespace ildsgen {
          * @param[in] scale The number of digits (default: 10)
          */
         explicit VdCorput(unsigned long base = 2, unsigned int scale = DEFAULT_SCALE)
-            : _base{base}, _count{0}, factor_lst{} {
+            : _base{base}, _count{0} {
             unsigned long factor = 1;
             unsigned int n = scale < MAX_REVERSE_BITS ? scale : MAX_REVERSE_BITS;
             for (unsigned int i = 0; i < n; ++i) {
@@ -81,9 +81,6 @@ namespace ildsgen {
         auto reseed(const unsigned long& seed) -> void {
             this->_count.store(seed, std::memory_order_relaxed);
         }
-
-        VdCorput(VdCorput&&) noexcept = delete;
-        VdCorput& operator=(VdCorput&&) noexcept = delete;
     };
 
     /**
@@ -122,7 +119,7 @@ namespace ildsgen {
          *
          * @return array<unsigned long, 2> the next point in the sequence
          */
-        inline auto pop() -> array<unsigned long, 2> {  //
+        auto pop() -> array<unsigned long, 2> {  //
             return {this->vdc0.pop(), this->vdc1.pop()};
         }
 
