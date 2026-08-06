@@ -29,7 +29,7 @@ if is_plat("linux") then
         add_sysincludedirs(termux_prefix .. "/include", {public = true})
     end
 elseif is_plat("windows") then
-    add_cxflags("/EHsc /utf-8 /W4 /WX", {force = true})
+    add_cxflags("/EHsc /utf-8 /W4 /WX /wd4702", {force = true})
 end
 
 target("LdsGen")
@@ -63,6 +63,22 @@ target("bench_sphere")
     set_kind("binary")
     add_deps("LdsGen")
     add_files("bench/bench_sphere.cpp")
+    add_includedirs("include", {public = true})
+    add_packages("fmt", "spdlog")
+
+target("verify_basic")
+    set_languages("c++20")
+    set_kind("binary")
+    add_deps("LdsGen")
+    add_files("examples/verify_basic.cpp")
+    add_includedirs("include", {public = true})
+    add_packages("fmt", "spdlog")
+
+target("bench_all")
+    set_languages("c++20")
+    set_kind("binary")
+    add_deps("LdsGen")
+    add_files("bench/bench_all.cpp")
     add_includedirs("include", {public = true})
     add_packages("fmt", "spdlog")
 
@@ -109,25 +125,6 @@ target("test_wrapper_only")
     add_files("source/logger.cpp")
     add_includedirs("include", {public = true})
     add_packages("spdlog", "fmt")
-
-    -- Check if rapidcheck was built by CMake
-    local rapidcheck_dir = path.join(os.projectdir(), "build", "_deps", "rapidcheck-src")
-    local rapidcheck_lib_dir = path.join(os.projectdir(), "build", "_deps", "rapidcheck-build")
-    local rapidcheck_lib = nil
-
-    if is_plat("windows") then
-        rapidcheck_lib_dir = path.join(rapidcheck_lib_dir, "Release")
-        rapidcheck_lib = path.join(rapidcheck_lib_dir, "rapidcheck.lib")
-    else
-        rapidcheck_lib = path.join(rapidcheck_lib_dir, "librapidcheck.a")
-    end
-
-    if os.isdir(rapidcheck_dir) and os.isfile(rapidcheck_lib) then
-        add_includedirs(path.join(rapidcheck_dir, "include"))
-        add_linkdirs(rapidcheck_lib_dir)
-        add_links("rapidcheck")
-        add_defines("RAPIDCHECK_H")
-    end
 
 -- If you want to known more usage about xmake, please see https://xmake.io
 --

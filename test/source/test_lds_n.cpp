@@ -1,7 +1,7 @@
 #include <doctest/doctest.h>  // for Approx, ResultBuilder, TestCase
 
 #include <ldsgen/lds_n.hpp>  // for halton_n
-#include <vector>
+
 TEST_CASE("HaltonN") {
     auto hgen = ldsgen::HaltonN({2, 3, 5});
     hgen.reseed(1);

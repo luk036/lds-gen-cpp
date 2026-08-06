@@ -176,7 +176,7 @@ namespace ldsgen {
     class VdCorput {
         std::atomic<unsigned long> count;
         unsigned long base;
-        std::array<double, MAX_REVERSE_BITS> rev_lst;
+        std::array<double, MAX_REVERSE_BITS> rev_lst{};
         static_assert(MAX_REVERSE_BITS >= sizeof(unsigned long) * 8,
                       "MAX_REVERSE_BITS must be at least the number of bits in unsigned long");
 
@@ -190,7 +190,7 @@ namespace ldsgen {
          *
          * @param[in] base the base of the Van der Corput sequence
          */
-        explicit VdCorput(const unsigned long base) : count{0}, base{base}, rev_lst{} {
+        explicit VdCorput(const unsigned long base) : count{0}, base{base} {
             double reverse = 1.0;
             for (unsigned int i = 0; i < MAX_REVERSE_BITS; ++i) {
                 reverse /= double(base);
@@ -292,9 +292,6 @@ namespace ldsgen {
             return GeneratorIterator<VdCorput, double>(nullptr,
                                                        std::numeric_limits<unsigned long>::max());
         }
-
-        VdCorput(VdCorput&&) noexcept = delete;
-        VdCorput& operator=(VdCorput&&) noexcept = delete;
     };
 
     /**

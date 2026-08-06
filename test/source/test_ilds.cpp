@@ -1,6 +1,5 @@
 #include <doctest/doctest.h>  // for ResultBuilder, TestCase, CHECK
 
-#include <array>            // for array
 #include <ldsgen/ilds.hpp>  // for Halton
 
 TEST_CASE("VdCorput_i") {
