@@ -134,8 +134,8 @@ namespace ldsgen {
         while (count != 0) {
             const auto remainder = count % base;
             count /= base;
-            denom *= double(base);
-            reslt += double(remainder) / denom;
+            denom *= static_cast<double>(base);
+            reslt += static_cast<double>(remainder) / denom;
         }
         return reslt;
     }
@@ -193,7 +193,7 @@ namespace ldsgen {
         explicit VdCorput(const unsigned long base) : count{0}, base{base} {
             double reverse = 1.0;
             for (unsigned int i = 0; i < MAX_REVERSE_BITS; ++i) {
-                reverse /= double(base);
+                reverse /= static_cast<double>(base);
                 this->rev_lst[i] = reverse;
             }
         }
@@ -218,7 +218,7 @@ namespace ldsgen {
             while (count_value != 0) {
                 const auto remainder = count_value % this->base;
                 count_value /= this->base;
-                res += this->rev_lst[idx] * double(remainder);
+                res += this->rev_lst[idx] * static_cast<double>(remainder);
                 ++idx;
             }
             return res;
@@ -236,7 +236,7 @@ namespace ldsgen {
             while (count_value != 0) {
                 const auto remainder = count_value % this->base;
                 count_value /= this->base;
-                res += this->rev_lst[idx] * double(remainder);
+                res += this->rev_lst[idx] * static_cast<double>(remainder);
                 ++idx;
             }
             return res;
