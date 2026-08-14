@@ -1,4 +1,5 @@
 #include <fmt/format.h>
+
 #include <ldsgen/sphere_n.hpp>
 
 int main() {
