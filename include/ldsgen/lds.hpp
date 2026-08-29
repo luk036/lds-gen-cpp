@@ -7,6 +7,8 @@
 #include <array>
 #include <atomic>
 #include <cmath>
+#include <concepts>
+#include <cstddef>
 #include <iterator>
 #include <limits>
 
@@ -22,8 +24,46 @@ namespace ldsgen {
     constexpr unsigned int MAX_REVERSE_BITS = 64;
     constexpr double MAPPING_FACTOR = 2.0;
 
+    namespace detail {
+
+        /**
+         * @brief Core base-b digit/weight summation shared by all van der Corput generators.
+         *
+         * Extracts the base-b digits of `n` (least significant first) and accumulates each
+         * digit times its precomputed weight:
+         * @f[
+         *     \sum_k a_k(n) \cdot \mathrm{weights}[k], \qquad
+         *     n = \sum_k a_k(n) \, b^k
+         * @f]
+         * The `weights` table determines the value type and scaling of the result: reverse
+         * powers \f$b^{-k-1}\f$ for the floating-point generators, ascending integer powers
+         * for the integer generators.
+         *
+         * @tparam T Accumulator/result type (e.g. double or unsigned long).
+         * @tparam Table Random-access table type (e.g. std::array).
+         * @param[in] n The sequence index to evaluate.
+         * @param[in] base The numeric base.
+         * @param[in] weights Precomputed digit weights.
+         * @return The weighted digit sum for index `n`.
+         */
+        template <typename T, typename Table>
+        constexpr auto vdc_digit_sum(unsigned long n, unsigned long base, const Table& weights)
+            -> T {
+            T reslt{};
+            std::size_t idx = 0;
+            while (n != 0) {
+                const auto remainder = n % base;
+                n /= base;
+                reslt += static_cast<T>(remainder) * weights[idx];
+                ++idx;
+            }
+            return reslt;
+        }
+
+    }  // namespace detail
+
     /**
-     * @brief Forward iterator for sequence generators
+     * @brief Forward iterator for sequence generators.
      *
      * Provides STL-compatible iterator interface for all generators.
      * Allows use in range-based for loops and STL algorithms.
@@ -32,15 +72,6 @@ namespace ldsgen {
      * VdCorput gen(2);
      * std::vector<double> points(gen.begin(), gen.begin() + 100);
      * @endverbatim
-     *
-     * @tparam Generator The generator class
-     * @tparam Value The value type (double or array)
-     */
-    /**
-     * @brief Forward iterator for sequence generators.
-     *
-     * Provides STL-compatible iterator interface for all generators.
-     * Allows use in range-based for loops and STL algorithms.
      *
      * @tparam Generator The generator class type.
      * @tparam Value The value type (double or array).
@@ -111,6 +142,136 @@ namespace ldsgen {
     };
 
     /**
+     * @brief Concept for the sequence generator protocol
+     *
+     * Requires the uniform strategy interface shared by every generator: pop/peek/skip/
+     * reseed/get_index. Every generator class in this library satisfies it, so generic code
+     * can be written against the protocol without knowing the concrete generator.
+     *
+     * @tparam G The candidate generator type.
+     * @tparam V The value type it produces.
+     */
+    template <typename G, typename V>
+    concept SequenceGenerator = requires(G g, unsigned long n) {
+        { g.pop() } -> std::convertible_to<V>;
+        { g.peek() } -> std::convertible_to<V>;
+        g.skip(static_cast<unsigned int>(n));
+        g.reseed(n);
+        { g.get_index() } -> std::convertible_to<unsigned long>;
+    };
+
+    /**
+     * @brief CRTP base implementing the sequence generator protocol
+     *
+     * Implements the shared stateful protocol (pop/peek/skip/reseed/get_index) in terms of
+     * a single pure computation `value_at(n)` supplied by the derived class. The sequence
+     * counter is a `std::atomic<unsigned long>` so the protocol stays thread-safe: `pop()`
+     * claims a unique index with a relaxed `fetch_add` and evaluates `value_at` on immutable
+     * generator data.
+     *
+     * @note Template Method pattern via CRTP: the base fixes the protocol skeleton —
+     * `pop()` evaluates `value_at(fetch_add(1) + 1)` and `peek()` evaluates
+     * `value_at(load() + 1)` — while the derived class supplies only the pure index-to-value
+     * computation. This guarantees pop/peek consistency by construction, centralizes the
+     * sequence state in one atomic counter (making composite pop() atomic as a point), and
+     * removes the duplicated protocol from every concrete generator.
+     *
+     * @tparam Derived The CRTP-derived generator class.
+     * @tparam Value The value type produced by pop()/peek().
+     */
+    template <typename Derived, typename Value> class GeneratorBase {
+      public:
+        /**
+         * @brief Generate the next value in the sequence (advances state).
+         *
+         * Atomically claims the next index and evaluates the pure value_at computation.
+         *
+         * @return The value at the incremented sequence index.
+         */
+        auto pop() -> Value {
+            auto count_value
+                = this->count_.fetch_add(1, std::memory_order_relaxed) + 1;  // ignore 0
+            return derived().value_at(count_value);
+        }
+
+        /**
+         * @brief Peek at the next value without advancing state.
+         *
+         * @return The value at the next sequence index.
+         */
+        [[nodiscard]] auto peek() -> Value {
+            auto count_value = this->count_.load(std::memory_order_relaxed) + 1;
+            return derived().value_at(count_value);
+        }
+
+        /**
+         * @brief Skip n values in the sequence.
+         *
+         * @param[in] n number of values to skip
+         */
+        auto skip(unsigned int n) -> void { this->count_.fetch_add(n, std::memory_order_relaxed); }
+
+        /**
+         * @brief Reset the generator to a specific seed value.
+         *
+         * @param[in] seed the seed value to reset the sequence generator to
+         */
+        auto reseed(const unsigned long& seed) -> void {
+            this->count_.store(seed, std::memory_order_relaxed);
+        }
+
+        /**
+         * @brief Get current index in the sequence.
+         *
+         * @return unsigned long current index in the sequence
+         */
+        [[nodiscard]] auto get_index() const -> unsigned long {
+            return this->count_.load(std::memory_order_relaxed);
+        }
+
+      protected:
+        std::atomic<unsigned long> count_{0};  ///< Current sequence index (single source of state)
+
+      private:
+        auto derived() -> Derived& { return static_cast<Derived&>(*this); }
+    };
+
+    /**
+     * @brief CRTP mixin adding STL iterator support to a GeneratorBase.
+     *
+     * Provides begin()/end() so generators can be consumed with range-for, std::begin/
+     * std::end and STL algorithms. Combined with GeneratorIterator, this realizes the
+     * Iterator pattern for every generator without repeating the iterator boilerplate.
+     *
+     * @tparam Derived The CRTP-derived generator class.
+     * @tparam Value The value type produced by the generator.
+     */
+    template <typename Derived, typename Value> class GeneratorIterable
+        : public GeneratorBase<Derived, Value> {
+      public:
+        /**
+         * @brief Get iterator to beginning
+         *
+         * @return GeneratorIterator<Derived, Value>
+         */
+        auto begin() -> GeneratorIterator<Derived, Value> {
+            return GeneratorIterator<Derived, Value>(static_cast<Derived*>(this));
+        }
+
+        /**
+         * @brief Get iterator to end (infinite sequence)
+         *
+         * For infinite sequences, you typically use begin() + n to get a specific position
+         *
+         * @return GeneratorIterator<Derived, Value>
+         */
+        [[nodiscard]] auto end() const -> GeneratorIterator<Derived, Value> {
+            return GeneratorIterator<Derived, Value>(nullptr,
+                                                     std::numeric_limits<unsigned long>::max());
+        }
+    };
+
+    /**
      * @brief Van der Corput sequence
      *
      * The `vdc` function is calculating the Van der Corput sequence value for a
@@ -173,8 +334,7 @@ namespace ldsgen {
      *   }
      * @enddot
      */
-    class VdCorput {
-        std::atomic<unsigned long> count;
+    class VdCorput : public GeneratorIterable<VdCorput, double> {
         unsigned long base;
         std::array<double, MAX_REVERSE_BITS> rev_lst{};
         static_assert(MAX_REVERSE_BITS >= sizeof(unsigned long) * 8,
@@ -190,7 +350,7 @@ namespace ldsgen {
          *
          * @param[in] base the base of the Van der Corput sequence
          */
-        explicit VdCorput(const unsigned long base) : count{0}, base{base} {
+        explicit VdCorput(const unsigned long base) : base{base} {
             double reverse = 1.0;
             for (unsigned int i = 0; i < MAX_REVERSE_BITS; ++i) {
                 reverse /= static_cast<double>(base);
@@ -199,98 +359,17 @@ namespace ldsgen {
         }
 
         /**
-         * @brief Generate the next value in the Van der Corput sequence
+         * @brief Evaluate the sequence value at a given index (pure, no state change)
          *
-         * Generates the next value in the Van der Corput sequence by incrementing
-         * the count and calculating the Van der Corput sequence value for that count
-         * and base.
-         *
+         * Computes the Van der Corput value for index \f$n\f$:
          * @f$ \phi_b(n) = \sum_{k=0}^{\infty} a_k(n) \, b^{-k-1} @f$
          * where @f$ a_k(n) @f$ are the base-@f$ b @f$ digits of @f$ n @f$.
          *
-         * @return double the next value in the sequence
+         * @param[in] n The sequence index.
+         * @return The Van der Corput value for index n.
          */
-        auto pop() -> double {
-            unsigned long count_value
-                = this->count.fetch_add(1, std::memory_order_relaxed) + 1;  // ignore 0
-            unsigned long idx = 0;
-            double res = 0.0;
-            while (count_value != 0) {
-                const auto remainder = count_value % this->base;
-                count_value /= this->base;
-                res += this->rev_lst[idx] * static_cast<double>(remainder);
-                ++idx;
-            }
-            return res;
-        }
-
-        /**
-         * @brief Peek at the next value without advancing state
-         *
-         * @return double the next value in the sequence
-         */
-        [[nodiscard]] auto peek() -> double {
-            unsigned long count_value = this->count.load(std::memory_order_relaxed) + 1;
-            unsigned long idx = 0;
-            double res = 0.0;
-            while (count_value != 0) {
-                const auto remainder = count_value % this->base;
-                count_value /= this->base;
-                res += this->rev_lst[idx] * static_cast<double>(remainder);
-                ++idx;
-            }
-            return res;
-        }
-
-        /**
-         * @brief Skip n values in the sequence
-         *
-         * @param[in] n number of values to skip
-         */
-        auto skip(unsigned int n) -> void { this->count.fetch_add(n, std::memory_order_relaxed); }
-
-        /**
-         * @brief reseed
-         *
-         * The `reseed(unsigned long seed)` function is used to reset the state of the
-         * sequence generator to a specific seed value. This allows the sequence
-         * generator to start generating the sequence from the beginning, or from a
-         * specific point in the sequence, depending on the value of the seed.
-         *
-         * @param[in] seed the seed value to reset the sequence generator to
-         */
-        auto reseed(const unsigned long& seed) -> void {
-            this->count.store(seed, std::memory_order_relaxed);
-        }
-
-        /**
-         * @brief Get current index
-         *
-         * @return unsigned long current index in the sequence
-         */
-        [[nodiscard]] auto get_index() const -> unsigned long {
-            return this->count.load(std::memory_order_relaxed);
-        }
-
-        /**
-         * @brief Get iterator to beginning
-         *
-         * @return GeneratorIterator<VdCorput, double>
-         */
-        auto begin() -> GeneratorIterator<VdCorput, double> {
-            return GeneratorIterator<VdCorput, double>(this);
-        }
-
-        /**
-         * @brief Get iterator to end (infinite sequence)
-         *
-         * For infinite sequences, you typically use begin() + n to get a specific position
-         *
-         * @return GeneratorIterator<VdCorput, double>
-         */
-        [[nodiscard]] auto end() const -> GeneratorIterator<VdCorput, double> {
-            return GeneratorIterator<VdCorput, double>(nullptr,
-                                                       std::numeric_limits<unsigned long>::max());
+        auto value_at(unsigned long n) const -> double {
+            return detail::vdc_digit_sum<double>(n, this->base, this->rev_lst);
         }
     };
 
@@ -326,7 +405,7 @@ namespace ldsgen {
      *   }
      * @enddot
      */
-    class Halton {
+    class Halton : public GeneratorIterable<Halton, std::array<double, 2>> {
         VdCorput vdc0;
         VdCorput vdc1;
 
@@ -343,73 +422,15 @@ namespace ldsgen {
         Halton(const unsigned long base0, const unsigned long base1) : vdc0(base0), vdc1(base1) {}
 
         /**
-         * @brief Generate the next point in the Halton sequence
-         *
-         * Returns the next point in the Halton sequence as an array of two double values.
+         * @brief Evaluate the 2D Halton point at a given index (pure, no state change)
          *
          * @f$ H(n) = \bigl(\phi_{b_0}(n),\; \phi_{b_1}(n)\bigr) @f$
          *
-         * @return std::array<double, 2> the next point in the sequence
+         * @param[in] n The sequence index.
+         * @return The 2D Halton point for index n.
          */
-        auto pop() -> std::array<double, 2> {  //
-            return {this->vdc0.pop(), this->vdc1.pop()};
-        }
-
-        /**
-         * @brief Peek at the next value without advancing state
-         *
-         * @return std::array<double, 2> the next point in the sequence
-         */
-        [[nodiscard]] auto peek() -> std::array<double, 2> {
-            return {this->vdc0.peek(), this->vdc1.peek()};
-        }
-
-        /**
-         * @brief Skip n values in the sequence
-         *
-         * @param[in] n number of values to skip
-         */
-        auto skip(unsigned int n) -> void {
-            this->vdc0.skip(n);
-            this->vdc1.skip(n);
-        }
-
-        /**
-         * @brief Reset the state of the Halton sequence generator
-         *
-         * Resets the state of the sequence generator to a specific seed value.
-         *
-         * @param[in] seed the seed value to reset the sequence generator to
-         */
-        auto reseed(const unsigned long& seed) -> void {
-            this->vdc0.reseed(seed);
-            this->vdc1.reseed(seed);
-        }
-
-        /**
-         * @brief Get current index
-         *
-         * @return unsigned long current index in the sequence
-         */
-        [[nodiscard]] auto get_index() const -> unsigned long { return this->vdc0.get_index(); }
-
-        /**
-         * @brief Get iterator to beginning
-         *
-         * @return GeneratorIterator<Halton, std::array<double, 2>>
-         */
-        auto begin() -> GeneratorIterator<Halton, std::array<double, 2>> {
-            return GeneratorIterator<Halton, std::array<double, 2>>(this);
-        }
-
-        /**
-         * @brief Get iterator to end (infinite sequence)
-         *
-         * @return GeneratorIterator<Halton, std::array<double, 2>>
-         */
-        [[nodiscard]] auto end() const -> GeneratorIterator<Halton, std::array<double, 2>> {
-            return GeneratorIterator<Halton, std::array<double, 2>>(
-                nullptr, std::numeric_limits<unsigned long>::max());
+        auto value_at(unsigned long n) const -> std::array<double, 2> {
+            return {this->vdc0.value_at(n), this->vdc1.value_at(n)};
         }
     };
 
@@ -448,7 +469,7 @@ namespace ldsgen {
      *   }
      * @enddot
      */
-    class Circle {
+    class Circle : public GeneratorIterable<Circle, std::array<double, 2>> {
         VdCorput vdc;
 
       public:
@@ -463,69 +484,16 @@ namespace ldsgen {
         explicit Circle(const unsigned long base) : vdc(base) {}
 
         /**
-         * @brief Generate the next point on the unit circle
-         *
-         * Returns the next point on the unit circle as an array of two double values.
+         * @brief Evaluate the point on the unit circle at a given index (pure, no state change)
          *
          * @f$ \theta = 2\pi \cdot \phi_b(n), \quad P(n) = (\cos\theta,\; \sin\theta) @f$
          *
-         * @return std::array<double, 2> the next point on the unit circle
+         * @param[in] n The sequence index.
+         * @return The point on the unit circle for index n.
          */
-        auto pop() -> std::array<double, 2> {
-            auto theta = this->vdc.pop() * TWO_PI;  // map to [0, 2*pi];
+        auto value_at(unsigned long n) const -> std::array<double, 2> {
+            auto theta = this->vdc.value_at(n) * TWO_PI;  // map to [0, 2*pi];
             return {std::cos(theta), std::sin(theta)};
-        }
-
-        /**
-         * @brief Peek at the next value without advancing state
-         *
-         * @return std::array<double, 2> next point on the circle
-         */
-        [[nodiscard]] auto peek() -> std::array<double, 2> {
-            auto theta = this->vdc.peek() * TWO_PI;  // map to [0, 2*pi];
-            return {std::cos(theta), std::sin(theta)};
-        }
-
-        /**
-         * @brief Skip n values in the sequence
-         *
-         * @param[in] n number of values to skip
-         */
-        auto skip(unsigned int n) -> void { this->vdc.skip(n); }
-
-        /**
-         * @brief Reset the state of the Circle sequence generator
-         *
-         * Resets the state of the sequence generator to a specific seed value.
-         *
-         * @param[in] seed the seed value to reset the sequence generator to
-         */
-        auto reseed(const unsigned long& seed) -> void { this->vdc.reseed(seed); }
-
-        /**
-         * @brief Get current index
-         *
-         * @return unsigned long current index in sequence
-         */
-        [[nodiscard]] auto get_index() const -> unsigned long { return this->vdc.get_index(); }
-
-        /**
-         * @brief Get iterator to beginning
-         *
-         * @return GeneratorIterator<Circle, std::array<double, 2>>
-         */
-        auto begin() -> GeneratorIterator<Circle, std::array<double, 2>> {
-            return GeneratorIterator<Circle, std::array<double, 2>>(this);
-        }
-
-        /**
-         * @brief Get iterator to end (infinite sequence)
-         *
-         * @return GeneratorIterator<Circle, std::array<double, 2>>
-         */
-        [[nodiscard]] auto end() const -> GeneratorIterator<Circle, std::array<double, 2>> {
-            return GeneratorIterator<Circle, std::array<double, 2>>(
-                nullptr, std::numeric_limits<unsigned long>::max());
         }
     };
 
@@ -566,7 +534,7 @@ namespace ldsgen {
      *   }
      * @enddot
      */
-    class Disk {
+    class Disk : public GeneratorIterable<Disk, std::array<double, 2>> {
         VdCorput vdc0;
         VdCorput vdc1;
 
@@ -582,78 +550,18 @@ namespace ldsgen {
         Disk(const unsigned long base0, const unsigned long base1) : vdc0(base0), vdc1(base1) {}
 
         /**
-         * @brief Generate the next point in the unit disk
-         *
-         * Returns the next point in the unit disk as an array of two double values.
+         * @brief Evaluate the point in the unit disk at a given index (pure, no state change)
          *
          * @f$ \theta = 2\pi \cdot \phi_{b_0}(n), \; r = \sqrt{\phi_{b_1}(n)} @f$
          * @f$ P(n) = \bigl(r\cos\theta,\; r\sin\theta\bigr) @f$
          *
-         * @return std::array<double, 2> the next point in the unit disk
+         * @param[in] n The sequence index.
+         * @return The point in the unit disk for index n.
          */
-        auto pop() -> std::array<double, 2> {        //
-            auto theta = this->vdc0.pop() * TWO_PI;  // map to [0, 2*pi];
-            auto radius = std::sqrt(this->vdc1.pop());
+        auto value_at(unsigned long n) const -> std::array<double, 2> {
+            auto theta = this->vdc0.value_at(n) * TWO_PI;  // map to [0, 2*pi];
+            auto radius = std::sqrt(this->vdc1.value_at(n));
             return {radius * std::cos(theta), radius * std::sin(theta)};
-        }
-
-        /**
-         * @brief Peek at the next value without advancing state
-         *
-         * @return std::array<double, 2> next point in the disk
-         */
-        [[nodiscard]] auto peek() -> std::array<double, 2> {
-            auto theta = this->vdc0.peek() * TWO_PI;  // map to [0, 2*pi];
-            auto radius = std::sqrt(this->vdc1.peek());
-            return {radius * std::cos(theta), radius * std::sin(theta)};
-        }
-
-        /**
-         * @brief Skip n values in the sequence
-         *
-         * @param[in] n number of values to skip
-         */
-        auto skip(unsigned int n) -> void {
-            this->vdc0.skip(n);
-            this->vdc1.skip(n);
-        }
-
-        /**
-         * @brief Reset the state of the Disk sequence generator
-         *
-         * Resets the state of the sequence generator to a specific seed value.
-         *
-         * @param[in] seed the seed value to reset the sequence generator to
-         */
-        auto reseed(const unsigned long& seed) -> void {
-            this->vdc0.reseed(seed);
-            this->vdc1.reseed(seed);
-        }
-
-        /**
-         * @brief Get current index
-         *
-         * @return unsigned long current index in sequence
-         */
-        [[nodiscard]] auto get_index() const -> unsigned long { return this->vdc0.get_index(); }
-
-        /**
-         * @brief Get iterator to beginning
-         *
-         * @return GeneratorIterator<Disk, std::array<double, 2>>
-         */
-        auto begin() -> GeneratorIterator<Disk, std::array<double, 2>> {
-            return GeneratorIterator<Disk, std::array<double, 2>>(this);
-        }
-
-        /**
-         * @brief Get iterator to end (infinite sequence)
-         *
-         * @return GeneratorIterator<Disk, std::array<double, 2>>
-         */
-        [[nodiscard]] auto end() const -> GeneratorIterator<Disk, std::array<double, 2>> {
-            return GeneratorIterator<Disk, std::array<double, 2>>(
-                nullptr, std::numeric_limits<unsigned long>::max());
         }
     };
 
@@ -695,7 +603,7 @@ namespace ldsgen {
      *   }
      * @enddot
      */
-    class Sphere {
+    class Sphere : public GeneratorIterable<Sphere, std::array<double, 3>> {
         VdCorput vdcgen;
         Circle cirgen;
 
@@ -713,80 +621,19 @@ namespace ldsgen {
             : vdcgen(base0), cirgen(base1) {}
 
         /**
-         * @brief Generate the next point on the unit sphere
-         *
-         * Returns the next point on the unit sphere as an array of three double values.
+         * @brief Evaluate the point on the unit sphere at a given index (pure, no state change)
          *
          * @f$ \phi = 2\pi \cdot \phi_{b_1}(n), \quad \cos\theta = 2\phi_{b_0}(n) - 1 @f$
          * @f$ P(n) = \bigl(\sin\theta\cos\phi,\; \sin\theta\sin\phi,\; \cos\theta\bigr) @f$
          *
-         * @return std::array<double, 3> the next point on the unit sphere
+         * @param[in] n The sequence index.
+         * @return The point on the unit sphere for index n.
          */
-        auto pop() -> std::array<double, 3> {
-            auto cosphi = (MAPPING_FACTOR * this->vdcgen.pop()) - 1.0;  // map to [-1, 1];
+        auto value_at(unsigned long n) const -> std::array<double, 3> {
+            auto cosphi = (MAPPING_FACTOR * this->vdcgen.value_at(n)) - 1.0;  // map to [-1, 1];
             auto sinphi = std::sqrt(1.0 - (cosphi * cosphi));
-            auto arr = this->cirgen.pop();
+            auto arr = this->cirgen.value_at(n);
             return {sinphi * arr[0], sinphi * arr[1], cosphi};
-        }
-
-        /**
-         * @brief Peek at the next value without advancing state
-         *
-         * @return std::array<double, 3> next point on the sphere
-         */
-        [[nodiscard]] auto peek() -> std::array<double, 3> {
-            auto cosphi = (MAPPING_FACTOR * this->vdcgen.peek()) - 1.0;  // map to [-1, 1];
-            auto sinphi = std::sqrt(1.0 - (cosphi * cosphi));
-            auto arr = this->cirgen.peek();
-            return {sinphi * arr[0], sinphi * arr[1], cosphi};
-        }
-
-        /**
-         * @brief Skip n values in the sequence
-         *
-         * @param[in] n number of values to skip
-         */
-        auto skip(unsigned int n) -> void {
-            this->vdcgen.skip(n);
-            this->cirgen.skip(n);
-        }
-
-        /**
-         * @brief Reset the state of the Sphere sequence generator
-         *
-         * Resets the state of the sequence generator to a specific seed value.
-         *
-         * @param[in] seed the seed value to reset the sequence generator to
-         */
-        auto reseed(const unsigned long& seed) -> void {
-            this->cirgen.reseed(seed);
-            this->vdcgen.reseed(seed);
-        }
-
-        /**
-         * @brief Get current index
-         *
-         * @return unsigned long current index in sequence
-         */
-        [[nodiscard]] auto get_index() const -> unsigned long { return this->vdcgen.get_index(); }
-
-        /**
-         * @brief Get iterator to beginning
-         *
-         * @return GeneratorIterator<Sphere, std::array<double, 3>>
-         */
-        auto begin() -> GeneratorIterator<Sphere, std::array<double, 3>> {
-            return GeneratorIterator<Sphere, std::array<double, 3>>(this);
-        }
-
-        /**
-         * @brief Get iterator to end (infinite sequence)
-         *
-         * @return GeneratorIterator<Sphere, std::array<double, 3>>
-         */
-        [[nodiscard]] auto end() const -> GeneratorIterator<Sphere, std::array<double, 3>> {
-            return GeneratorIterator<Sphere, std::array<double, 3>>(
-                nullptr, std::numeric_limits<unsigned long>::max());
         }
     };
 
@@ -818,7 +665,7 @@ namespace ldsgen {
      *         '-.....-'
      * @endverbatim
      */
-    class Sphere3Hopf {
+    class Sphere3Hopf : public GeneratorIterable<Sphere3Hopf, std::array<double, 4>> {
         VdCorput vdc0;
         VdCorput vdc1;
         VdCorput vdc2;
@@ -838,11 +685,9 @@ namespace ldsgen {
             : vdc0(base0), vdc1(base1), vdc2(base2) {}
 
         /**
-         * @brief Generate the next point on the 3-sphere using Hopf fibration
+         * @brief Evaluate the point on the 3-sphere at a given index (pure, no state change)
          *
-         * Returns the next point on the 3-sphere using the Hopf fibration as an array of four
-         * double values.
-         *
+         * Uses the Hopf fibration parametrization:
          * @f[
          *     \begin{aligned}
          *     x &= \cos\eta\cos\psi \\
@@ -854,12 +699,13 @@ namespace ldsgen {
          * where @f$ \phi = 2\pi\phi_{b_0}(n) @f$, @f$ \psi = 2\pi\phi_{b_1}(n) @f$,
          * and @f$ \eta = \arccos\sqrt{\phi_{b_2}(n)} @f$.
          *
-         * @return std::array<double, 4> the next point on the 3-sphere
+         * @param[in] n The sequence index.
+         * @return The point on the 3-sphere for index n.
          */
-        auto pop() -> std::array<double, 4> {
-            auto phi = this->vdc0.pop() * TWO_PI;  // map to [0, 2*pi];
-            auto psy = this->vdc1.pop() * TWO_PI;  // map to [0, 2*pi];
-            auto vdc = this->vdc2.pop();
+        auto value_at(unsigned long n) const -> std::array<double, 4> {
+            auto phi = this->vdc0.value_at(n) * TWO_PI;  // map to [0, 2*pi];
+            auto psy = this->vdc1.value_at(n) * TWO_PI;  // map to [0, 2*pi];
+            auto vdc = this->vdc2.value_at(n);
             auto cos_eta = std::sqrt(vdc);
             auto sin_eta = std::sqrt(1.0 - vdc);
             return {
@@ -868,77 +714,16 @@ namespace ldsgen {
                 sin_eta * std::cos(phi + psy),
                 sin_eta * std::sin(phi + psy),
             };
-        }
-
-        /**
-         * @brief Peek at the next value without advancing state
-         *
-         * @return std::array<double, 4> next point on the 3-sphere
-         */
-        [[nodiscard]] auto peek() -> std::array<double, 4> {
-            auto phi = this->vdc0.peek() * TWO_PI;  // map to [0, 2*pi];
-            auto psy = this->vdc1.peek() * TWO_PI;  // map to [0, 2*pi];
-            auto vdc = this->vdc2.peek();
-            auto cos_eta = std::sqrt(vdc);
-            auto sin_eta = std::sqrt(1.0 - vdc);
-            return {
-                cos_eta * std::cos(psy),
-                cos_eta * std::sin(psy),
-                sin_eta * std::cos(phi + psy),
-                sin_eta * std::sin(phi + psy),
-            };
-        }
-
-        /**
-         * @brief Skip n values in the sequence
-         *
-         * @param[in] n number of values to skip
-         */
-        auto skip(unsigned int n) -> void {
-            this->vdc0.skip(n);
-            this->vdc1.skip(n);
-            this->vdc2.skip(n);
-        }
-
-        /**
-         * @brief Reset the state of the Sphere3Hopf sequence generator
-         *
-         * Resets the state of the sequence generator to a specific seed value.
-         *
-         * @param[in] seed the seed value to reset the sequence generator to
-         */
-        auto reseed(unsigned long seed) -> void {
-            this->vdc0.reseed(seed);
-            this->vdc1.reseed(seed);
-            this->vdc2.reseed(seed);
-        }
-
-        /**
-         * @brief Get current index
-         *
-         * @return unsigned long current index in sequence
-         */
-        [[nodiscard]] auto get_index() const -> unsigned long { return this->vdc0.get_index(); }
-
-        /**
-         * @brief Get iterator to beginning
-         *
-         * @return GeneratorIterator<Sphere3Hopf, std::array<double, 4>>
-         */
-        auto begin() -> GeneratorIterator<Sphere3Hopf, std::array<double, 4>> {
-            return GeneratorIterator<Sphere3Hopf, std::array<double, 4>>(this);
-        }
-
-        /**
-         * @brief Get iterator to end (infinite sequence)
-         *
-         * @return GeneratorIterator<Sphere3Hopf, std::array<double, 4>>
-         */
-        [[nodiscard]] auto end() const -> GeneratorIterator<Sphere3Hopf, std::array<double, 4>> {
-            return GeneratorIterator<Sphere3Hopf, std::array<double, 4>>(
-                nullptr, std::numeric_limits<unsigned long>::max());
         }
     };
+
+    // Compile-time contract checks: every generator satisfies the protocol concept.
+    static_assert(SequenceGenerator<VdCorput, double>);
+    static_assert(SequenceGenerator<Halton, std::array<double, 2>>);
+    static_assert(SequenceGenerator<Circle, std::array<double, 2>>);
+    static_assert(SequenceGenerator<Disk, std::array<double, 2>>);
+    static_assert(SequenceGenerator<Sphere, std::array<double, 3>>);
+    static_assert(SequenceGenerator<Sphere3Hopf, std::array<double, 4>>);
 
     /**
      * @brief Dummy function (placeholder, not yet implemented).

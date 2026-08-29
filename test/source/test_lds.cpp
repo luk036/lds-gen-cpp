@@ -656,7 +656,7 @@ TEST_CASE("get_index") {
 // --- Memory regression tests: class sizes ---
 
 TEST_CASE("sizeof VdCorput") {
-    // atomic<ul> count + ul base + double[N] rev_lst
+    // GeneratorBase atomic counter + ul base + double[N] rev_lst
     // Size varies by platform: 520 on MSVC (ul=4), 528 on GCC (ul=8)
     constexpr auto kCountSize = sizeof(std::atomic<unsigned long>);
     constexpr auto kBaseSize = sizeof(unsigned long);
@@ -664,16 +664,24 @@ TEST_CASE("sizeof VdCorput") {
     CHECK_EQ(sizeof(ldsgen::VdCorput), kCountSize + kBaseSize + kRevListSize);
 }
 
-TEST_CASE("sizeof Circle") { CHECK_EQ(sizeof(ldsgen::Circle), sizeof(ldsgen::VdCorput)); }
+TEST_CASE("sizeof Circle") {
+    // own atomic counter (padded to VdCorput's alignment) + VdCorput member
+    CHECK_EQ(sizeof(ldsgen::Circle), sizeof(ldsgen::VdCorput) + alignof(ldsgen::VdCorput));
+}
 
-TEST_CASE("sizeof Halton") { CHECK_EQ(sizeof(ldsgen::Halton), 2 * sizeof(ldsgen::VdCorput)); }
+TEST_CASE("sizeof Halton") {
+    CHECK_EQ(sizeof(ldsgen::Halton), 2 * sizeof(ldsgen::VdCorput) + alignof(ldsgen::VdCorput));
+}
 
-TEST_CASE("sizeof Disk") { CHECK_EQ(sizeof(ldsgen::Disk), 2 * sizeof(ldsgen::VdCorput)); }
+TEST_CASE("sizeof Disk") {
+    CHECK_EQ(sizeof(ldsgen::Disk), 2 * sizeof(ldsgen::VdCorput) + alignof(ldsgen::VdCorput));
+}
 
 TEST_CASE("sizeof Sphere") {
-    CHECK_EQ(sizeof(ldsgen::Sphere), sizeof(ldsgen::VdCorput) + sizeof(ldsgen::Circle));
+    CHECK_EQ(sizeof(ldsgen::Sphere),
+             sizeof(ldsgen::VdCorput) + sizeof(ldsgen::Circle) + alignof(ldsgen::VdCorput));
 }
 
 TEST_CASE("sizeof Sphere3Hopf") {
-    CHECK_EQ(sizeof(ldsgen::Sphere3Hopf), 3 * sizeof(ldsgen::VdCorput));
+    CHECK_EQ(sizeof(ldsgen::Sphere3Hopf), 3 * sizeof(ldsgen::VdCorput) + alignof(ldsgen::VdCorput));
 }
