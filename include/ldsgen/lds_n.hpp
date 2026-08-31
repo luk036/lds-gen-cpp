@@ -5,12 +5,9 @@
  */
 
 #include <memory>  // for unique_ptr
-
-// #include <algorithm>  // for std::transform
-// #include <iterator>
 #include <vector>  // for vector
 
-#include "lds.hpp"  // for VdCorput, Sphere
+#include "lds.hpp"  // for GeneratorBase, SequenceGenerator, VdCorput
 
 namespace ldsgen {
     using std::vector;
@@ -34,7 +31,7 @@ namespace ldsgen {
      *     ...
      * @endverbatim
      */
-    class HaltonN {
+    class HaltonN : public GeneratorBase<HaltonN, vector<double>> {
       private:
         vector<std::unique_ptr<VdCorput>> vdcs;
 
@@ -53,32 +50,25 @@ namespace ldsgen {
         }
 
         /**
-         * @brief Generate the next point in the N-dimensional Halton sequence
+         * @brief Evaluate the N-dimensional Halton point at a given index (pure, no state change)
          *
-         * Returns the next point in the N-dimensional Halton sequence as a vector of double values.
+         * @f[
+         *     H(n) = (\phi_{b_1}(n), \phi_{b_2}(n), \dots, \phi_{b_N}(n))
+         * @f]
          *
-         * @return vector<double> the next point in the sequence
+         * @param[in] n The sequence index.
+         * @return vector<double> the N-dimensional Halton point for index n.
          */
-        auto pop() -> vector<double> {
+        auto value_at(unsigned long n) const -> vector<double> {
             auto res = vector<double>{};
-            for (auto& vdc : this->vdcs) {
-                res.emplace_back(vdc->pop());
+            for (const auto& vdc : this->vdcs) {
+                res.emplace_back(vdc->value_at(n));
             }
             return res;
         }
-
-        /**
-         * @brief Reset the state of the HaltonN sequence generator
-         *
-         * Resets the state of the sequence generator to a specific seed value.
-         *
-         * @param[in] seed the seed value to reset the sequence generator to
-         */
-        auto reseed(unsigned long seed) -> void {
-            for (auto& vdc : this->vdcs) {
-                vdc->reseed(seed);
-            }
-        }
     };
+
+    // Compile-time contract check: HaltonN satisfies the protocol concept.
+    static_assert(SequenceGenerator<HaltonN, vector<double>>);
 
 }  // namespace ldsgen

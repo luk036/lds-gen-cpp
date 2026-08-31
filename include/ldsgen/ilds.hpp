@@ -7,6 +7,8 @@
 #include <array>
 #include <atomic>
 
+#include "lds.hpp"
+
 namespace ildsgen {
 
     using std::array;
@@ -27,10 +29,8 @@ namespace ildsgen {
      * Implementation based on pre-calculating the scale factor.
      *
      */
-    class VdCorput {
-        unsigned long _base;                ///< Base of the number system
-        std::atomic<unsigned long> _count;  ///< Current count in the sequence
-        // unsigned long _factor;              ///< Precomputed scale factor (base^scale)
+    class VdCorput : public ldsgen::GeneratorBase<VdCorput, unsigned long> {
+        unsigned long _base;  ///< Base of the number system
         std::array<unsigned long, MAX_REVERSE_BITS>
             factor_lst{};  ///< Precomputed scale factors for each digit
         static_assert(MAX_REVERSE_BITS >= sizeof(unsigned long) * 8,
@@ -44,7 +44,7 @@ namespace ildsgen {
          * @param[in] scale The number of digits (default: 10)
          */
         explicit VdCorput(unsigned long base = 2, unsigned int scale = DEFAULT_SCALE)
-            : _base{base}, _count{0} {
+            : _base{base} {
             unsigned long factor = 1;
             unsigned int n = scale < MAX_REVERSE_BITS ? scale : MAX_REVERSE_BITS;
             for (unsigned int i = 0; i < n; ++i) {
@@ -54,32 +54,19 @@ namespace ildsgen {
         }
 
         /**
-         * @brief Increments count and calculates the next value in the sequence.
+         * @brief Evaluate the integer sequence value at a given index (pure, no state change)
          *
-         * @return unsigned long
-         */
-        [[nodiscard]] auto pop() -> unsigned long {
-            this->_count.fetch_add(1, std::memory_order_relaxed);
-
-            unsigned long count = this->_count.load(std::memory_order_relaxed);
-            unsigned long reslt = 0;
-            unsigned int idx = 0;
-            while (count != 0) {
-                const unsigned long remainder = count % this->_base;
-                count /= this->_base;
-                reslt += remainder * this->factor_lst[idx];
-                ++idx;
-            }
-            return reslt;
-        }
-
-        /**
-         * @brief Resets the state of the sequence generator.
+         * @f[
+         *     \phi_b^{\mathbb{Z}}(n) = \sum_{k=0}^{\infty} a_k(n) \cdot \mathrm{factor}_k
+         * @f]
+         * where \f$\mathrm{factor}_k = b^{\mathrm{scale}-1-k}\f$ scales the reversed
+         * base-b digits into an integer.
          *
-         * @param[in] seed
+         * @param[in] n The sequence index.
+         * @return The integer Van der Corput value for index n.
          */
-        auto reseed(const unsigned long& seed) -> void {
-            this->_count.store(seed, std::memory_order_relaxed);
+        [[nodiscard]] auto value_at(unsigned long n) const -> unsigned long {
+            return ldsgen::detail::vdc_digit_sum<unsigned long>(n, this->_base, this->factor_lst);
         }
     };
 
@@ -93,7 +80,7 @@ namespace ildsgen {
      *     ...
      * @endverbatim
      */
-    class Halton {
+    class Halton : public ldsgen::GeneratorBase<Halton, array<unsigned long, 2>> {
         VdCorput vdc0;
         VdCorput vdc1;
 
@@ -113,27 +100,22 @@ namespace ildsgen {
             : vdc0(base[0], scale[0]), vdc1(base[1], scale[1]) {}
 
         /**
-         * @brief Generate the next point in the Halton sequence
+         * @brief Evaluate the integer 2D Halton point at a given index (pure, no state change)
          *
-         * Returns the next point in the Halton sequence as an array of two unsigned long values.
+         * @f[
+         *     H(n) = (\phi_{b_1}^{\mathbb{Z}}(n), \phi_{b_2}^{\mathbb{Z}}(n))
+         * @f]
          *
-         * @return array<unsigned long, 2> the next point in the sequence
+         * @param[in] n The sequence index.
+         * @return The integer 2D Halton point for index n.
          */
-        auto pop() -> array<unsigned long, 2> {  //
-            return {this->vdc0.pop(), this->vdc1.pop()};
-        }
-
-        /**
-         * @brief Reset the state of the Halton sequence generator
-         *
-         * Resets the state of the sequence generator to a specific seed value.
-         *
-         * @param[in] seed the seed value to reset the sequence generator to
-         */
-        auto reseed(const unsigned long& seed) -> void {
-            this->vdc0.reseed(seed);
-            this->vdc1.reseed(seed);
+        [[nodiscard]] auto value_at(unsigned long n) const -> array<unsigned long, 2> {
+            return {this->vdc0.value_at(n), this->vdc1.value_at(n)};
         }
     };
+
+    // Compile-time contract checks: the integer generators satisfy the protocol concept.
+    static_assert(ldsgen::SequenceGenerator<VdCorput, unsigned long>);
+    static_assert(ldsgen::SequenceGenerator<Halton, array<unsigned long, 2>>);
 
 }  // namespace ildsgen
