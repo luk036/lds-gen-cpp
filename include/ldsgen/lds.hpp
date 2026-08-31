@@ -252,7 +252,6 @@ namespace ldsgen {
      */
     template <typename Derived, typename Value> class GeneratorIterable
         : public GeneratorBase<Derived, Value> {
-
       private:
         friend Derived;
         GeneratorIterable() = default;
