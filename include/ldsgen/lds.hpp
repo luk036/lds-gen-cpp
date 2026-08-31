@@ -233,6 +233,10 @@ namespace ldsgen {
         std::atomic<unsigned long> count_{0};  ///< Current sequence index (single source of state)
 
       private:
+        friend Derived;  // for classes deriving directly from GeneratorBase (ilds.hpp, lds_n.hpp)
+        template <typename, typename> friend class GeneratorIterable;
+        GeneratorBase() = default;
+
         auto derived() -> Derived& { return static_cast<Derived&>(*this); }
     };
 
@@ -248,6 +252,11 @@ namespace ldsgen {
      */
     template <typename Derived, typename Value> class GeneratorIterable
         : public GeneratorBase<Derived, Value> {
+
+      private:
+        friend Derived;
+        GeneratorIterable() = default;
+
       public:
         /**
          * @brief Get iterator to beginning
