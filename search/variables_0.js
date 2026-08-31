@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['default_5fscale_0',['DEFAULT_SCALE',['../namespaceildsgen.html#ab40d6b84c9e85cabea683b932a99aaaa',1,'ildsgen']]]
+  ['count_5f_0',['count_',['../classldsgen_1_1GeneratorBase.html#ad3e9ee1fec21101b5a218ed2fae9db23',1,'ldsgen::GeneratorBase']]]
 ];

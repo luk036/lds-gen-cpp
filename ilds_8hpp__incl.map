@@ -1,7 +1,21 @@
 <map id="ldsgen/ilds.hpp" name="ldsgen/ilds.hpp">
-<area shape="rect" id="Node000001" title="Integer low&#45;discrepancy sequence generators with thread&#45;safe runtime (ildsgen)." alt="" coords="16,5,136,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,61,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,32,49,68,45,66,67,30"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="85,79,152,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="85,30,107,66,103,68,81,32"/>
+<area shape="rect" id="Node000001" title="Integer low&#45;discrepancy sequence generators with thread&#45;safe runtime (ildsgen)." alt="" coords="59,5,179,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,152,61,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="114,32,49,141,45,139,109,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="85,152,152,177"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="121,31,121,138,116,138,116,31"/>
+<area shape="rect" id="Node000004" href="$lds_8hpp.html" title="Low&#45;discrepancy sequence generators with thread&#45;safe runtime polymorphism (ldsgen)." alt="" coords="231,79,300,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="143,28,230,70,228,75,141,33"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="231,106,75,153,73,148,230,101"/>
+<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="243,106,156,148,154,144,241,102"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="554,152,617,177"/>
+<area shape="poly" id="edge6_Node000004_Node000005" title=" " alt="" coords="301,97,541,149,540,154,300,102"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="176,152,256,177"/>
+<area shape="poly" id="edge7_Node000004_Node000006" title=" " alt="" coords="259,106,234,142,230,139,255,103"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="281,152,351,177"/>
+<area shape="poly" id="edge8_Node000004_Node000007" title=" " alt="" coords="276,103,302,139,298,142,272,106"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="375,152,446,177"/>
+<area shape="poly" id="edge9_Node000004_Node000008" title=" " alt="" coords="290,102,376,144,374,148,288,106"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="471,152,529,177"/>
+<area shape="poly" id="edge10_Node000004_Node000009" title=" " alt="" coords="301,101,458,148,457,153,300,106"/>
 </map>

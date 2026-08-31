@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['pi_0',['PI',['../namespaceldsgen.html#a25f216e0743de1c3bf3d524647c6fdd6',1,'ldsgen']]]
+  ['neg_5fcosine_0',['NEG_COSINE',['../namespaceldsgen.html#a8f0c1a61326d9b663256f6ec8ddb843c',1,'ldsgen']]]
 ];

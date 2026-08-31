@@ -1,7 +1,9 @@
 <map id="ldsgen/lds.hpp" name="ldsgen/lds.hpp">
-<area shape="rect" id="Node000001" title="Low&#45;discrepancy sequence generators with thread&#45;safe runtime polymorphism (ldsgen)." alt="" coords="97,5,213,31"/>
-<area shape="rect" id="Node000002" href="$lds__n_8hpp.html" title="N&#45;dimensional Halton sequence generator with runtime polymorphism." alt="" coords="5,79,136,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,42,86,80,83,76,129,38"/>
-<area shape="rect" id="Node000003" href="$sphere__n_8hpp.html" title="N&#45;dimensional sphere sequence generators (Sphere3, SphereN, SphereWrapper)." alt="" coords="161,79,317,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="180,38,227,76,223,80,177,42"/>
+<area shape="rect" id="Node000001" title="Low&#45;discrepancy sequence generators with thread&#45;safe runtime polymorphism (ldsgen)." alt="" coords="157,5,273,31"/>
+<area shape="rect" id="Node000002" href="$ilds_8hpp.html" title="Integer low&#45;discrepancy sequence generators with thread&#45;safe runtime (ildsgen)." alt="" coords="5,79,125,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="180,39,91,81,89,76,177,34"/>
+<area shape="rect" id="Node000003" href="$lds__n_8hpp.html" title="N&#45;dimensional Halton sequence generator with runtime polymorphism." alt="" coords="149,79,280,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="217,44,217,79,212,79,212,44"/>
+<area shape="rect" id="Node000004" href="$sphere__n_8hpp.html" title="N&#45;dimensional sphere sequence generators (Sphere3, SphereN, SphereWrapper)." alt="" coords="305,79,461,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="255,34,356,76,354,81,253,38"/>
 </map>

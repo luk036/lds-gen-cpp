@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.5</span>
+   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.6</span>
    </div>
   </td>
  </tr>
@@ -83,6 +83,7 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#concepts">Concepts</a> &#124;
 <a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
@@ -95,17 +96,19 @@ $(function() {
 <div class="textblock"><code>#include &lt;array&gt;</code><br />
 <code>#include &lt;atomic&gt;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
+<code>#include &lt;concepts&gt;</code><br />
+<code>#include &lt;cstddef&gt;</code><br />
 <code>#include &lt;iterator&gt;</code><br />
 <code>#include &lt;limits&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for lds.hpp:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lds_8hpp__incl.svg" width="423" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lds_8hpp__incl.svg" width="623" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lds_8hpp__dep__incl.svg" width="323" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lds_8hpp__dep__incl.svg" width="467" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="lds_8hpp_source.html">Go to the source code of this file.</a></p>
@@ -114,6 +117,12 @@ This graph shows which files directly or indirectly include this file:</div>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1GeneratorIterator.html">ldsgen::GeneratorIterator&lt; Generator, Value &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forward iterator for sequence generators.  <a href="classldsgen_1_1GeneratorIterator.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1GeneratorBase.html">ldsgen::GeneratorBase&lt; Derived, Value &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">CRTP base implementing the sequence generator protocol.  <a href="classldsgen_1_1GeneratorBase.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1GeneratorIterable.html">ldsgen::GeneratorIterable&lt; Derived, Value &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">CRTP mixin adding STL iterator support to a <a class="el" href="classldsgen_1_1GeneratorBase.html" title="CRTP base implementing the sequence generator protocol.">GeneratorBase</a>.  <a href="classldsgen_1_1GeneratorIterable.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1VdCorput.html">ldsgen::VdCorput</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Van der Corput sequence generator.  <a href="classldsgen_1_1VdCorput.html#details">More...</a><br /></td></tr>
@@ -138,6 +147,14 @@ Classes</h2></td></tr>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceldsgen" id="r_namespaceldsgen"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceldsgen.html">ldsgen</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceldsgen_1_1detail" id="r_namespaceldsgen_1_1detail"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceldsgen_1_1detail.html">ldsgen::detail</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="concepts" name="concepts"></a>
+Concepts</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="conceptldsgen_1_1SequenceGenerator.html">ldsgen::SequenceGenerator</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concept for the sequence generator protocol. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -146,6 +163,10 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a21b11970235cda45bd10db99e8c41f9a" id="r_a21b11970235cda45bd10db99e8c41f9a"><td class="memTemplParams" colspan="2">template&lt;typename T , typename Table &gt; </td></tr>
+<tr class="memitem:a21b11970235cda45bd10db99e8c41f9a"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceldsgen_1_1detail.html#a21b11970235cda45bd10db99e8c41f9a">ldsgen::detail::vdc_digit_sum</a> (unsigned long n, unsigned long base, const Table &amp;weights) -&gt; T</td></tr>
+<tr class="memdesc:a21b11970235cda45bd10db99e8c41f9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Core base-b digit/weight summation shared by all van der Corput generators.  <br /></td></tr>
+<tr class="separator:a21b11970235cda45bd10db99e8c41f9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9892d8b07e1a7f82dc59be7d3896a2b" id="r_af9892d8b07e1a7f82dc59be7d3896a2b"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceldsgen.html#af9892d8b07e1a7f82dc59be7d3896a2b">ldsgen::vdc</a> (unsigned long count, unsigned long base) -&gt; double</td></tr>
 <tr class="memdesc:af9892d8b07e1a7f82dc59be7d3896a2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Van der Corput sequence.  <br /></td></tr>
 <tr class="separator:af9892d8b07e1a7f82dc59be7d3896a2b"><td class="memSeparator" colspan="2">&#160;</td></tr>

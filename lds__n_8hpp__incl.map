@@ -1,19 +1,23 @@
 <map id="ldsgen/lds_n.hpp" name="ldsgen/lds_n.hpp">
-<area shape="rect" id="Node000001" title="N&#45;dimensional Halton sequence generator with runtime polymorphism." alt="" coords="73,5,204,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,83,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,33,72,72,69,68,122,29"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="107,79,170,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="141,31,141,65,136,65,136,31"/>
-<area shape="rect" id="Node000004" href="$lds_8hpp.html" title="Low&#45;discrepancy sequence generators with thread&#45;safe runtime polymorphism (ldsgen)." alt="" coords="195,79,264,104"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="155,29,205,68,202,72,152,33"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="27,152,83,177"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="202,106,97,149,95,144,200,102"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="107,152,173,177"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="217,106,167,145,164,141,213,102"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="198,152,261,177"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="232,104,232,138,227,138,227,104"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="285,152,355,177"/>
-<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="246,102,296,141,293,145,242,106"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="380,152,439,177"/>
-<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="259,102,368,144,366,149,257,107"/>
+<area shape="rect" id="Node000001" title="N&#45;dimensional Halton sequence generator with runtime polymorphism." alt="" coords="148,5,279,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="80,79,157,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,33,147,72,144,68,197,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="182,79,245,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="216,31,216,65,211,65,211,31"/>
+<area shape="rect" id="Node000004" href="$lds_8hpp.html" title="Low&#45;discrepancy sequence generators with thread&#45;safe runtime polymorphism (ldsgen)." alt="" coords="269,79,339,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="230,29,280,68,277,72,226,33"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="5,152,61,177"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="270,104,76,154,74,149,268,99"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="85,152,152,177"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="275,107,162,149,161,145,273,102"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="177,152,239,177"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="290,106,236,146,233,141,287,102"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="264,152,344,177"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="307,104,307,138,301,138,301,104"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="369,152,439,177"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="322,102,378,142,375,146,319,106"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="463,152,534,177"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="336,102,455,145,453,150,334,107"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="559,152,617,177"/>
+<area shape="poly" id="edge10_Node000004_Node000011" title=" " alt="" coords="340,98,546,149,545,154,338,103"/>
 </map>

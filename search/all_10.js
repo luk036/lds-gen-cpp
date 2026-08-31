@@ -8,6 +8,5 @@ var searchData=
   ['the_20standalone_20target_5',['Build and run the standalone target',['../index.html#autotoc_md6',1,'']]],
   ['the_20template_20to_20your_20needs_6',['Adjust the template to your needs',['../index.html#autotoc_md5',1,'']]],
   ['to_20your_20needs_7',['Adjust the template to your needs',['../index.html#autotoc_md5',1,'']]],
-  ['tools_8',['Additional tools',['../index.html#additional-tools',1,'']]],
-  ['two_5fpi_9',['TWO_PI',['../namespaceldsgen.html#a4ee3065056614b55639ee8fa2083957d',1,'ldsgen']]]
+  ['two_5fpi_8',['TWO_PI',['../namespaceldsgen.html#a4ee3065056614b55639ee8fa2083957d',1,'ldsgen']]]
 ];

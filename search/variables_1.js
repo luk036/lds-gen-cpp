@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['f2_0',['F2',['../namespaceldsgen.html#a73ca8c92190518a98c5275962fc8bf54',1,'ldsgen']]]
+  ['default_5fscale_0',['DEFAULT_SCALE',['../namespaceildsgen.html#ab40d6b84c9e85cabea683b932a99aaaa',1,'ildsgen']]]
 ];

@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.5</span>
+   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.6</span>
    </div>
   </td>
  </tr>
@@ -91,37 +91,59 @@ $(function() {
  <a href="classldsgen_1_1Disk.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="lds_8hpp_source.html">lds.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for ldsgen::Disk:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classldsgen_1_1Disk__inherit__graph.svg" width="252" height="212"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for ldsgen::Disk:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classldsgen_1_1Disk__coll__graph.svg" width="252" height="212"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a095ea334bf7f090b4a44ef9be6ea543f" id="r_a095ea334bf7f090b4a44ef9be6ea543f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1Disk.html#a095ea334bf7f090b4a44ef9be6ea543f">Disk</a> (const unsigned long base0, const unsigned long base1)</td></tr>
 <tr class="memdesc:a095ea334bf7f090b4a44ef9be6ea543f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="classldsgen_1_1Disk.html" title="Disk sequence generator.">Disk</a> object.  <br /></td></tr>
 <tr class="separator:a095ea334bf7f090b4a44ef9be6ea543f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a866cefd5f69441d0108f55f762e9d60a" id="r_a866cefd5f69441d0108f55f762e9d60a"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1Disk.html#a866cefd5f69441d0108f55f762e9d60a">pop</a> () -&gt; std::array&lt; double, 2 &gt;</td></tr>
-<tr class="memdesc:a866cefd5f69441d0108f55f762e9d60a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate the next point in the unit disk.  <br /></td></tr>
-<tr class="separator:a866cefd5f69441d0108f55f762e9d60a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ae6840c32c6fbd7c7f041006a21895f" id="r_a8ae6840c32c6fbd7c7f041006a21895f"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1Disk.html#a8ae6840c32c6fbd7c7f041006a21895f">peek</a> () -&gt; std::array&lt; double, 2 &gt;</td></tr>
-<tr class="memdesc:a8ae6840c32c6fbd7c7f041006a21895f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek at the next value without advancing state.  <br /></td></tr>
-<tr class="separator:a8ae6840c32c6fbd7c7f041006a21895f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a222ab7ca3bde5f63f94ffbb13398a578" id="r_a222ab7ca3bde5f63f94ffbb13398a578"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1Disk.html#a222ab7ca3bde5f63f94ffbb13398a578">skip</a> (unsigned int n) -&gt; void</td></tr>
-<tr class="memdesc:a222ab7ca3bde5f63f94ffbb13398a578"><td class="mdescLeft">&#160;</td><td class="mdescRight">Skip n values in the sequence.  <br /></td></tr>
-<tr class="separator:a222ab7ca3bde5f63f94ffbb13398a578"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9f21ea3f30fd2f53222e91874bc6eec" id="r_ab9f21ea3f30fd2f53222e91874bc6eec"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1Disk.html#ab9f21ea3f30fd2f53222e91874bc6eec">reseed</a> (const unsigned long &amp;seed) -&gt; void</td></tr>
-<tr class="memdesc:ab9f21ea3f30fd2f53222e91874bc6eec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset the state of the <a class="el" href="classldsgen_1_1Disk.html" title="Disk sequence generator.">Disk</a> sequence generator.  <br /></td></tr>
-<tr class="separator:ab9f21ea3f30fd2f53222e91874bc6eec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad40b8a8706ce10bcc9cd197bbd7598c2" id="r_ad40b8a8706ce10bcc9cd197bbd7598c2"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1Disk.html#ad40b8a8706ce10bcc9cd197bbd7598c2">get_index</a> () const -&gt; unsigned long</td></tr>
-<tr class="memdesc:ad40b8a8706ce10bcc9cd197bbd7598c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get current index.  <br /></td></tr>
-<tr class="separator:ad40b8a8706ce10bcc9cd197bbd7598c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d9f5d4018244631df3211ddeaf426db" id="r_a8d9f5d4018244631df3211ddeaf426db"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1Disk.html#a8d9f5d4018244631df3211ddeaf426db">begin</a> () -&gt; <a class="el" href="classldsgen_1_1GeneratorIterator.html">GeneratorIterator</a>&lt; <a class="el" href="classldsgen_1_1Disk.html">Disk</a>, std::array&lt; double, 2 &gt; &gt;</td></tr>
-<tr class="memdesc:a8d9f5d4018244631df3211ddeaf426db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get iterator to beginning.  <br /></td></tr>
-<tr class="separator:a8d9f5d4018244631df3211ddeaf426db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37ce82d6885f92d25e3e8bdfbc11496d" id="r_a37ce82d6885f92d25e3e8bdfbc11496d"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1Disk.html#a37ce82d6885f92d25e3e8bdfbc11496d">end</a> () const -&gt; <a class="el" href="classldsgen_1_1GeneratorIterator.html">GeneratorIterator</a>&lt; <a class="el" href="classldsgen_1_1Disk.html">Disk</a>, std::array&lt; double, 2 &gt; &gt;</td></tr>
-<tr class="memdesc:a37ce82d6885f92d25e3e8bdfbc11496d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get iterator to end (infinite sequence)  <br /></td></tr>
-<tr class="separator:a37ce82d6885f92d25e3e8bdfbc11496d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a314dcb1c3f3afae374268e9a52716d23" id="r_a314dcb1c3f3afae374268e9a52716d23"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1Disk.html#a314dcb1c3f3afae374268e9a52716d23">value_at</a> (unsigned long n) const -&gt; std::array&lt; double, 2 &gt;</td></tr>
+<tr class="memdesc:a314dcb1c3f3afae374268e9a52716d23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluate the point in the unit disk at a given index (pure, no state change)  <br /></td></tr>
+<tr class="separator:a314dcb1c3f3afae374268e9a52716d23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classldsgen_1_1GeneratorIterable"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classldsgen_1_1GeneratorIterable')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classldsgen_1_1GeneratorIterable.html">ldsgen::GeneratorIterable&lt; Disk, std::array&lt; double, 2 &gt; &gt;</a></td></tr>
+<tr class="memitem:aeb9d6546a97154ac23e56ceb62adce48 inherit pub_methods_classldsgen_1_1GeneratorIterable" id="r_aeb9d6546a97154ac23e56ceb62adce48"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1GeneratorIterable.html#aeb9d6546a97154ac23e56ceb62adce48">begin</a> () -&gt; <a class="el" href="classldsgen_1_1GeneratorIterator.html">GeneratorIterator</a>&lt; <a class="el" href="classldsgen_1_1Disk.html">Disk</a>, std::array&lt; double, 2 &gt; &gt;</td></tr>
+<tr class="memdesc:aeb9d6546a97154ac23e56ceb62adce48 inherit pub_methods_classldsgen_1_1GeneratorIterable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get iterator to beginning.  <br /></td></tr>
+<tr class="separator:aeb9d6546a97154ac23e56ceb62adce48 inherit pub_methods_classldsgen_1_1GeneratorIterable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a066fd6cc2beea8cda3821effec9de262 inherit pub_methods_classldsgen_1_1GeneratorIterable" id="r_a066fd6cc2beea8cda3821effec9de262"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1GeneratorIterable.html#a066fd6cc2beea8cda3821effec9de262">end</a> () const -&gt; <a class="el" href="classldsgen_1_1GeneratorIterator.html">GeneratorIterator</a>&lt; <a class="el" href="classldsgen_1_1Disk.html">Disk</a>, std::array&lt; double, 2 &gt; &gt;</td></tr>
+<tr class="memdesc:a066fd6cc2beea8cda3821effec9de262 inherit pub_methods_classldsgen_1_1GeneratorIterable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get iterator to end (infinite sequence)  <br /></td></tr>
+<tr class="separator:a066fd6cc2beea8cda3821effec9de262 inherit pub_methods_classldsgen_1_1GeneratorIterable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classldsgen_1_1GeneratorBase"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classldsgen_1_1GeneratorBase')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classldsgen_1_1GeneratorBase.html">ldsgen::GeneratorBase&lt; Derived, Value &gt;</a></td></tr>
+<tr class="memitem:a452de31ac519c4adb466308b33acabd4 inherit pub_methods_classldsgen_1_1GeneratorBase" id="r_a452de31ac519c4adb466308b33acabd4"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1GeneratorBase.html#a452de31ac519c4adb466308b33acabd4">pop</a> () -&gt; Value</td></tr>
+<tr class="memdesc:a452de31ac519c4adb466308b33acabd4 inherit pub_methods_classldsgen_1_1GeneratorBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate the next value in the sequence (advances state).  <br /></td></tr>
+<tr class="separator:a452de31ac519c4adb466308b33acabd4 inherit pub_methods_classldsgen_1_1GeneratorBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee5e2ea967663e054aef046feedc5dc4 inherit pub_methods_classldsgen_1_1GeneratorBase" id="r_aee5e2ea967663e054aef046feedc5dc4"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1GeneratorBase.html#aee5e2ea967663e054aef046feedc5dc4">peek</a> () -&gt; Value</td></tr>
+<tr class="memdesc:aee5e2ea967663e054aef046feedc5dc4 inherit pub_methods_classldsgen_1_1GeneratorBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek at the next value without advancing state.  <br /></td></tr>
+<tr class="separator:aee5e2ea967663e054aef046feedc5dc4 inherit pub_methods_classldsgen_1_1GeneratorBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8d52bd8cc1c89725ef1683460d338e4 inherit pub_methods_classldsgen_1_1GeneratorBase" id="r_aa8d52bd8cc1c89725ef1683460d338e4"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1GeneratorBase.html#aa8d52bd8cc1c89725ef1683460d338e4">skip</a> (unsigned int n) -&gt; void</td></tr>
+<tr class="memdesc:aa8d52bd8cc1c89725ef1683460d338e4 inherit pub_methods_classldsgen_1_1GeneratorBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Skip n values in the sequence.  <br /></td></tr>
+<tr class="separator:aa8d52bd8cc1c89725ef1683460d338e4 inherit pub_methods_classldsgen_1_1GeneratorBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2cecc11a456d04aa83b083ce7143931 inherit pub_methods_classldsgen_1_1GeneratorBase" id="r_ac2cecc11a456d04aa83b083ce7143931"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1GeneratorBase.html#ac2cecc11a456d04aa83b083ce7143931">reseed</a> (const unsigned long &amp;seed) -&gt; void</td></tr>
+<tr class="memdesc:ac2cecc11a456d04aa83b083ce7143931 inherit pub_methods_classldsgen_1_1GeneratorBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset the generator to a specific seed value.  <br /></td></tr>
+<tr class="separator:ac2cecc11a456d04aa83b083ce7143931 inherit pub_methods_classldsgen_1_1GeneratorBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25b7a69c13cf960758cb7b02891ed43f inherit pub_methods_classldsgen_1_1GeneratorBase" id="r_a25b7a69c13cf960758cb7b02891ed43f"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1GeneratorBase.html#a25b7a69c13cf960758cb7b02891ed43f">get_index</a> () const -&gt; unsigned long</td></tr>
+<tr class="memdesc:a25b7a69c13cf960758cb7b02891ed43f inherit pub_methods_classldsgen_1_1GeneratorBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get current index in the sequence.  <br /></td></tr>
+<tr class="separator:a25b7a69c13cf960758cb7b02891ed43f inherit pub_methods_classldsgen_1_1GeneratorBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pro_attribs_classldsgen_1_1GeneratorBase"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classldsgen_1_1GeneratorBase')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classldsgen_1_1GeneratorBase.html">ldsgen::GeneratorBase&lt; Derived, Value &gt;</a></td></tr>
+<tr class="memitem:ad3e9ee1fec21101b5a218ed2fae9db23 inherit pro_attribs_classldsgen_1_1GeneratorBase" id="r_ad3e9ee1fec21101b5a218ed2fae9db23"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; unsigned long &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1GeneratorBase.html#ad3e9ee1fec21101b5a218ed2fae9db23">count_</a> {0}</td></tr>
+<tr class="memdesc:ad3e9ee1fec21101b5a218ed2fae9db23 inherit pro_attribs_classldsgen_1_1GeneratorBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current sequence index (single source of state)  <br /></td></tr>
+<tr class="separator:ad3e9ee1fec21101b5a218ed2fae9db23 inherit pro_attribs_classldsgen_1_1GeneratorBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classldsgen_1_1Disk.html" title="Disk sequence generator.">Disk</a> sequence generator. </p>
-<p>The <code><a class="el" href="classldsgen_1_1Disk.html" title="Disk sequence generator.">Disk</a></code> class is a sequence generator that generates points in a 2-dimensional space using the <a class="el" href="classldsgen_1_1Disk.html" title="Disk sequence generator.">Disk</a> sequence. The <a class="el" href="classldsgen_1_1Disk.html" title="Disk sequence generator.">Disk</a> sequence is a low-discrepancy sequence that is commonly used in quasi-Monte Carlo methods. It is generated by iterating over two different bases and calculating the fractional parts of the numbers in those bases. The <code><a class="el" href="classldsgen_1_1Disk.html" title="Disk sequence generator.">Disk</a></code> class keeps track of the current count and bases, and provides a <code><a class="el" href="classldsgen_1_1Disk.html#a866cefd5f69441d0108f55f762e9d60a" title="Generate the next point in the unit disk.">pop()</a></code> method that returns the next point in the sequence as a <code>std::array&lt;double, 2&gt;</code>.</p>
+<p>The <code><a class="el" href="classldsgen_1_1Disk.html" title="Disk sequence generator.">Disk</a></code> class is a sequence generator that generates points in a 2-dimensional space using the <a class="el" href="classldsgen_1_1Disk.html" title="Disk sequence generator.">Disk</a> sequence. The <a class="el" href="classldsgen_1_1Disk.html" title="Disk sequence generator.">Disk</a> sequence is a low-discrepancy sequence that is commonly used in quasi-Monte Carlo methods. It is generated by iterating over two different bases and calculating the fractional parts of the numbers in those bases. The <code><a class="el" href="classldsgen_1_1Disk.html" title="Disk sequence generator.">Disk</a></code> class keeps track of the current count and bases, and provides a <code><a class="el" href="classldsgen_1_1GeneratorBase.html#a452de31ac519c4adb466308b33acabd4" title="Generate the next value in the sequence (advances state).">pop()</a></code> method that returns the next point in the sequence as a <code>std::array&lt;double, 2&gt;</code>.</p>
 <pre class="fragment">*     Unit Disk:
 *         *****
 *      ***     ***
@@ -182,8 +204,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a8d9f5d4018244631df3211ddeaf426db" name="a8d9f5d4018244631df3211ddeaf426db"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8d9f5d4018244631df3211ddeaf426db">&#9670;&#160;</a></span>begin()</h2>
+<a id="a314dcb1c3f3afae374268e9a52716d23" name="a314dcb1c3f3afae374268e9a52716d23"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a314dcb1c3f3afae374268e9a52716d23">&#9670;&#160;</a></span>value_at()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -192,188 +214,11 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">auto ldsgen::Disk::begin </td>
+          <td class="memname">auto ldsgen::Disk::value_at </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> -&gt; <a class="el" href="classldsgen_1_1GeneratorIterator.html">GeneratorIterator</a>&lt;<a class="el" href="classldsgen_1_1Disk.html">Disk</a>, std::array&lt;double, 2&gt;&gt; </td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Get iterator to beginning. </p>
-<dl class="section return"><dt>Returns</dt><dd>GeneratorIterator&lt;Disk, std::array&lt;double, 2&gt;&gt; </dd></dl>
-
-</div>
-</div>
-<a id="a37ce82d6885f92d25e3e8bdfbc11496d" name="a37ce82d6885f92d25e3e8bdfbc11496d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a37ce82d6885f92d25e3e8bdfbc11496d">&#9670;&#160;</a></span>end()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto ldsgen::Disk::end </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const -&gt; <a class="el" href="classldsgen_1_1GeneratorIterator.html">GeneratorIterator</a>&lt;<a class="el" href="classldsgen_1_1Disk.html">Disk</a>, std::array&lt;double, 2&gt;&gt; </td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Get iterator to end (infinite sequence) </p>
-<dl class="section return"><dt>Returns</dt><dd>GeneratorIterator&lt;Disk, std::array&lt;double, 2&gt;&gt; </dd></dl>
-
-</div>
-</div>
-<a id="ad40b8a8706ce10bcc9cd197bbd7598c2" name="ad40b8a8706ce10bcc9cd197bbd7598c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad40b8a8706ce10bcc9cd197bbd7598c2">&#9670;&#160;</a></span>get_index()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto ldsgen::Disk::get_index </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const -&gt; unsigned long </td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Get current index. </p>
-<dl class="section return"><dt>Returns</dt><dd>unsigned long current index in sequence </dd></dl>
-
-</div>
-</div>
-<a id="a8ae6840c32c6fbd7c7f041006a21895f" name="a8ae6840c32c6fbd7c7f041006a21895f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ae6840c32c6fbd7c7f041006a21895f">&#9670;&#160;</a></span>peek()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto ldsgen::Disk::peek </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> -&gt; std::array&lt;double, 2&gt; </td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Peek at the next value without advancing state. </p>
-<dl class="section return"><dt>Returns</dt><dd>std::array&lt;double, 2&gt; next point in the disk </dd></dl>
-
-</div>
-</div>
-<a id="a866cefd5f69441d0108f55f762e9d60a" name="a866cefd5f69441d0108f55f762e9d60a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a866cefd5f69441d0108f55f762e9d60a">&#9670;&#160;</a></span>pop()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto ldsgen::Disk::pop </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> -&gt; std::array&lt;double, 2&gt; </td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Generate the next point in the unit disk. </p>
-<p>Returns the next point in the unit disk as an array of two double values.</p>
-<p>\( \theta = 2\pi \cdot \phi_{b_0}(n), \; r = \sqrt{\phi_{b_1}(n)} \) \( P(n) = \bigl(r\cos\theta,\; r\sin\theta\bigr) \)</p>
-<dl class="section return"><dt>Returns</dt><dd>std::array&lt;double, 2&gt; the next point in the unit disk </dd></dl>
-
-</div>
-</div>
-<a id="ab9f21ea3f30fd2f53222e91874bc6eec" name="ab9f21ea3f30fd2f53222e91874bc6eec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab9f21ea3f30fd2f53222e91874bc6eec">&#9670;&#160;</a></span>reseed()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto ldsgen::Disk::reseed </td>
-          <td>(</td>
-          <td class="paramtype">const unsigned long &amp;&#160;</td>
-          <td class="paramname"><em>seed</em></td><td>)</td>
-          <td> -&gt; void </td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Reset the state of the <a class="el" href="classldsgen_1_1Disk.html" title="Disk sequence generator.">Disk</a> sequence generator. </p>
-<p>Resets the state of the sequence generator to a specific seed value.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">seed</td><td>the seed value to reset the sequence generator to </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a222ab7ca3bde5f63f94ffbb13398a578" name="a222ab7ca3bde5f63f94ffbb13398a578"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a222ab7ca3bde5f63f94ffbb13398a578">&#9670;&#160;</a></span>skip()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto ldsgen::Disk::skip </td>
-          <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramtype">unsigned long&#160;</td>
           <td class="paramname"><em>n</em></td><td>)</td>
-          <td> -&gt; void </td>
+          <td> const -&gt; std::array&lt;double, 2&gt; </td>
         </tr>
       </table>
   </td>
@@ -383,13 +228,15 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Skip n values in the sequence. </p>
+<p>Evaluate the point in the unit disk at a given index (pure, no state change) </p>
+<p>\( \theta = 2\pi \cdot \phi_{b_0}(n), \; r = \sqrt{\phi_{b_1}(n)} \) \( P(n) = \bigl(r\cos\theta,\; r\sin\theta\bigr) \)</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">n</td><td>number of values to skip </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">n</td><td>The sequence index. </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>The point in the unit disk for index n. </dd></dl>
 
 </div>
 </div>

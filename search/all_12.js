@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['value_5ftype_0',['value_type',['../classldsgen_1_1GeneratorIterator.html#a631d42c18afbb3b3cc8da63c9424adb2',1,'ldsgen::GeneratorIterator']]],
-  ['vdc_1',['vdc',['../namespaceldsgen.html#af9892d8b07e1a7f82dc59be7d3896a2b',1,'ldsgen']]],
-  ['vdcorput_2',['vdcorput',['../classildsgen_1_1VdCorput.html',1,'ildsgen::VdCorput'],['../classldsgen_1_1VdCorput.html',1,'ldsgen::VdCorput'],['../classildsgen_1_1VdCorput.html#aeb5890d424854ba686c12433f215ab69',1,'ildsgen::VdCorput::VdCorput()'],['../classldsgen_1_1VdCorput.html#add0abdf64fc1d71da7b83b1dd2c58ce3',1,'ldsgen::VdCorput::VdCorput()']]]
+  ['value_5fat_0',['value_at',['../classildsgen_1_1VdCorput.html#a7005237e65760518e9e8849e25ab58ab',1,'ildsgen::VdCorput::value_at()'],['../classildsgen_1_1Halton.html#a9d0f0f0965ccbae9636f8c129ecfc169',1,'ildsgen::Halton::value_at()'],['../classldsgen_1_1VdCorput.html#a8b713241df934733ea41f5348beb85d6',1,'ldsgen::VdCorput::value_at()'],['../classldsgen_1_1Halton.html#aa272c85bacc6bfd1427f5c1678f7fcf8',1,'ldsgen::Halton::value_at()'],['../classldsgen_1_1Circle.html#ab8133460f5e23a2f857eae2c543ed44e',1,'ldsgen::Circle::value_at()'],['../classldsgen_1_1Disk.html#a314dcb1c3f3afae374268e9a52716d23',1,'ldsgen::Disk::value_at()'],['../classldsgen_1_1Sphere.html#ad548f1e381939811261d3b30e5550a17',1,'ldsgen::Sphere::value_at()'],['../classldsgen_1_1Sphere3Hopf.html#a6a5823a1e3d81c109171400f74f1a2d4',1,'ldsgen::Sphere3Hopf::value_at()'],['../classldsgen_1_1HaltonN.html#a685205d66702784b7f2c97c1248d4374',1,'ldsgen::HaltonN::value_at()']]],
+  ['value_5ftype_1',['value_type',['../classldsgen_1_1GeneratorIterator.html#a631d42c18afbb3b3cc8da63c9424adb2',1,'ldsgen::GeneratorIterator']]],
+  ['vdc_2',['vdc',['../namespaceldsgen.html#af9892d8b07e1a7f82dc59be7d3896a2b',1,'ldsgen']]],
+  ['vdc_5fdigit_5fsum_3',['vdc_digit_sum',['../namespaceldsgen_1_1detail.html#a21b11970235cda45bd10db99e8c41f9a',1,'ldsgen::detail']]],
+  ['vdcorput_4',['vdcorput',['../classildsgen_1_1VdCorput.html',1,'ildsgen::VdCorput'],['../classldsgen_1_1VdCorput.html',1,'ldsgen::VdCorput'],['../classildsgen_1_1VdCorput.html#aeb5890d424854ba686c12433f215ab69',1,'ildsgen::VdCorput::VdCorput()'],['../classldsgen_1_1VdCorput.html#add0abdf64fc1d71da7b83b1dd2c58ce3',1,'ldsgen::VdCorput::VdCorput()']]]
 ];

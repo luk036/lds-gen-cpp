@@ -1,0 +1,5 @@
+<map id="ildsgen::Halton" name="ildsgen::Halton">
+<area shape="rect" id="Node000001" title="Halton sequence generator." alt="" coords="43,108,163,133"/>
+<area shape="rect" id="Node000002" href="$classldsgen_1_1GeneratorBase.html" title=" " alt="" coords="5,5,201,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,74,106,108,101,108,101,74"/>
+</map>
