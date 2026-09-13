@@ -34,4 +34,34 @@ int main() {
             ankerl::nanobench::doNotOptimizeAway(r);
         });
     }
+
+    {
+        ankerl::nanobench::Bench bench;
+        bench.title("Sphere-N batch generation (C++)")
+            .unit("batch")
+            .warmup(10)
+            .epochs(30)
+            .minEpochIterations(100);
+
+        ldsgen::Sphere3 s3(std::vector<unsigned long>{2, 3, 5});
+        s3.reseed(0);
+        bench.run("Sphere3 pop_batch(1024)", [&] {
+            auto r = s3.pop_batch(1024);
+            ankerl::nanobench::doNotOptimizeAway(r);
+        });
+
+        ldsgen::SphereN sn4(std::vector<unsigned long>{2, 3, 5, 7});
+        sn4.reseed(0);
+        bench.run("SphereN [2,3,5,7] pop_batch(1024)", [&] {
+            auto r = sn4.pop_batch(1024);
+            ankerl::nanobench::doNotOptimizeAway(r);
+        });
+
+        ldsgen::SphereN sn5(std::vector<unsigned long>{2, 3, 5, 7, 11});
+        sn5.reseed(0);
+        bench.run("SphereN [2,3,5,7,11] pop_batch(1024)", [&] {
+            auto r = sn5.pop_batch(1024);
+            ankerl::nanobench::doNotOptimizeAway(r);
+        });
+    }
 }
