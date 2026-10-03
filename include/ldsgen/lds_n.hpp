@@ -31,7 +31,7 @@ namespace ldsgen {
      *     ...
      * @endverbatim
      */
-    class HaltonN : public GeneratorBase<HaltonN, vector<double>> {
+    class HaltonN : public GeneratorIterable<HaltonN, vector<double>> {
       private:
         vector<std::unique_ptr<VdCorput>> vdcs;
 
@@ -70,5 +70,8 @@ namespace ldsgen {
 
     // Compile-time contract check: HaltonN satisfies the protocol concept.
     static_assert(SequenceGenerator<HaltonN, vector<double>>);
+
+    // It also supports the same read-only traversal as the other generators.
+    static_assert(IndexableGenerator<HaltonN, vector<double>>);
 
 }  // namespace ldsgen

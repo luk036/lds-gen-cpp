@@ -57,3 +57,21 @@ TEST_CASE("Halton_i different bases and scales") {
     CHECK_EQ(res[0], 243);  // 3^5 = 243
     CHECK_EQ(res[1], 125);  // 5^3 = 125
 }
+
+TEST_CASE("ilds VdCorput iterator") {
+    auto vgen = ildsgen::VdCorput(2, 10);
+    auto it = vgen.begin();
+    CHECK_EQ(*it, 512);
+    ++it;
+    CHECK_EQ(*it, 256);
+}
+
+TEST_CASE("ilds Halton iterator") {
+    const std::array<unsigned long, 2> base = {2, 3};
+    const std::array<unsigned int, 2> scale = {10, 10};
+    auto hgen = ildsgen::Halton(base, scale);
+    auto it = hgen.begin();
+    auto v = *it;
+    CHECK_EQ(v[0], 512);
+    CHECK_EQ(v[1], 19683);
+}
