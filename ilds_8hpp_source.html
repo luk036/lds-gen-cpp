@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.6</span>
+   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.7</span>
    </div>
   </td>
  </tr>
@@ -105,7 +105,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="namespaceildsgen.html#abc357a0aebeebee2afe65436292c0604">   24</a></span>    <span class="keyword">constexpr</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="namespaceildsgen.html#abc357a0aebeebee2afe65436292c0604">MAX_REVERSE_BITS</a> = 64;</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="foldopen" id="foldopen00032" data-start="{" data-end="};">
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classildsgen_1_1VdCorput.html">   32</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classildsgen_1_1VdCorput.html">VdCorput</a> : <span class="keyword">public</span> <a class="code hl_class" href="classldsgen_1_1GeneratorBase.html">ldsgen::GeneratorBase</a>&lt;VdCorput, unsigned long&gt; {</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classildsgen_1_1VdCorput.html">   32</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classildsgen_1_1VdCorput.html">VdCorput</a> : <span class="keyword">public</span> <a class="code hl_class" href="classldsgen_1_1GeneratorIterable.html">ldsgen::GeneratorIterable</a>&lt;VdCorput, unsigned long&gt; {</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> _base;  </div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        std::array&lt;unsigned long, MAX_REVERSE_BITS&gt;</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>            factor_lst{};  </div>
@@ -134,7 +134,7 @@ $(document).ready(function() { init_codefold(0); });
 </div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
 <div class="foldopen" id="foldopen00083" data-start="{" data-end="};">
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="classildsgen_1_1Halton.html">   83</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classildsgen_1_1Halton.html">Halton</a> : <span class="keyword">public</span> <a class="code hl_class" href="classldsgen_1_1GeneratorBase.html">ldsgen::GeneratorBase</a>&lt;Halton, array&lt;unsigned long, 2&gt;&gt; {</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="classildsgen_1_1Halton.html">   83</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classildsgen_1_1Halton.html">Halton</a> : <span class="keyword">public</span> <a class="code hl_class" href="classldsgen_1_1GeneratorIterable.html">ldsgen::GeneratorIterable</a>&lt;Halton, array&lt;unsigned long, 2&gt;&gt; {</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        <a class="code hl_class" href="classildsgen_1_1VdCorput.html">VdCorput</a> vdc0;</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        <a class="code hl_class" href="classildsgen_1_1VdCorput.html">VdCorput</a> vdc1;</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
@@ -157,7 +157,11 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    <span class="keyword">static_assert</span>(<a class="code hl_concept" href="conceptldsgen_1_1SequenceGenerator.html">ldsgen::SequenceGenerator&lt;VdCorput, unsigned long&gt;</a>);</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <span class="keyword">static_assert</span>(<a class="code hl_concept" href="conceptldsgen_1_1SequenceGenerator.html">ldsgen::SequenceGenerator&lt;Halton, array&lt;unsigned long, 2&gt;</a>&gt;);</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>}  <span class="comment">// namespace ildsgen</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="comment">// They also share the read-only traversal support of the floating-point family.</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keyword">static_assert</span>(<a class="code hl_concept" href="conceptldsgen_1_1IndexableGenerator.html">ldsgen::IndexableGenerator&lt;VdCorput, unsigned long&gt;</a>);</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keyword">static_assert</span>(<a class="code hl_concept" href="conceptldsgen_1_1IndexableGenerator.html">ldsgen::IndexableGenerator&lt;Halton, array&lt;unsigned long, 2&gt;</a>&gt;);</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>}  <span class="comment">// namespace ildsgen</span></div>
 </div>
 <div class="ttc" id="aclassildsgen_1_1Halton_html"><div class="ttname"><a href="classildsgen_1_1Halton.html">ildsgen::Halton</a></div><div class="ttdoc">Halton sequence generator.</div><div class="ttdef"><b>Definition</b> ilds.hpp:83</div></div>
 <div class="ttc" id="aclassildsgen_1_1Halton_html_a9d0f0f0965ccbae9636f8c129ecfc169"><div class="ttname"><a href="classildsgen_1_1Halton.html#a9d0f0f0965ccbae9636f8c129ecfc169">ildsgen::Halton::value_at</a></div><div class="ttdeci">auto value_at(unsigned long n) const -&gt; array&lt; unsigned long, 2 &gt;</div><div class="ttdoc">Evaluate the integer 2D Halton point at a given index (pure, no state change)</div><div class="ttdef"><b>Definition</b> ilds.hpp:112</div></div>
@@ -165,8 +169,9 @@ $(document).ready(function() { init_codefold(0); });
 <div class="ttc" id="aclassildsgen_1_1VdCorput_html"><div class="ttname"><a href="classildsgen_1_1VdCorput.html">ildsgen::VdCorput</a></div><div class="ttdoc">Van der Corput sequence generator.</div><div class="ttdef"><b>Definition</b> ilds.hpp:32</div></div>
 <div class="ttc" id="aclassildsgen_1_1VdCorput_html_a7005237e65760518e9e8849e25ab58ab"><div class="ttname"><a href="classildsgen_1_1VdCorput.html#a7005237e65760518e9e8849e25ab58ab">ildsgen::VdCorput::value_at</a></div><div class="ttdeci">auto value_at(unsigned long n) const -&gt; unsigned long</div><div class="ttdoc">Evaluate the integer sequence value at a given index (pure, no state change)</div><div class="ttdef"><b>Definition</b> ilds.hpp:68</div></div>
 <div class="ttc" id="aclassildsgen_1_1VdCorput_html_aeb5890d424854ba686c12433f215ab69"><div class="ttname"><a href="classildsgen_1_1VdCorput.html#aeb5890d424854ba686c12433f215ab69">ildsgen::VdCorput::VdCorput</a></div><div class="ttdeci">VdCorput(unsigned long base=2, unsigned int scale=DEFAULT_SCALE)</div><div class="ttdoc">Construct a new VdCorput object.</div><div class="ttdef"><b>Definition</b> ilds.hpp:46</div></div>
-<div class="ttc" id="aclassldsgen_1_1GeneratorBase_html"><div class="ttname"><a href="classldsgen_1_1GeneratorBase.html">ldsgen::GeneratorBase</a></div><div class="ttdoc">CRTP base implementing the sequence generator protocol.</div><div class="ttdef"><b>Definition</b> lds.hpp:182</div></div>
-<div class="ttc" id="aconceptldsgen_1_1SequenceGenerator_html"><div class="ttname"><a href="conceptldsgen_1_1SequenceGenerator.html">ldsgen::SequenceGenerator</a></div><div class="ttdoc">Concept for the sequence generator protocol.</div><div class="ttdef"><b>Definition</b> lds.hpp:155</div></div>
+<div class="ttc" id="aclassldsgen_1_1GeneratorIterable_html"><div class="ttname"><a href="classldsgen_1_1GeneratorIterable.html">ldsgen::GeneratorIterable</a></div><div class="ttdoc">CRTP mixin adding STL iterator support to a GeneratorBase.</div><div class="ttdef"><b>Definition</b> lds.hpp:276</div></div>
+<div class="ttc" id="aconceptldsgen_1_1IndexableGenerator_html"><div class="ttname"><a href="conceptldsgen_1_1IndexableGenerator.html">ldsgen::IndexableGenerator</a></div><div class="ttdoc">Concept refinement for generators exposing a pure index-to-value map.</div><div class="ttdef"><b>Definition</b> lds.hpp:181</div></div>
+<div class="ttc" id="aconceptldsgen_1_1SequenceGenerator_html"><div class="ttname"><a href="conceptldsgen_1_1SequenceGenerator.html">ldsgen::SequenceGenerator</a></div><div class="ttdoc">Concept for the sequence generator protocol.</div><div class="ttdef"><b>Definition</b> lds.hpp:161</div></div>
 <div class="ttc" id="alds_8hpp_html"><div class="ttname"><a href="lds_8hpp.html">lds.hpp</a></div><div class="ttdoc">Low-discrepancy sequence generators with thread-safe runtime polymorphism (ldsgen).</div></div>
 <div class="ttc" id="anamespaceildsgen_html"><div class="ttname"><a href="namespaceildsgen.html">ildsgen</a></div><div class="ttdef"><b>Definition</b> ilds.hpp:12</div></div>
 <div class="ttc" id="anamespaceildsgen_html_ab40d6b84c9e85cabea683b932a99aaaa"><div class="ttname"><a href="namespaceildsgen.html#ab40d6b84c9e85cabea683b932a99aaaa">ildsgen::DEFAULT_SCALE</a></div><div class="ttdeci">constexpr unsigned int DEFAULT_SCALE</div><div class="ttdoc">Default number of digits for the Van der Corput sequence.</div><div class="ttdef"><b>Definition</b> ilds.hpp:23</div></div>

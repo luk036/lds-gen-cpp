@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.6</span>
+   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.7</span>
    </div>
   </td>
  </tr>
@@ -115,6 +115,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab548bed42f2f5316fc48839440ee17f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a341c02b91bf1cae38eff489b818ae286" id="r_a341c02b91bf1cae38eff489b818ae286"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1SphereGen.html#a341c02b91bf1cae38eff489b818ae286">reseed</a> (unsigned long seed)=0</td></tr>
 <tr class="separator:a341c02b91bf1cae38eff489b818ae286"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f44e46d0cd02ec12da220a746247e15" id="r_a1f44e46d0cd02ec12da220a746247e15"><td class="memItemLeft" align="right" valign="top">virtual auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1SphereGen.html#a1f44e46d0cd02ec12da220a746247e15">dim</a> () const -&gt; std::size_t=0</td></tr>
+<tr class="memdesc:a1f44e46d0cd02ec12da220a746247e15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of coordinates in each generated point.  <br /></td></tr>
+<tr class="separator:a1f44e46d0cd02ec12da220a746247e15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a500edfc17dc309b30db74f638a12d9f4" id="r_a500edfc17dc309b30db74f638a12d9f4"><td class="memItemLeft" align="right" valign="top">virtual auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1SphereGen.html#a500edfc17dc309b30db74f638a12d9f4">pop_batch</a> (std::size_t n, std::span&lt; double &gt; out) -&gt; void=0</td></tr>
+<tr class="memdesc:a500edfc17dc309b30db74f638a12d9f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate n points into a row-major buffer of size &gt;= n * <a class="el" href="classldsgen_1_1SphereGen.html#a1f44e46d0cd02ec12da220a746247e15" title="Number of coordinates in each generated point.">dim()</a>.  <br /></td></tr>
+<tr class="separator:a500edfc17dc309b30db74f638a12d9f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1787346853db8fc1d0a7fab1d7cd0fc2" id="r_a1787346853db8fc1d0a7fab1d7cd0fc2"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1SphereGen.html#a1787346853db8fc1d0a7fab1d7cd0fc2">pop_batch</a> (std::size_t n) -&gt; std::vector&lt; double &gt;</td></tr>
+<tr class="memdesc:a1787346853db8fc1d0a7fab1d7cd0fc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate n points into a freshly allocated row-major buffer.  <br /></td></tr>
+<tr class="separator:a1787346853db8fc1d0a7fab1d7cd0fc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base class for sphere generators. </p>
@@ -223,6 +232,35 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a1f44e46d0cd02ec12da220a746247e15" name="a1f44e46d0cd02ec12da220a746247e15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f44e46d0cd02ec12da220a746247e15">&#9670;&#160;</a></span>dim()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual auto ldsgen::SphereGen::dim </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const -&gt;  std::size_t</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Number of coordinates in each generated point. </p>
+
+<p>Implemented in <a class="el" href="classldsgen_1_1SphereWrapper.html#abec25917686f472cabc48f5524cbed93">ldsgen::SphereWrapper</a>, and <a class="el" href="classldsgen_1_1SphereN.html#aa2a68a2da85450c5c8b6b5632cf12d95">ldsgen::SphereN</a>.</p>
+
+</div>
+</div>
 <a id="a8c173967b3faaa41245eb4348d67e086" name="a8c173967b3faaa41245eb4348d67e086"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8c173967b3faaa41245eb4348d67e086">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
 
@@ -299,6 +337,74 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classldsgen_1_1SphereWrapper.html#a211767944ab8dea0c800d4729444d638">ldsgen::SphereWrapper</a>, and <a class="el" href="classldsgen_1_1SphereN.html#a737e97cb1cd29f811651578dd9712b17">ldsgen::SphereN</a>.</p>
+
+</div>
+</div>
+<a id="a1787346853db8fc1d0a7fab1d7cd0fc2" name="a1787346853db8fc1d0a7fab1d7cd0fc2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1787346853db8fc1d0a7fab1d7cd0fc2">&#9670;&#160;</a></span>pop_batch() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto ldsgen::SphereGen::pop_batch </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
+          <td> -&gt; std::vector&lt;double&gt; </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generate n points into a freshly allocated row-major buffer. </p>
+
+</div>
+</div>
+<a id="a500edfc17dc309b30db74f638a12d9f4" name="a500edfc17dc309b30db74f638a12d9f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a500edfc17dc309b30db74f638a12d9f4">&#9670;&#160;</a></span>pop_batch() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual auto ldsgen::SphereGen::pop_batch </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::span&lt; double &gt;&#160;</td>
+          <td class="paramname"><em>out</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt;  void</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generate n points into a row-major buffer of size &gt;= n * <a class="el" href="classldsgen_1_1SphereGen.html#a1f44e46d0cd02ec12da220a746247e15" title="Number of coordinates in each generated point.">dim()</a>. </p>
+
+<p>Implemented in <a class="el" href="classldsgen_1_1SphereWrapper.html#a21e869ee4cc8a4d72db6b6e7d079be2b">ldsgen::SphereWrapper</a>, <a class="el" href="classldsgen_1_1SphereN.html#a4857a1a5ba4f3a143f46c7df9e928eac">ldsgen::SphereN</a>, <a class="el" href="classldsgen_1_1SphereWrapper.html#a500edfc17dc309b30db74f638a12d9f4">ldsgen::SphereWrapper</a>, and <a class="el" href="classldsgen_1_1SphereN.html#a500edfc17dc309b30db74f638a12d9f4">ldsgen::SphereN</a>.</p>
 
 </div>
 </div>

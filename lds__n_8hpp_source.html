@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.6</span>
+   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.7</span>
    </div>
   </td>
  </tr>
@@ -99,7 +99,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <span class="keyword">using </span>std::vector;</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="foldopen" id="foldopen00034" data-start="{" data-end="};">
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classldsgen_1_1HaltonN.html">   34</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classldsgen_1_1HaltonN.html">HaltonN</a> : <span class="keyword">public</span> <a class="code hl_class" href="classldsgen_1_1GeneratorBase.html">GeneratorBase</a>&lt;HaltonN, vector&lt;double&gt;&gt; {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classldsgen_1_1HaltonN.html">   34</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classldsgen_1_1HaltonN.html">HaltonN</a> : <span class="keyword">public</span> <a class="code hl_class" href="classldsgen_1_1GeneratorIterable.html">GeneratorIterable</a>&lt;HaltonN, vector&lt;double&gt;&gt; {</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>      <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        vector&lt;std::unique_ptr&lt;VdCorput&gt;&gt; vdcs;</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
@@ -127,14 +127,17 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="comment">// Compile-time contract check: HaltonN satisfies the protocol concept.</span></div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keyword">static_assert</span>(SequenceGenerator&lt;HaltonN, vector&lt;double&gt;&gt;);</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>}  <span class="comment">// namespace ldsgen</span></div>
-<div class="ttc" id="aclassldsgen_1_1GeneratorBase_html"><div class="ttname"><a href="classldsgen_1_1GeneratorBase.html">ldsgen::GeneratorBase</a></div><div class="ttdoc">CRTP base implementing the sequence generator protocol.</div><div class="ttdef"><b>Definition</b> lds.hpp:182</div></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="comment">// It also supports the same read-only traversal as the other generators.</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keyword">static_assert</span>(IndexableGenerator&lt;HaltonN, vector&lt;double&gt;&gt;);</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>}  <span class="comment">// namespace ldsgen</span></div>
+<div class="ttc" id="aclassldsgen_1_1GeneratorIterable_html"><div class="ttname"><a href="classldsgen_1_1GeneratorIterable.html">ldsgen::GeneratorIterable</a></div><div class="ttdoc">CRTP mixin adding STL iterator support to a GeneratorBase.</div><div class="ttdef"><b>Definition</b> lds.hpp:276</div></div>
 <div class="ttc" id="aclassldsgen_1_1HaltonN_html"><div class="ttname"><a href="classldsgen_1_1HaltonN.html">ldsgen::HaltonN</a></div><div class="ttdoc">Halton(n) sequence generator.</div><div class="ttdef"><b>Definition</b> lds_n.hpp:34</div></div>
 <div class="ttc" id="aclassldsgen_1_1HaltonN_html_a685205d66702784b7f2c97c1248d4374"><div class="ttname"><a href="classldsgen_1_1HaltonN.html#a685205d66702784b7f2c97c1248d4374">ldsgen::HaltonN::value_at</a></div><div class="ttdeci">auto value_at(unsigned long n) const -&gt; vector&lt; double &gt;</div><div class="ttdoc">Evaluate the N-dimensional Halton point at a given index (pure, no state change)</div><div class="ttdef"><b>Definition</b> lds_n.hpp:62</div></div>
 <div class="ttc" id="aclassldsgen_1_1HaltonN_html_a899627360500b4d6834d1ccd03f70074"><div class="ttname"><a href="classldsgen_1_1HaltonN.html#a899627360500b4d6834d1ccd03f70074">ldsgen::HaltonN::HaltonN</a></div><div class="ttdeci">HaltonN(const vector&lt; unsigned long &gt; &amp;base)</div><div class="ttdoc">Construct a new Halton N object.</div><div class="ttdef"><b>Definition</b> lds_n.hpp:46</div></div>
 <div class="ttc" id="alds_8hpp_html"><div class="ttname"><a href="lds_8hpp.html">lds.hpp</a></div><div class="ttdoc">Low-discrepancy sequence generators with thread-safe runtime polymorphism (ldsgen).</div></div>
 <div class="ttc" id="anamespaceldsgen_html"><div class="ttname"><a href="namespaceldsgen.html">ldsgen</a></div><div class="ttdef"><b>Definition</b> lds.hpp:19</div></div>
-<div class="ttc" id="anamespaceldsgen_html_af9892d8b07e1a7f82dc59be7d3896a2b"><div class="ttname"><a href="namespaceldsgen.html#af9892d8b07e1a7f82dc59be7d3896a2b">ldsgen::vdc</a></div><div class="ttdeci">constexpr auto vdc(unsigned long count, unsigned long base) -&gt; double</div><div class="ttdoc">Van der Corput sequence.</div><div class="ttdef"><b>Definition</b> lds.hpp:301</div></div>
+<div class="ttc" id="anamespaceldsgen_html_af9892d8b07e1a7f82dc59be7d3896a2b"><div class="ttname"><a href="namespaceldsgen.html#af9892d8b07e1a7f82dc59be7d3896a2b">ldsgen::vdc</a></div><div class="ttdeci">constexpr auto vdc(unsigned long count, unsigned long base) -&gt; double</div><div class="ttdoc">Van der Corput sequence.</div><div class="ttdef"><b>Definition</b> lds.hpp:322</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

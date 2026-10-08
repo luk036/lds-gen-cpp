@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.6</span>
+   <div id="projectname">LdsGen<span id="projectnumber">&#160;1.2.7</span>
    </div>
   </td>
  </tr>
@@ -108,10 +108,10 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a98d3f9d89c8da0d0583e420b59de8640" id="r_a98d3f9d89c8da0d0583e420b59de8640"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1GeneratorIterator.html#a98d3f9d89c8da0d0583e420b59de8640">GeneratorIterator</a> (Generator *g=nullptr, unsigned long idx=0)</td></tr>
-<tr class="separator:a98d3f9d89c8da0d0583e420b59de8640"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd0f3d8a0beeb656ce6eb2a94a41e25e" id="r_abd0f3d8a0beeb656ce6eb2a94a41e25e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1GeneratorIterator.html#abd0f3d8a0beeb656ce6eb2a94a41e25e">GeneratorIterator</a> (const Generator *g=nullptr, unsigned long idx=0)</td></tr>
+<tr class="separator:abd0f3d8a0beeb656ce6eb2a94a41e25e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad950bc39431c06fb20eda4829296c79a" id="r_ad950bc39431c06fb20eda4829296c79a"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1GeneratorIterator.html#ad950bc39431c06fb20eda4829296c79a">operator*</a> () const -&gt; Value</td></tr>
-<tr class="memdesc:ad950bc39431c06fb20eda4829296c79a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dereference operator.  <br /></td></tr>
+<tr class="memdesc:ad950bc39431c06fb20eda4829296c79a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dereference operator (read-only)  <br /></td></tr>
 <tr class="separator:ad950bc39431c06fb20eda4829296c79a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ff32d4dc103f5e29f7fcd6ea5a8767e" id="r_a7ff32d4dc103f5e29f7fcd6ea5a8767e"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classldsgen_1_1GeneratorIterator.html#a7ff32d4dc103f5e29f7fcd6ea5a8767e">operator++</a> () -&gt; <a class="el" href="classldsgen_1_1GeneratorIterator.html">GeneratorIterator</a> &amp;</td></tr>
 <tr class="memdesc:a7ff32d4dc103f5e29f7fcd6ea5a8767e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pre-increment operator.  <br /></td></tr>
@@ -224,8 +224,8 @@ template&lt;typename Generator , typename Value &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a98d3f9d89c8da0d0583e420b59de8640" name="a98d3f9d89c8da0d0583e420b59de8640"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a98d3f9d89c8da0d0583e420b59de8640">&#9670;&#160;</a></span>GeneratorIterator()</h2>
+<a id="abd0f3d8a0beeb656ce6eb2a94a41e25e" name="abd0f3d8a0beeb656ce6eb2a94a41e25e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd0f3d8a0beeb656ce6eb2a94a41e25e">&#9670;&#160;</a></span>GeneratorIterator()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -238,7 +238,7 @@ template&lt;typename Generator , typename Value &gt; </div>
         <tr>
           <td class="memname"><a class="el" href="classldsgen_1_1GeneratorIterator.html">ldsgen::GeneratorIterator</a>&lt; Generator, Value &gt;::GeneratorIterator </td>
           <td>(</td>
-          <td class="paramtype">Generator *&#160;</td>
+          <td class="paramtype">const Generator *&#160;</td>
           <td class="paramname"><em>g</em> = <code>nullptr</code>, </td>
         </tr>
         <tr>
@@ -347,7 +347,9 @@ template&lt;typename Generator , typename Value &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Dereference operator. </p>
+<p>Dereference operator (read-only) </p>
+<p>Reads the value at the current sequence position through the generator's pure <code>value_at()</code> computation. Because <code>pop()</code> is defined as <code>value_at(++count_)</code> and the <code>begin()</code> index is 0, the value at iterator position <code>index</code> is <code>value_at(index + 1)</code>. Dereferencing therefore never mutates the generator, keeping iteration a read-only operation (and free of the previous reseed/pop/reseed state churn on the atomic counter).</p>
+<dl class="section note"><dt>Note</dt><dd>Requires the IndexableGenerator refinement (pure <code>value_at</code>). </dd></dl>
 
 </div>
 </div>
@@ -437,6 +439,7 @@ template&lt;typename Generator , typename Value &gt; </div>
 </div><div class="memdoc">
 
 <p>Equality comparison. </p>
+<dl class="section note"><dt>Note</dt><dd>Compares both the sequence position and the underlying generator, so iterators over different generators never compare equal. </dd></dl>
 
 </div>
 </div>
