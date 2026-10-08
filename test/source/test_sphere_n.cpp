@@ -5,6 +5,7 @@
 #include <cstddef>  // for std::size_t
 #include <ldsgen/sphere_n.hpp>
 #include <numeric>
+#include <stdexcept>
 #include <vector>
 
 TEST_CASE("Test linspace function") {
@@ -459,4 +460,101 @@ TEST_CASE("SphereN pop throughput") {
     auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
     CHECK_LT(ms, 5000);
     MESSAGE("SphereN 50k pops: ", ms, " ms");
+}
+
+TEST_CASE("Sphere3::pop_batch matches repeated pop") {
+    std::vector<unsigned long> base = {2, 3, 5};
+    ldsgen::Sphere3 ref_gen(base);
+    ref_gen.reseed(0);
+    std::vector<std::array<double, 4>> ref;
+    ref.reserve(20);
+    for (int i = 0; i < 20; ++i) ref.push_back(ref_gen.pop());
+
+    ldsgen::Sphere3 batched(base);
+    batched.reseed(0);
+    auto out = batched.pop_batch(20);
+    REQUIRE(out.size() == 20 * ldsgen::Sphere3::dim());
+    for (std::size_t i = 0; i < 20; ++i) {
+        for (std::size_t j = 0; j < 4; ++j) {
+            CHECK_EQ(out[i * 4 + j], doctest::Approx(ref[i][j]).epsilon(1e-12));
+        }
+    }
+}
+
+TEST_CASE("SphereN::pop_batch matches repeated pop") {
+    std::vector<unsigned long> base = {2, 3, 5, 7};
+    ldsgen::SphereN ref_gen(base);
+    ref_gen.reseed(0);
+    std::vector<std::vector<double>> ref;
+    ref.reserve(20);
+    for (int i = 0; i < 20; ++i) ref.push_back(ref_gen.pop());
+
+    ldsgen::SphereN batched(base);
+    batched.reseed(0);
+    const std::size_t d = batched.dim();
+    CHECK_EQ(d, 5);
+    std::vector<double> out(20 * d);
+    batched.pop_batch(20, out);
+    for (std::size_t i = 0; i < 20; ++i) {
+        for (std::size_t j = 0; j < d; ++j) {
+            CHECK_EQ(out[i * d + j], doctest::Approx(ref[i][j]).epsilon(1e-12));
+        }
+    }
+}
+
+TEST_CASE("SphereWrapper::pop_batch matches repeated pop") {
+    std::vector<unsigned long> base = {2, 3};
+    ldsgen::SphereWrapper ref_gen(base);
+    ref_gen.reseed(0);
+    std::vector<std::vector<double>> ref;
+    ref.reserve(20);
+    for (int i = 0; i < 20; ++i) ref.push_back(ref_gen.pop());
+
+    ldsgen::SphereWrapper batched(base);
+    batched.reseed(0);
+    const std::size_t d = batched.dim();
+    CHECK_EQ(d, 3);
+    std::vector<double> out(20 * d);
+    batched.pop_batch(20, out);
+    for (std::size_t i = 0; i < 20; ++i) {
+        for (std::size_t j = 0; j < d; ++j) {
+            CHECK_EQ(out[i * d + j], doctest::Approx(ref[i][j]).epsilon(1e-12));
+        }
+    }
+}
+
+TEST_CASE("pop_batch advances state consistently with pop") {
+    std::vector<unsigned long> base = {2, 3, 5, 7};
+    ldsgen::SphereN mixed(base);
+    mixed.reseed(0);
+    std::vector<std::vector<double>> seq;
+    seq.push_back(mixed.pop());
+    seq.push_back(mixed.pop());
+    const std::size_t d = mixed.dim();
+    auto chunk = mixed.pop_batch(3);
+    for (std::size_t i = 0; i < 3; ++i) {
+        seq.emplace_back(chunk.begin() + static_cast<std::ptrdiff_t>(i * d),
+                         chunk.begin() + static_cast<std::ptrdiff_t>((i + 1) * d));
+    }
+
+    ldsgen::SphereN ref_gen(base);
+    ref_gen.reseed(0);
+    for (auto& i : seq) {
+        auto p = ref_gen.pop();
+        for (std::size_t j = 0; j < p.size(); ++j) {
+            CHECK_EQ(i[j], doctest::Approx(p[j]).epsilon(1e-12));
+        }
+    }
+}
+
+TEST_CASE("pop_batch rejects undersized buffers") {
+    std::vector<unsigned long> base = {2, 3, 5};
+    ldsgen::Sphere3 s3(base);
+    std::vector<double> tiny(3);
+    CHECK_THROWS_AS(s3.pop_batch(1, tiny), std::invalid_argument);
+
+    std::vector<unsigned long> base_n = {2, 3, 5, 7};
+    ldsgen::SphereN sn(base_n);
+    std::vector<double> tiny_n(4);
+    CHECK_THROWS_AS(sn.pop_batch(1, tiny_n), std::invalid_argument);
 }

@@ -29,7 +29,7 @@ namespace ildsgen {
      * Implementation based on pre-calculating the scale factor.
      *
      */
-    class VdCorput : public ldsgen::GeneratorBase<VdCorput, unsigned long> {
+    class VdCorput : public ldsgen::GeneratorIterable<VdCorput, unsigned long> {
         unsigned long _base;  ///< Base of the number system
         std::array<unsigned long, MAX_REVERSE_BITS>
             factor_lst{};  ///< Precomputed scale factors for each digit
@@ -80,7 +80,7 @@ namespace ildsgen {
      *     ...
      * @endverbatim
      */
-    class Halton : public ldsgen::GeneratorBase<Halton, array<unsigned long, 2>> {
+    class Halton : public ldsgen::GeneratorIterable<Halton, array<unsigned long, 2>> {
         VdCorput vdc0;
         VdCorput vdc1;
 
@@ -117,5 +117,9 @@ namespace ildsgen {
     // Compile-time contract checks: the integer generators satisfy the protocol concept.
     static_assert(ldsgen::SequenceGenerator<VdCorput, unsigned long>);
     static_assert(ldsgen::SequenceGenerator<Halton, array<unsigned long, 2>>);
+
+    // They also share the read-only traversal support of the floating-point family.
+    static_assert(ldsgen::IndexableGenerator<VdCorput, unsigned long>);
+    static_assert(ldsgen::IndexableGenerator<Halton, array<unsigned long, 2>>);
 
 }  // namespace ildsgen

@@ -15,3 +15,12 @@ TEST_CASE("HaltonN") {
     CHECK_EQ(res[1], doctest::Approx(1.0 / 3.0));
     CHECK_EQ(res[2], doctest::Approx(1.0 / 5.0));
 }
+
+TEST_CASE("HaltonN iterator") {
+    auto hgen = ldsgen::HaltonN({2, 3, 5});
+    auto it = hgen.begin();
+    auto v = *it;
+    CHECK_EQ(v[0], doctest::Approx(0.5));
+    CHECK_EQ(v[1], doctest::Approx(1.0 / 3.0));
+    CHECK_EQ(v[2], doctest::Approx(1.0 / 5.0));
+}

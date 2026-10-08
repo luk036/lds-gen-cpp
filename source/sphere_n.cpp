@@ -111,14 +111,35 @@ namespace ldsgen {
     }
 
     std::array<double, 4> Sphere3::pop() {
-        std::scoped_lock lock(mutex_);
-        double ti = HALF_PI * vdc_.pop();
-        double xi = simple_interp(ti, F2, X);
-        double cosxi = std::cos(xi);
-        double sinxi = std::sin(xi);
+        std::array<double, 4> result{};
+        pop_batch(1, result);
+        return result;
+    }
 
-        auto pt = sphere2_.pop();
-        return {sinxi * pt[0], sinxi * pt[1], sinxi * pt[2], cosxi};
+    void Sphere3::pop_batch(std::size_t n, std::span<double> out) {
+        if (out.size() < n * dim()) {
+            throw std::invalid_argument("Sphere3::pop_batch: output buffer too small");
+        }
+        std::scoped_lock lock(mutex_);
+        for (std::size_t i = 0; i < n; ++i) {
+            double ti = HALF_PI * vdc_.pop();
+            double xi = simple_interp(ti, F2, X);
+            double cosxi = std::cos(xi);
+            double sinxi = std::sin(xi);
+
+            auto pt = sphere2_.pop();
+            double* row = out.data() + (i * dim());
+            row[0] = sinxi * pt[0];
+            row[1] = sinxi * pt[1];
+            row[2] = sinxi * pt[2];
+            row[3] = cosxi;
+        }
+    }
+
+    auto Sphere3::pop_batch(std::size_t n) -> std::vector<double> {
+        std::vector<double> out(n * dim());
+        pop_batch(n, out);
+        return out;
     }
 
     void Sphere3::reseed(unsigned long seed) {
@@ -132,9 +153,22 @@ namespace ldsgen {
     SphereWrapper::SphereWrapper(std::span<const unsigned long> base) : sphere_(base[0], base[1]) {}
 
     std::vector<double> SphereWrapper::pop() {
+        std::vector<double> result(dim());
+        pop_batch(1, result);
+        return result;
+    }
+
+    auto SphereWrapper::dim() const -> std::size_t { return 3; }
+
+    void SphereWrapper::pop_batch(std::size_t n, std::span<double> out) {
+        if (out.size() < n * dim()) {
+            throw std::invalid_argument("SphereWrapper::pop_batch: output buffer too small");
+        }
         std::scoped_lock lock(mutex_);
-        auto arr = sphere_.pop();
-        return {arr.begin(), arr.end()};
+        for (std::size_t i = 0; i < n; ++i) {
+            auto arr = sphere_.pop();
+            std::ranges::copy(arr, out.begin() + static_cast<std::ptrdiff_t>(i * dim()));
+        }
     }
 
     void SphereWrapper::reseed(unsigned long seed) {
@@ -164,32 +198,35 @@ namespace ldsgen {
     }
 
     std::vector<double> SphereN::pop() {
-        std::scoped_lock lock(mutex_);
-        if (n_ == 2) {
-            double ti = HALF_PI * vdc_.pop();
-            double xi = simple_interp(ti, F2, X);
-            double cosxi = std::cos(xi);
-            double sinxi = std::sin(xi);
-
-            auto sub_point = s_gen_->pop();
-            std::vector<double> result;
-            result.reserve(sub_point.size() + 1);
-            for (double s : sub_point) result.emplace_back(sinxi * s);
-            result.emplace_back(cosxi);
-            return result;
-        }
-
-        double vd = vdc_.pop();
-        double ti = tp_.front() + range_ * vd;
-        double xi = simple_interp(ti, tp_, X);
-        double sinphi = std::sin(xi);
-
-        auto sub_point = s_gen_->pop();
-        std::vector<double> result;
-        result.reserve(sub_point.size() + 1);
-        for (double s : sub_point) result.emplace_back(s * sinphi);
-        result.emplace_back(std::cos(xi));
+        std::vector<double> result(dim());
+        pop_batch(1, result);
         return result;
+    }
+
+    auto SphereN::dim() const -> std::size_t { return static_cast<std::size_t>(n_) + 2; }
+
+    void SphereN::pop_batch(std::size_t n, std::span<double> out) {
+        const std::size_t d = dim();
+        if (out.size() < n * d) {
+            throw std::invalid_argument("SphereN::pop_batch: output buffer too small");
+        }
+        std::scoped_lock lock(mutex_);
+        const std::size_t child_dim = d - 1;
+        std::vector<double> child(n * child_dim);
+        s_gen_->pop_batch(n, child);
+        for (std::size_t i = 0; i < n; ++i) {
+            double vd = vdc_.pop();
+            double xi = (n_ == 2) ? simple_interp(HALF_PI * vd, F2, X)
+                                  : simple_interp(tp_.front() + range_ * vd, tp_, X);
+            double sinxi = std::sin(xi);
+            double cosxi = std::cos(xi);
+            double* row = out.data() + (i * d);
+            const double* child_row = child.data() + (i * child_dim);
+            for (std::size_t j = 0; j < child_dim; ++j) {
+                row[j] = child_row[j] * sinxi;
+            }
+            row[child_dim] = cosxi;
+        }
     }
 
     void SphereN::reseed(unsigned long seed) {

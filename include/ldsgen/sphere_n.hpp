@@ -5,6 +5,7 @@
  */
 
 #include <array>
+#include <cstddef>
 #include <memory>
 #include <mutex>
 #include <span>
@@ -63,6 +64,19 @@ namespace ldsgen {
         virtual ~SphereGen() = default;
         virtual std::vector<double> pop() = 0;
         virtual void reseed(unsigned long seed) = 0;
+
+        /// @brief Number of coordinates in each generated point.
+        [[nodiscard]] virtual auto dim() const -> std::size_t = 0;
+
+        /// @brief Generate n points into a row-major buffer of size >= n * dim().
+        virtual auto pop_batch(std::size_t n, std::span<double> out) -> void = 0;
+
+        /// @brief Generate n points into a freshly allocated row-major buffer.
+        [[nodiscard]] auto pop_batch(std::size_t n) -> std::vector<double> {
+            std::vector<double> out(n * dim());
+            pop_batch(n, out);
+            return out;
+        }
     };
 
     /**
@@ -78,6 +92,15 @@ namespace ldsgen {
         std::array<double, 4> pop();
         void reseed(unsigned long seed);
 
+        /// @brief Number of coordinates in each generated point (always 4).
+        [[nodiscard]] static constexpr auto dim() -> std::size_t { return 4; }
+
+        /// @brief Generate n points into a row-major buffer of size >= n * 4.
+        auto pop_batch(std::size_t n, std::span<double> out) -> void;
+
+        /// @brief Generate n points into a freshly allocated row-major buffer.
+        [[nodiscard]] auto pop_batch(std::size_t n) -> std::vector<double>;
+
       private:
         VdCorput vdc_;
         Sphere sphere2_;
@@ -92,6 +115,9 @@ namespace ldsgen {
         explicit SphereWrapper(std::span<const unsigned long> base);
         std::vector<double> pop() override;
         void reseed(unsigned long seed) override;
+        [[nodiscard]] auto dim() const -> std::size_t override;
+        auto pop_batch(std::size_t n, std::span<double> out) -> void override;
+        using SphereGen::pop_batch;
 
       private:
         Sphere sphere_;
@@ -108,6 +134,9 @@ namespace ldsgen {
         explicit SphereN(std::span<const unsigned long> base);
         std::vector<double> pop() override;
         void reseed(unsigned long seed) override;
+        [[nodiscard]] auto dim() const -> std::size_t override;
+        auto pop_batch(std::size_t n, std::span<double> out) -> void override;
+        using SphereGen::pop_batch;
 
       private:
         VdCorput vdc_;

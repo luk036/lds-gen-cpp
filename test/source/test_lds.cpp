@@ -685,3 +685,22 @@ TEST_CASE("sizeof Sphere") {
 TEST_CASE("sizeof Sphere3Hopf") {
     CHECK_EQ(sizeof(ldsgen::Sphere3Hopf), 3 * sizeof(ldsgen::VdCorput) + alignof(ldsgen::VdCorput));
 }
+
+TEST_CASE("GeneratorIterator different generators are not equal") {
+    auto gen1 = ldsgen::VdCorput(2);
+    auto gen2 = ldsgen::VdCorput(2);
+    auto it1 = gen1.begin();
+    auto it2 = gen2.begin();
+    CHECK(it1 != it2);
+    CHECK(it1 == gen1.begin());
+}
+
+TEST_CASE("GeneratorIterator dereference is read-only") {
+    auto vgen = ldsgen::VdCorput(2);
+    auto it = vgen.begin();
+    CHECK_EQ(*it, doctest::Approx(0.5));
+    CHECK_EQ(vgen.get_index(), 0);
+    ++it;
+    CHECK_EQ(*it, doctest::Approx(0.25));
+    CHECK_EQ(vgen.get_index(), 0);
+}
