@@ -167,7 +167,7 @@ namespace ldsgen {
         std::scoped_lock lock(mutex_);
         for (std::size_t i = 0; i < n; ++i) {
             auto arr = sphere_.pop();
-            std::copy(arr.begin(), arr.end(), out.begin() + static_cast<std::ptrdiff_t>(i * dim()));
+            std::ranges::copy(arr, out.begin() + static_cast<std::ptrdiff_t>(i * dim()));
         }
     }
 

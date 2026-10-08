@@ -539,10 +539,10 @@ TEST_CASE("pop_batch advances state consistently with pop") {
 
     ldsgen::SphereN ref_gen(base);
     ref_gen.reseed(0);
-    for (std::size_t i = 0; i < seq.size(); ++i) {
+    for (auto& i : seq) {
         auto p = ref_gen.pop();
         for (std::size_t j = 0; j < p.size(); ++j) {
-            CHECK_EQ(seq[i][j], doctest::Approx(p[j]).epsilon(1e-12));
+            CHECK_EQ(i[j], doctest::Approx(p[j]).epsilon(1e-12));
         }
     }
 }
