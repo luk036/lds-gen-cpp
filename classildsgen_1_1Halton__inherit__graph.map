@@ -1,7 +1,7 @@
 <map id="ildsgen::Halton" name="ildsgen::Halton">
-<area shape="rect" id="Node000001" title="Halton sequence generator." alt="" coords="43,196,163,221"/>
-<area shape="rect" id="Node000002" href="$classldsgen_1_1GeneratorIterable.html" title=" " alt="" coords="5,93,201,148"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,162,106,196,101,196,101,162"/>
-<area shape="rect" id="Node000003" href="$classldsgen_1_1GeneratorBase.html" title="CRTP base implementing the sequence generator protocol." alt="" coords="18,5,189,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="106,59,106,93,101,93,101,59"/>
+<area shape="rect" id="Node000001" title="Halton sequence generator." alt="" coords="43,225,163,252"/>
+<area shape="rect" id="Node000002" href="$classldsgen_1_1GeneratorIterable.html" title=" " alt="" coords="5,115,201,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,190,105,225,101,223,101,194"/>
+<area shape="rect" id="Node000003" href="$classldsgen_1_1GeneratorBase.html" title=" " alt="" coords="5,5,201,67"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="104,80,106,115,100,114,102,85"/>
 </map>

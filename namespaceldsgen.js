@@ -1,0 +1,38 @@
+var namespaceldsgen =
+[
+    [ "detail", "namespaceldsgen_1_1detail.html", [
+      [ "vdc_digit_sum", "namespaceldsgen_1_1detail.html#a21b11970235cda45bd10db99e8c41f9a", null ]
+    ] ],
+    [ "GeneratorIterator", "classldsgen_1_1GeneratorIterator.html", "classldsgen_1_1GeneratorIterator" ],
+    [ "GeneratorBase", "classldsgen_1_1GeneratorBase.html", "classldsgen_1_1GeneratorBase" ],
+    [ "GeneratorIterable", "classldsgen_1_1GeneratorIterable.html", "classldsgen_1_1GeneratorIterable" ],
+    [ "VdCorput", "classldsgen_1_1VdCorput.html", "classldsgen_1_1VdCorput" ],
+    [ "Halton", "classldsgen_1_1Halton.html", "classldsgen_1_1Halton" ],
+    [ "Circle", "classldsgen_1_1Circle.html", "classldsgen_1_1Circle" ],
+    [ "Disk", "classldsgen_1_1Disk.html", "classldsgen_1_1Disk" ],
+    [ "Sphere", "classldsgen_1_1Sphere.html", "classldsgen_1_1Sphere" ],
+    [ "Sphere3Hopf", "classldsgen_1_1Sphere3Hopf.html", "classldsgen_1_1Sphere3Hopf" ],
+    [ "HaltonN", "classldsgen_1_1HaltonN.html", "classldsgen_1_1HaltonN" ],
+    [ "SphereGen", "classldsgen_1_1SphereGen.html", "classldsgen_1_1SphereGen" ],
+    [ "Sphere3", "classldsgen_1_1Sphere3.html", "classldsgen_1_1Sphere3" ],
+    [ "SphereWrapper", "classldsgen_1_1SphereWrapper.html", "classldsgen_1_1SphereWrapper" ],
+    [ "SphereN", "classldsgen_1_1SphereN.html", "classldsgen_1_1SphereN" ],
+    [ "SequenceGenerator", "conceptldsgen_1_1SequenceGenerator.html", null ],
+    [ "IndexableGenerator", "conceptldsgen_1_1IndexableGenerator.html", null ],
+    [ "dummy", "namespaceldsgen.html#aab2e96b28f416f0c8b88859fb334668e", null ],
+    [ "get_tp", "namespaceldsgen.html#ae50f22cf2d0c68ccb47d895e78a016b2", null ],
+    [ "linspace", "namespaceldsgen.html#a5a26414db735d2c3bf0695cb3e607bc9", null ],
+    [ "log_with_spdlog", "namespaceldsgen.html#a849595053f5dba23c06f1eb63f5dc74c", null ],
+    [ "simple_interp", "namespaceldsgen.html#ab6c435ee1c8fd5d1e79fd0463b50f779", null ],
+    [ "vdc", "namespaceldsgen.html#af9892d8b07e1a7f82dc59be7d3896a2b", null ],
+    [ "F2", "namespaceldsgen.html#a73ca8c92190518a98c5275962fc8bf54", null ],
+    [ "HALF_PI", "namespaceldsgen.html#a2b4e5305e15fa0d5ac05ced56701c0b2", null ],
+    [ "MAPPING_FACTOR", "namespaceldsgen.html#a99973c6fe2aab187ec7b8b5170734021", null ],
+    [ "MAX_REVERSE_BITS", "namespaceldsgen.html#ae42c57343c6cef0bc80fa0d5b13c7d2e", null ],
+    [ "NEG_COSINE", "namespaceldsgen.html#a8f0c1a61326d9b663256f6ec8ddb843c", null ],
+    [ "PI", "namespaceldsgen.html#a25f216e0743de1c3bf3d524647c6fdd6", null ],
+    [ "SINE", "namespaceldsgen.html#a5310ffaf51b239bc5c188a283d6f567a", null ],
+    [ "TABLE_SIZE", "namespaceldsgen.html#a3fbf0556101334172e7e5a750bd56d9b", null ],
+    [ "TWO_PI", "namespaceldsgen.html#a4ee3065056614b55639ee8fa2083957d", null ],
+    [ "X", "namespaceldsgen.html#a805e0a618767566e9730cd2ed33dabb2", null ]
+];

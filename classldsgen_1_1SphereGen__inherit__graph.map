@@ -1,7 +1,7 @@
 <map id="ldsgen::SphereGen" name="ldsgen::SphereGen">
-<area shape="rect" id="Node000001" title="Base class for sphere generators." alt="" coords="84,5,228,31"/>
-<area shape="rect" id="Node000002" href="$classldsgen_1_1SphereN.html" title="N&#45;dimensional sphere sequence generator." alt="" coords="5,79,133,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,41,85,81,82,76,130,37"/>
-<area shape="rect" id="Node000003" href="$classldsgen_1_1SphereWrapper.html" title="Wrapper class to make Sphere compatible with SphereGen interface." alt="" coords="157,79,331,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="182,37,231,76,228,81,179,41"/>
+<area shape="rect" id="Node000001" title="Base class for sphere generators." alt="" coords="84,5,227,33"/>
+<area shape="rect" id="Node000002" href="$classldsgen_1_1SphereN.html" title="N&#45;dimensional sphere sequence generator." alt="" coords="5,81,133,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,43,86,83,83,78,126,44"/>
+<area shape="rect" id="Node000003" href="$classldsgen_1_1SphereWrapper.html" title="Wrapper class to make Sphere compatible with SphereGen interface." alt="" coords="156,81,328,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="184,41,230,81,224,81,182,46"/>
 </map>

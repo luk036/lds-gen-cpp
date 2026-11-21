@@ -9,8 +9,8 @@ var indexSectionsWithContent =
   6: "diprv",
   7: "g",
   8: "m",
-  9: "al",
-  10: "l"
+  9: "abcdefghilmnoprstuy✨❓👀🤏",
+  10: "is"
 };
 
 var indexSectionNames =
