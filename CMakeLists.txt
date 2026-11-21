@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14...3.22)
 
 project(
   LdsGen
-  VERSION 1.2.7
+  VERSION 1.2.8
   LANGUAGES CXX
 )
 
