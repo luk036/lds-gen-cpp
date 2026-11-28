@@ -10,60 +10,46 @@ This file provides guidelines for agentic coding agents operating in this reposi
 
 ### CMake (Primary - 3.14+)
 
+There is a single top-level `CMakeLists.txt`; `test/` and `standalone/` have no build files of their own.
+
 ```bash
-# Build and run all tests
-cmake -S test -B build/test
-cmake --build build/test
-CTEST_OUTPUT_ON_FAILURE=1 cmake --build build/test --target test
-
-# Run executable directly
-./build/test/LdsGenTests
-
-# Build standalone executable
-cmake -S standalone -B build/standalone
-cmake --build build/standalone
-./build/standalone/LdsGen --help
-
-# Build everything (library, tests, standalone, docs)
-cmake -S all -B build
+# Configure once, then build (library + tests + standalone)
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 
-# Code formatting (view or apply)
-cmake --build build/test --target format        # view changes
-cmake --build build/test --target fix-format   # apply changes
+# Run all tests
+ctest --test-dir build --output-on-failure
 
-# Clean build artifacts
-cmake --build build/test --target clean    # use CMake clean
+# Run the test executable directly
+./build/LdsGenTests
+
+# Standalone demo
+./build/LdsGen
+
+# Code formatting (view or apply)
+cmake --build build --target format        # view changes
+cmake --build build --target fix-format    # apply changes
 ```
 
 ### xmake (Alternative)
 
 ```bash
-# Build project
-xmake
-
-# Build and run tests
-xmake test
-
-# Build standalone executable
-xmake build LdsGen
-
-# Run standalone
-xmake run LdsGen
-
-# Clean build artifacts (DO NOT delete build/ directory directly)
-xmake clean
+xmake                 # build default targets (LdsGen, test_ldsgen, verify_basic, verify_sphere)
+xmake test            # build and run the doctest suite
+xmake build LdsGen    # build the static library only
+xmake run test_ldsgen # run the test binary
+xmake clean           # clean build artifacts (do not delete build/ by hand)
 ```
 
 ### Running Single Tests (Doctest)
 
 ```bash
-./build/test/LdsGenTests --test-case="VdCorput"
-./build/test/LdsGenTests --test-case="Halton"
-./build/test/LdsGenTests --test-case="Circle"
-./build/test/LdsGenTests --test-case="Sphere"
+./build/LdsGenTests --test-case="VdCorput"
+./build/LdsGenTests --test-case="Halton"
+./build/LdsGenTests --test-case="Circle"
+./build/LdsGenTests --test-case="Sphere"
 # Wildcards supported
-./build/test/LdsGenTests --test-case="*thread*"
+./build/LdsGenTests --test-case="*thread*"
 ```
 
 ---
@@ -169,12 +155,13 @@ TEST_CASE("ClassName::pop multiple") {
 ## Project Structure
 
 ```
-include/ldsgen/    # Public headers (*.hpp)
+include/ldsgen/     # Public headers (*.hpp)
 source/             # Implementation files (*.cpp)
-test/               # Test suite (doctest)
-standalone/         # Executable demo
-all/                # Build all targets together
-cmake/              # CMake modules (CPM.cmake, Format.cmake, etc.)
+test/source/        # Test suite (doctest)
+standalone/source/  # Executable demo
+bench/              # nanobench micro-benchmarks
+examples/           # Verification programs
+documentation/      # Doxyfile + pages
 .github/workflows/  # CI/CD workflows
 ```
 
@@ -186,7 +173,7 @@ The project uses:
 - **CPM.cmake** for dependency management
 - **doctest** for testing
 - **fmt** for string formatting
-- **spdlog** for logging (optional)
+- **spdlog** for the optional `ldsgen::log_with_spdlog` logger
 
 ---
 
@@ -206,12 +193,6 @@ The project uses:
 
 ## Additional Tools
 
-### Sanitizers
-```bash
-cmake -S test -B build/test -DUSE_SANITIZER=Address
-cmake -S test -B build/test -DUSE_SANITIZER=Thread
-```
-
 ### Static Analyzers
 ```bash
 # clang-tidy over the public headers (uses the checks in .clang-tidy)
@@ -221,6 +202,6 @@ cmake --build build --target clang-tidy
 
 ### Code Coverage
 ```bash
-cmake -S test -B build/test -DENABLE_TEST_COVERAGE=1
-cmake --build build/test
+cmake -S . -B build -DLDSGEN_ENABLE_COVERAGE=ON
+cmake --build build --target coverage   # requires gcovr
 ```
